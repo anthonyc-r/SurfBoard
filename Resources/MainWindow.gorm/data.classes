@@ -1,0 +1,20 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    BoxView = {
+	Actions = (
+	);
+	Outlets = (
+	    titleView,
+	    box
+	);
+	Super = NSView;
+    };
+    MainWindow = {
+	Actions = (
+	);
+	Outlets = (
+	    scrollView
+	);
+	Super = NSWindow;
+    };
+}

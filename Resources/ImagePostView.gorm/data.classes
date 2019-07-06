@@ -1,0 +1,13 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    ImagePostView = {
+	Actions = (
+	);
+	Outlets = (
+	    lowerTextView,
+	    imageView,
+	    upperTextView
+	);
+	Super = NSView;
+    };
+}
