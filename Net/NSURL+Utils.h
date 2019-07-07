@@ -14,21 +14,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
+#import "Data/Post.h"
 
-@interface Post: NSObject {
-	NSNumber *number;
-	NSString *body;
-	NSString *userName;
-	NSString *imageName;
-	NSString *imgResName;
-	NSString *imageExt;
-	NSString *subject;
-	NSImage *image;
-	NSDate *postDate;
-}
+@interface NSURL (Utils)
 
--(id)initWithDictionary: (NSDictionary*)dict;
--(NSString*)getBody;
--(void)performWithImages: (SEL)selector target: (id)target;
++(NSURL*)urlForPostImage: (*Post)post;
 
 @end

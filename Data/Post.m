@@ -14,21 +14,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
+#import "Post.h"
 
-@interface Post: NSObject {
-	NSNumber *number;
-	NSString *body;
-	NSString *userName;
-	NSString *imageName;
-	NSString *imgResName;
-	NSString *imageExt;
-	NSString *subject;
-	NSImage *image;
-	NSDate *postDate;
+@implementation Post
+
+-(id)initWithDictionary: (NSDictionary*)dict {
+	number = [dict objectForKey: @"no"];
+	[number retain];
+	body = [dict objectForKey: @"com"];
+	[body retain];
+	userName = [dict objectForKey: @"name"];
+	[userName retain];
+	imageExt = [dict objectForKey: @"ext"];
+	[imageExt retain];
+	imageName = [dict objectForKey: @"filename"];
+	[imageName retain];
+	subject = [dict objectForKey: @"sub"];
+	[subject retain];
+	imgResName = [dict objectForKey: @"tim"];
+	[imgResName retain];
+	
 }
 
--(id)initWithDictionary: (NSDictionary*)dict;
--(NSString*)getBody;
--(void)performWithImages: (SEL)selector target: (id)target;
+-deinit {
+
+}
+
+-(NSString*)getBody {
+
+}
+
+-(void)performWithImages: (SEL)selector target: (id)target {
+
+}
+
 
 @end

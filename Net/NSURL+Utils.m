@@ -14,21 +14,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
+#import "Data/Post.h"
 
-@interface Post: NSObject {
-	NSNumber *number;
-	NSString *body;
-	NSString *userName;
-	NSString *imageName;
-	NSString *imgResName;
-	NSString *imageExt;
-	NSString *subject;
-	NSImage *image;
-	NSDate *postDate;
+static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
+static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
+
+@implementation NSURL (Utils)
+
++(NSURL*)urlForPostImage: (Post*)post {
+	NSString *urlString = [NSString stringWithFormat: IMAGE_URL];
 }
-
--(id)initWithDictionary: (NSDictionary*)dict;
--(NSString*)getBody;
--(void)performWithImages: (SEL)selector target: (id)target;
 
 @end
