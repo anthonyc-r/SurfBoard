@@ -13,18 +13,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 
-@interface ImagePostView : NSView
-{
-  NSImageView *imageView;
-  NSTextView *upperTextView;
-  CGFloat maximumPostHeight;
+@interface Post: NSObject {
+	NSNumber number;
+	NSString *body;
+	NSString *name;
+	NSString *subject;
+	NSImage *image;
+	NSDate *postDate;
 }
 
--(void)setPostBody: (NSString*)postBody;
--(void)setImage: (NSImage*)image;
--(CGFloat)getRequestedSize;
--(CGFloat)getMaximumPostHeight;
--(void)setMaximumPostHight: (CGFloat)height;
 @end

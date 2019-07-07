@@ -13,18 +13,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AppKit/AppKit.h>
+#import <AppKit/AppKit.h>
+#import "Theme.h"
 
-@interface ImagePostView : NSView
-{
-  NSImageView *imageView;
-  NSTextView *upperTextView;
-  CGFloat maximumPostHeight;
+@implementation Theme
+
++(NSColor*)postBackgroundColor {
+	return [NSColor cyanColor];
 }
 
--(void)setPostBody: (NSString*)postBody;
--(void)setImage: (NSImage*)image;
--(CGFloat)getRequestedSize;
--(CGFloat)getMaximumPostHeight;
--(void)setMaximumPostHight: (CGFloat)height;
++(NSColor*)mainBackgroundColor {
+	return [NSColor whiteColor];
+}
+
++(NSColor*)postBodyColor {
+	return [NSColor blackColor];
+}
+
 @end

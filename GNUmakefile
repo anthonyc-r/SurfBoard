@@ -12,8 +12,8 @@ APP_NAME = RedditPro
 Terminal_APPLICATION_ICON =
 
 # The Objective-C files to compile
-RedditPro_OBJC_FILES = AppDelegate.m MainWindow.m ImagePostView.m TextPostView.m NSView+NibLoadable.m
-RedditPro_H_FILES = AppDelegate.h MainWindow.h ImagePostView.h TextPostView.h NSView+NibLoadable.h
+RedditPro_OBJC_FILES = AppDelegate.m MainWindow.m ImagePostView.m TextPostView.m NSView+NibLoadable.m Theme.m
+RedditPro_H_FILES = AppDelegate.h MainWindow.h ImagePostView.h TextPostView.h NSView+NibLoadable.h Theme.h
 
 RedditPro_RESOURCE_FILES = Resources/MainWindow.gorm Resources/ImagePostView.gorm Resources/TextPostView.gorm
 
