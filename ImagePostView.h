@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)setPostBody: (NSString*)postBody;
 -(void)setImage: (NSImage*)image;
--(CGFloat)getRequestedSize;
+-(CGFloat)getRequestedHeight;
 -(CGFloat)getMaximumPostHeight;
 -(void)setMaximumPostHight: (CGFloat)height;
 @end

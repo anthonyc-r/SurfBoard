@@ -14,24 +14,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#import "FrontPageNetworkSource.h"
+#import "Data/Thread.h"
 
-//BASE+Board+GeneratedImgName+ex/+s.jpg
-static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
-static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
+@implementation FrontPageNetworkSource
 
-@implementation NSURL (Utils)
-
-+(NSURL*)urlForPostImage: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: IMAGE_URL, 
-		[post getBoard], [post getImageResName], [post getImageExt]];
-	return [NSURL URLWithString: urlString];
+-(void)fetch {
+	[successTarget performSelector: successSelector 
+		withObject: [[Thread alloc] init]];
 }
 
-+(NSURL*)urlForThumbnail: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: THUMB_URL,
-		[post getBoard], [post getImageResName]];
-	return [NSURL URLWithString: urlString];
+-(void)performOnSuccess: (SEL)selector target: (id)target {
+	successSelector = selector;
+	successTarget = target;
+}
+
+-(void)performOnFailure: (SEL)selector target: (id)target {
+	failureSelector = selector;
+	failureTarget = target;
 }
 
 @end

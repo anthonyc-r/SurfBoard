@@ -18,6 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface NSURL (Utils)
 
-+(NSURL*)urlForPostImage: (*Post)post;
-
++(NSURL*)urlForPostImage: (Post*)post;
++(NSURL*)urlForThumbnail: (Post*)post;
 @end

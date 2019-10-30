@@ -14,21 +14,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 @interface Post: NSObject {
+@private
 	NSNumber *number;
 	NSString *body;
 	NSString *userName;
 	NSString *imageName;
-	NSString *imgResName;
+	NSString *imageResName;
 	NSString *imageExt;
 	NSString *subject;
 	NSImage *image;
+	NSImage *thumbnail;
 	NSDate *postDate;
+	NSString *board;
 }
 
--(id)initWithDictionary: (NSDictionary*)dict;
+-(id)initWithDictionary: (NSDictionary*)dict board: (NSString*)aBoard;
+-(void)setBody: (NSString*)bodyContent;
 -(NSString*)getBody;
+-(NSString*)getImageResName;
+-(NSString*)getImageExt;
+-(NSString*)getBoard;
 -(void)performWithImages: (SEL)selector target: (id)target;
-
+-(void)performWithThumbnail: (SEL)selector target: (id)target;
 @end

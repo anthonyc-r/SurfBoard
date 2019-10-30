@@ -66,13 +66,14 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[imageView setImage: image];
 }
 
--(CGFloat)getRequestedSize {
+-(CGFloat)getRequestedHeight {
 	return [upperTextView frame].size.height + TOTAL_VERTICAL_MARGIN;
 }
 
 -(CGFloat)getMaximumPostHeight {
 	return maximumPostHeight;
 }
+
 -(void)setMaximumPostHight: (CGFloat)height {
 	maximumPostHeight = height;
 }

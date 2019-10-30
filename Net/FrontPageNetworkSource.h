@@ -12,26 +12,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#import <Data/Thread.h>
 
-//BASE+Board+GeneratedImgName+ex/+s.jpg
-static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
-static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
-
-@implementation NSURL (Utils)
-
-+(NSURL*)urlForPostImage: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: IMAGE_URL, 
-		[post getBoard], [post getImageResName], [post getImageExt]];
-	return [NSURL URLWithString: urlString];
+@interface FrontPageNetworkSource: NSObject {
+@private
+	id successTarget;
+	SEL successSelector;
+	id failureTarget;
+	SEL failureSelector;
 }
 
-+(NSURL*)urlForThumbnail: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: THUMB_URL,
-		[post getBoard], [post getImageResName]];
-	return [NSURL URLWithString: urlString];
-}
+-(void)fetch;
+-(void)performOnSuccess: (SEL)selector target: (id)target;
+-(void)performOnFailure: (SEL)selector target: (id)target;
 
 @end

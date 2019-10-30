@@ -12,26 +12,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#import "Data/Thread.h"
+#import "ThreadSummaryView.h"
 
-//BASE+Board+GeneratedImgName+ex/+s.jpg
-static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
-static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
+@implementation ThreadSummaryView
 
-@implementation NSURL (Utils)
-
-+(NSURL*)urlForPostImage: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: IMAGE_URL, 
-		[post getBoard], [post getImageResName], [post getImageExt]];
-	return [NSURL URLWithString: urlString];
+-(void)configureForThread: (Thread*)aThread {
+	Post *op = [aThread getOP];
+	[op performWithThumbnail: @selector(setOPImage:) target: self];
 }
 
-+(NSURL*)urlForThumbnail: (Post*)post {
-	NSString *urlString = [NSString stringWithFormat: THUMB_URL,
-		[post getBoard], [post getImageResName]];
-	return [NSURL URLWithString: urlString];
+-(CGFloat)getRequestedHeight {
+	return 0;
+}
+
+-(void)setOPImage: (Post*)sender image: (NSImage*)anImage {
+	// TODO: - Make sure the thread hasn't changed since the request was made if reusing
+	[opImageView setImage: anImage];
 }
 
 @end

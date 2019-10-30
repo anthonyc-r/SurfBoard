@@ -18,34 +18,69 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation Post
 
--(id)initWithDictionary: (NSDictionary*)dict {
-	number = [dict objectForKey: @"no"];
-	[number retain];
-	body = [dict objectForKey: @"com"];
-	[body retain];
-	userName = [dict objectForKey: @"name"];
-	[userName retain];
-	imageExt = [dict objectForKey: @"ext"];
-	[imageExt retain];
-	imageName = [dict objectForKey: @"filename"];
-	[imageName retain];
-	subject = [dict objectForKey: @"sub"];
-	[subject retain];
-	imgResName = [dict objectForKey: @"tim"];
-	[imgResName retain];
-	
+-(id)initWithDictionary: (NSDictionary*)dict board: (NSString*)aBoard {
+	self = [super init];
+	if (self) {
+		number = [dict objectForKey: @"no"];
+		[number retain];
+		body = [dict objectForKey: @"com"];
+		[body retain];
+		userName = [dict objectForKey: @"name"];
+		[userName retain];
+		imageExt = [dict objectForKey: @"ext"];
+		[imageExt retain];
+		imageName = [dict objectForKey: @"filename"];
+		[imageName retain];
+		subject = [dict objectForKey: @"sub"];
+		[subject retain];
+		imageResName = [dict objectForKey: @"tim"];
+		[imageResName retain];
+		board = aBoard;
+		[board retain];
+	}
+	return self;
 }
 
--deinit {
-
+-(void)deinit {
+	// TODO: - Release everything.
 }
 
 -(NSString*)getBody {
+	return body;
+}
 
+-(void)setBody: (NSString*)bodyContent {
+	[body release];
+	body = bodyContent;
+	[body retain];
+}
+
+-(NSString*)getImageResName {
+	return imageResName;
+}
+
+-(NSString*)getImageExt {
+	return imageExt;
+}
+
+-(NSString*)getBoard {
+	return board;
 }
 
 -(void)performWithImages: (SEL)selector target: (id)target {
+	if (image) {
+		[target performSelector: selector withObject: self 
+			withObject: image];
+		return;
+	}
+}
 
+-(void)performWithThumbnail: (SEL)selector target: (id)target {
+	if (thumbnail) {
+		[target performSelector: selector withObject: self 
+			withObject: nil];
+		return;
+	}
 }
 
 
