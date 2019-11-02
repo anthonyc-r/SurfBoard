@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //BASE+Board+GeneratedImgName+ex/+s.jpg
 static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
 static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
+static NSString *const INDEX_URL = @"https://a.4cdn.org/%@/%@.json";
 
 @implementation NSURL (Utils)
 
@@ -31,6 +32,12 @@ static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
 +(NSURL*)urlForThumbnail: (Post*)post {
 	NSString *urlString = [NSString stringWithFormat: THUMB_URL,
 		[post getBoard], [post getImageResName]];
+	return [NSURL URLWithString: urlString];
+}
+
++(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board {
+	NSString *urlString = [NSString stringWithFormat: INDEX_URL,
+		board, index];
 	return [NSURL URLWithString: urlString];
 }
 

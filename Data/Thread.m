@@ -14,8 +14,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #import <Foundation/Foundation.h>
 #import "Thread.h"
+#import "Post.h"
 
 @implementation Thread
+
+-(id)initWithDictionary: (NSDictionary*)dict {
+	self = [super init];
+	if (self) {
+		NSMutableArray *somePosts = [[NSMutableArray alloc] init];
+		NSArray *postsJson = [dict objectForKey: @"posts"];
+		for (int i = 0; i < [postsJson count]; i++) {
+			NSDictionary *json = [postsJson objectAtIndex: i];
+			Post *aPost = [[Post alloc] initWithDictionary: json board: @"g"];
+			[somePosts addObject: aPost];
+			[aPost release];
+		}
+		posts = somePosts;
+	}
+	return self;
+}
+
+-(void)dealloc {
+	[super dealloc];
+	[posts dealloc];
+}
 
 -(NSArray*)getPosts {
 	return posts;
@@ -36,7 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[ret autorelease];
 		return ret;
 	} else {
-		
+		NSArray *ret = [[NSArray alloc] init];
+		[ret autorelease];
+		return ret;
 	}
 }
 

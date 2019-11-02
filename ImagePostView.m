@@ -13,8 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AppKit/AppKit.h>
-#include "ImagePostView.h"
+#import <AppKit/AppKit.h>
+#import "ImagePostView.h"
 
 static const CGFloat TOTAL_VERTICAL_MARGIN = 20.0;
 static const CGFloat NO_MAXIMUM = 1000.0;
@@ -34,11 +34,11 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[upperTextView setDrawsBackground: NO];
 	[upperTextView setVerticallyResizable: YES];
 	[upperTextView setEditable: NO];
+	[upperTextView setRichText: YES];
 	CGFloat viewHeight = [self frame].size.height;
 	[upperTextView setMaxSize: NSMakeSize(viewHeight, 1000)];
 	[upperTextView setMinSize: NSMakeSize(viewHeight, 0)];
 }
-
 
 -(void)setFrame: (NSRect)frameRect {
 	[super setFrame: frameRect];
@@ -47,19 +47,18 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[upperTextView setMinSize: NSMakeSize(frameRect.size.height, 0)];
 }
 
+-(void)configureForPost: (Post*)post {
+	[self setAttributedPostBody: [post getAttributedBody]];
+}
+
+-(void)setAttributedPostBody: (NSAttributedString*)postBody {
+	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: postBody];
+	[self updateFrame];
+}
+
 -(void)setPostBody: (NSString*)postBody {
-	[upperTextView setString: postBody];
-	NSRect prevFrame = [upperTextView frame];
-	[upperTextView sizeToFit];
-	NSRect newFrame = [upperTextView frame];
-	CGFloat heightDiff = prevFrame.size.height - newFrame.size.height;
-	newFrame.origin.y += heightDiff;
-	NSLog(@"newFrame x: %f y: %f width: %f height: %f", newFrame.origin.x, 
-		newFrame.origin.y, newFrame.size.width, newFrame.size.height);
-	[upperTextView setFrame: newFrame];
-	
-	NSLog(@"text view height: %f", newFrame.size.height);
-	
+	[upperTextView setText: postBody];
+	[self updateFrame];
 }
 
 -(void)setImage: (NSImage*)image {
@@ -76,6 +75,20 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)setMaximumPostHight: (CGFloat)height {
 	maximumPostHeight = height;
+}
+
+-(void)updateFrame {
+	NSRect prevFrame = [upperTextView frame];
+	[upperTextView sizeToFit];
+	NSRect newFrame = [upperTextView frame];
+	CGFloat heightDiff = prevFrame.size.height - newFrame.size.height;
+	newFrame.origin.y += heightDiff;
+	NSLog(@"newFrame x: %f y: %f width: %f height: %f", newFrame.origin.x, 
+		newFrame.origin.y, newFrame.size.width, newFrame.size.height);
+	[upperTextView setFrame: newFrame];
+	
+	NSLog(@"text view height: %f", newFrame.size.height);
+	
 }
 
 @end

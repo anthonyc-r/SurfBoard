@@ -16,12 +16,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "FrontPageNetworkSource.h"
 #import "Data/Thread.h"
+#import "Net/NSURL+Utils.h"
 
 @implementation FrontPageNetworkSource
 
 -(void)fetch {
-	[successTarget performSelector: successSelector 
-		withObject: [[Thread alloc] init]];
+	NSURL *url = [NSURL urlForIndex: [NSNumber numberWithInt: 1] ofBoard: @"g"];
+	NSURLRequest *request = [NSURLRequest requestWithURL: url];
+	NSLog(@"Fetching request: %@", request);
+	// TODO: - Dealloc
+	NSURLResponse *response = [NSURLResponse alloc];
+	NSError *error = [NSError alloc];
+	NSData *data = [NSURLConnection sendSynchronousRequest: request
+		returningResponse: &response
+		error: &error];
+	NSMutableArray *threads = [[NSMutableArray alloc] init];
+	if (data != nil) {
+		NSLog(@"Successfully made request for threads");
+		NSDictionary *json = [NSJSONSerialization 
+			JSONObjectWithData: data 
+			options: 0 
+			error: &error];
+		NSArray *threadsJson = [json objectForKey: @"threads"];
+		for (int i = 0; i < [threadsJson count]; i++) {
+			Thread *thread = [[Thread alloc] initWithDictionary: [threadsJson objectAtIndex: i]];
+			[thread autorelease];
+			[threads addObject: thread];
+		}
+		NSLog(@"idx 0: %@", [threads firstObject]);
+		[successTarget performSelector: successSelector
+			onThread: [NSThread mainThread]
+			withObject: threads
+			waitUntilDone: NO];
+	}
 }
 
 -(void)performOnSuccess: (SEL)selector target: (id)target {
@@ -32,6 +59,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)performOnFailure: (SEL)selector target: (id)target {
 	failureSelector = selector;
 	failureTarget = target;
+}
+
+-(void)connectionDidFinishLoading: (NSURLConnection*)connection {
+	NSLog(@"Finished loading");
+}
+
+-(void)connection: (NSURLConnection*)connection didReceiveData: (NSData*)data {
+	NSLog(@"Did Receive Data");
+}
+
+-(void)connection: (NSURLConnection*)connection didRecieveResponse: (NSURLResponse*)response {
+	NSLog(@"Received response %@", response);
+}
+
+-(void)connection: (NSURLConnection*)connection didFailWithError: (NSError*)error {
+	NSLog(@"Error, %@", error);
 }
 
 @end

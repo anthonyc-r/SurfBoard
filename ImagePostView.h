@@ -13,7 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AppKit/AppKit.h>
+#import <AppKit/AppKit.h>
+#import "Data/Post.h"
 
 @interface ImagePostView : NSView
 {
@@ -21,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   NSTextView *upperTextView;
   CGFloat maximumPostHeight;
 }
-
+-(void)configureForPost: (Post*)post;
 -(void)setPostBody: (NSString*)postBody;
 -(void)setImage: (NSImage*)image;
 -(CGFloat)getRequestedHeight;

@@ -15,12 +15,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import <Data/Thread.h>
 
-@interface FrontPageNetworkSource: NSObject {
+@interface FrontPageNetworkSource: NSObject<NSURLConnectionDelegate> {
 @private
 	id successTarget;
 	SEL successSelector;
 	id failureTarget;
 	SEL failureSelector;
+	NSURLConnection *activeConnection;
 }
 
 -(void)fetch;

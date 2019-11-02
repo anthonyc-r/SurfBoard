@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @private
 	NSNumber *number;
 	NSString *body;
+	NSAttributedString *attributedBody;
 	NSString *userName;
 	NSString *imageName;
 	NSString *imageResName;
@@ -34,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(id)initWithDictionary: (NSDictionary*)dict board: (NSString*)aBoard;
 -(void)setBody: (NSString*)bodyContent;
 -(NSString*)getBody;
+-(NSAttributedString*)getAttributedBody;
 -(NSString*)getImageResName;
 -(NSString*)getImageExt;
 -(NSString*)getBoard;

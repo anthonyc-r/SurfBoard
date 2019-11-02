@@ -25,17 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)awakeFromNib {
 	[super awakeFromNib];
 	NSLog(@"MainWindow loaded.");
-	ImagePostView *imagePostView = [ImagePostView loadFromNibNamed: @"ImagePostView" owner: NSApp];
-	[imagePostView setPostBody: @"Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post body!!!Test post b"];
-	[[self contentView] addSubview: imagePostView];
-	Post *p = [[Post alloc] init];
-	[p setBody: @"Test!?!"];
-	[p performWithThumbnail: @selector(testFunc:sender:) target: self];
+	postView = [ImagePostView loadFromNibNamed: @"ImagePostView" owner: NSApp];
+	[[self contentView] addSubview: postView];
 	
-	FrontPageNetworkSource *networkSource = [[FrontPageNetworkSource alloc] init];
+	networkSource = [[FrontPageNetworkSource alloc] init];
 	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
 	NSLog(@"Fetching network source.");
-	[networkSource fetch];
+	[NSThread detachNewThreadSelector: @selector(fetch) toTarget: networkSource withObject: nil];
 }
 
 -(void)testFunc: (Post*)sender {
@@ -43,8 +39,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 }
 
--(void)networkSourceTest: (id)thread {
-	NSLog(@"Called network source success with thread %@", thread);
+-(void)networkSourceTest: (NSArray*)threads {
+	NSLog(@"Called network source success with thread %@", threads);
+	NSLog(@"First object: %@", [threads firstObject]);
+	NSArray *posts = [[threads firstObject] getPosts];
+	id post = [posts firstObject];
+	if (post) {
+		NSLog(@"Post was not null");
+		NSLog(@"post %@", post);
+		[postView configureForPost: post];
+	} else {
+		NSLog(@"Post was null!?");
+	}
 }
 
 @end

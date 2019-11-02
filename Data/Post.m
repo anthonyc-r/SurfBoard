@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "Post.h"
+#import "Text/NSAttributedString+HTML.h"
 
 @implementation Post
 
@@ -23,8 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (self) {
 		number = [dict objectForKey: @"no"];
 		[number retain];
-		body = [dict objectForKey: @"com"];
-		[body retain];
+		if ((body = [dict objectForKey: @"com"])) {
+			attributedBody = [NSAttributedString attributedStringFromHTMLString: body];
+			[body retain];
+			[attributedBody retain];
+		} else {
+			attributedBody = nil;
+		}
 		userName = [dict objectForKey: @"name"];
 		[userName retain];
 		imageExt = [dict objectForKey: @"ext"];
@@ -65,6 +71,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(NSString*)getBoard {
 	return board;
+}
+
+-(NSAttributedString*)getAttributedBody {
+	return attributedBody;
 }
 
 -(void)performWithImages: (SEL)selector target: (id)target {
