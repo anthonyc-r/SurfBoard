@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[super awakeFromNib];
 	NSLog(@"MainWindow loaded.");
 	postView = [ImagePostView loadFromNibNamed: @"ImagePostView" owner: NSApp];
+	[postView setFrame: NSMakeRect(50, 200, 600, 200)];
 	[[self contentView] addSubview: postView];
 	
 	networkSource = [[FrontPageNetworkSource alloc] init];

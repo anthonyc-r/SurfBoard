@@ -31,20 +31,22 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 -(void)awakeFromNib {
 	[super awakeFromNib];
 	NSLog(@"ImagePostView awoke from nib.");
-	[upperTextView setDrawsBackground: NO];
+	maximumPostHeight = NO_MAXIMUM;
+	[upperTextView setDrawsBackground: YES];
 	[upperTextView setVerticallyResizable: YES];
 	[upperTextView setEditable: NO];
 	[upperTextView setRichText: YES];
 	CGFloat viewHeight = [self frame].size.height;
-	[upperTextView setMaxSize: NSMakeSize(viewHeight, 1000)];
+	[upperTextView setMaxSize: NSMakeSize(viewHeight, NO_MAXIMUM)];
 	[upperTextView setMinSize: NSMakeSize(viewHeight, 0)];
 }
 
 -(void)setFrame: (NSRect)frameRect {
 	[super setFrame: frameRect];
 	NSLog(@"Frame set, changing textview constraints");
-	[upperTextView setMaxSize: NSMakeSize(frameRect.size.height, maximumPostHeight)];
-	[upperTextView setMinSize: NSMakeSize(frameRect.size.height, 0)];
+	[upperTextView setMaxSize: NSMakeSize(frameRect.size.width, maximumPostHeight)];
+	[upperTextView setMinSize: NSMakeSize(frameRect.size.width, 0)];
+	[self updateFrame];
 }
 
 -(void)configureForPost: (Post*)post {
@@ -80,15 +82,20 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 -(void)updateFrame {
 	NSRect prevFrame = [upperTextView frame];
 	[upperTextView sizeToFit];
+	[self performSelector: @selector(scrollToBottom) onThread: [NSThread mainThread] withObject: nil waitUntilDone: NO];
+	return;
 	NSRect newFrame = [upperTextView frame];
 	CGFloat heightDiff = prevFrame.size.height - newFrame.size.height;
 	newFrame.origin.y += heightDiff;
 	NSLog(@"newFrame x: %f y: %f width: %f height: %f", newFrame.origin.x, 
 		newFrame.origin.y, newFrame.size.width, newFrame.size.height);
 	[upperTextView setFrame: newFrame];
-	
 	NSLog(@"text view height: %f", newFrame.size.height);
 	
+}
+
+-(void)scrollToBottom {
+	[upperTextView scrollRangeToVisible: NSMakeRange(1, 1)];
 }
 
 @end
