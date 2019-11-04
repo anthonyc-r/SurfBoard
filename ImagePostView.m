@@ -21,32 +21,31 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 @implementation ImagePostView
 
--init {
-	if (self = [super init]) {
+
+-initWithFrame: (NSRect)frame {
+	if ((self = [super initWithFrame: frame])) {
 		maximumPostHeight = NO_MAXIMUM;
+		imageView = [[NSImageView alloc] init];
+		upperTextView = [[NSTextView alloc] init];
+		[self addSubview: imageView];
+		[self addSubview: upperTextView];
+		[upperTextView setDrawsBackground: YES];
+		[upperTextView setVerticallyResizable: NO];
+		[upperTextView setEditable: NO];
+		[upperTextView setRichText: YES];
+		[self layoutSubviews];
 	}
 	return self;
 }
 
--(void)awakeFromNib {
-	[super awakeFromNib];
-	NSLog(@"ImagePostView awoke from nib.");
-	maximumPostHeight = NO_MAXIMUM;
-	[upperTextView setDrawsBackground: YES];
-	[upperTextView setVerticallyResizable: YES];
-	[upperTextView setEditable: NO];
-	[upperTextView setRichText: YES];
-	CGFloat viewHeight = [self frame].size.height;
-	[upperTextView setMaxSize: NSMakeSize(viewHeight, NO_MAXIMUM)];
-	[upperTextView setMinSize: NSMakeSize(viewHeight, 0)];
+-(void)drawRect: (NSRect)rect {
+	[[NSColor blueColor] set];
+	[[NSBezierPath bezierPathWithRect: [self bounds]] fill];
 }
 
 -(void)setFrame: (NSRect)frameRect {
 	[super setFrame: frameRect];
-	NSLog(@"Frame set, changing textview constraints");
-	[upperTextView setMaxSize: NSMakeSize(frameRect.size.width, maximumPostHeight)];
-	[upperTextView setMinSize: NSMakeSize(frameRect.size.width, 0)];
-	[self updateFrame];
+	[self layoutSubviews];
 }
 
 -(void)configureForPost: (Post*)post {
@@ -55,12 +54,11 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)setAttributedPostBody: (NSAttributedString*)postBody {
 	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: postBody];
-	[self updateFrame];
 }
 
 -(void)setPostBody: (NSString*)postBody {
 	[upperTextView setText: postBody];
-	[self updateFrame];
+	[self layoutSubviews];
 }
 
 -(void)setImage: (NSImage*)image {
@@ -79,23 +77,20 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	maximumPostHeight = height;
 }
 
--(void)updateFrame {
-	NSRect prevFrame = [upperTextView frame];
-	[upperTextView sizeToFit];
-	[self performSelector: @selector(scrollToBottom) onThread: [NSThread mainThread] withObject: nil waitUntilDone: NO];
-	return;
-	NSRect newFrame = [upperTextView frame];
-	CGFloat heightDiff = prevFrame.size.height - newFrame.size.height;
-	newFrame.origin.y += heightDiff;
-	NSLog(@"newFrame x: %f y: %f width: %f height: %f", newFrame.origin.x, 
-		newFrame.origin.y, newFrame.size.width, newFrame.size.height);
-	[upperTextView setFrame: newFrame];
-	NSLog(@"text view height: %f", newFrame.size.height);
-	
-}
-
 -(void)scrollToBottom {
 	[upperTextView scrollRangeToVisible: NSMakeRange(1, 1)];
+}
+
+-(void)layoutSubviews {
+	NSRect rect = [self frame];
+	[imageView setFrame: NSMakeRect(
+		10, 10, 100, 100
+	)];
+	[upperTextView setFrame: NSMakeRect(
+		120, 10, 
+		rect.size.width - 130,
+		rect.size.height - 20
+	)];
 }
 
 @end

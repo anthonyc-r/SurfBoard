@@ -18,6 +18,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation TextPostView
 
+-initWithFrame: (NSRect)frame {
+	if ((self = [super initWithFrame: frame])) {
+		textView = [[NSTextView alloc] init];
+		[textView setDrawsBackground: YES];
+		[textView setRichText: YES];
+		[textView setEditable: NO];
+		[self addSubview: textView];
+		[self layoutSubviews];
+	}
+	return self;
+}
 
+-(void)drawRect: (NSRect)rect {
+	[[NSColor blueColor] set];
+	[[NSBezierPath bezierPathWithRect: [self bounds]] fill];
+}
+
+-(void)setFrame: (NSRect)frameRect {
+	[super setFrame: frameRect];
+	[self layoutSubviews];
+}
+
+-(void)configureForPost: (Post*)post {
+	[textView replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedBody]];
+}
+
+-(void) layoutSubviews {
+	NSRect frame = [self frame];
+	[textView setFrame: NSMakeRect(
+		10, 10,
+		frame.size.width - 20,
+		frame.size.height - 20
+	)];
+}
 
 @end

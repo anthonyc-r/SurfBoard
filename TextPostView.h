@@ -13,10 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AppKit/AppKit.h>
+#import <AppKit/AppKit.h>
+#import "Data/Post.h"
 
 @interface TextPostView : NSView
 {
   id textView;
 }
+
+-(void)configureForPost: (Post*)post;
 @end
