@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	id failureTarget;
 }
 
--(id)initWithUrl: (NSURL*)URL;
+-(id)initWithURL: (NSURL*)URL;
 -(void)fetch;
 -(void)performOnSuccess: (SEL)selector target: (id)target;
 -(void)performOnFailure: (SEL)selector target: (id)target;

@@ -15,12 +15,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "Data/Post.h"
+#import "Net/ImageNetworkSource.h"
 
 @interface ImagePostView : NSView
 {
   NSImageView *imageView;
   NSTextView *upperTextView;
   CGFloat maximumPostHeight;
+  ImageNetworkSource *activeImageSource;
 }
 -(void)configureForPost: (Post*)post;
 -(void)setPostBody: (NSString*)postBody;

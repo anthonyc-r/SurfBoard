@@ -15,6 +15,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "ImagePostView.h"
+#import "Net/ImageNetworkSource.h"
+#import "Net/NSURL+Utils.h"
+#import "GNUstepGUI/GSTable.h"
 
 static const CGFloat TOTAL_VERTICAL_MARGIN = 20.0;
 static const CGFloat NO_MAXIMUM = 1000.0;
@@ -50,6 +53,11 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)configureForPost: (Post*)post {
 	[self setAttributedPostBody: [post getAttributedBody]];
+	activeImageSource = [[ImageNetworkSource alloc] initWithURL: [NSURL urlForThumbnail: post]];
+	[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
+	NSLog(@"Performing on background thread...");
+	[activeImageSource performSelectorInBackground: @selector(fetch) withObject: nil];
+	NSLog(@"Test 2");
 }
 
 -(void)setAttributedPostBody: (NSAttributedString*)postBody {
@@ -82,15 +90,21 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 }
 
 -(void)layoutSubviews {
-	NSRect rect = [self frame];
+	NSRect rect = [self bounds];
 	[imageView setFrame: NSMakeRect(
-		10, 10, 100, 100
+		10, rect.size.height - 110, 
+		100, 100
 	)];
 	[upperTextView setFrame: NSMakeRect(
 		120, 10, 
 		rect.size.width - 130,
 		rect.size.height - 20
 	)];
+}
+
+-(void)onFetchedImage: (NSImage*)image {
+	NSLog(@"Fetched image!!");
+	[imageView setImage: image];
 }
 
 @end

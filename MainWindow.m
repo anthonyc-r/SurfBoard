@@ -25,15 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)awakeFromNib {
 	[super awakeFromNib];
 	NSLog(@"MainWindow loaded.");
-	//postView = [ImagePostView loadFromNibNamed: @"ImagePostView" owner: NSApp];
-	postView = [[ImagePostView alloc] initWithFrame: NSMakeRect(50, 200, 600, 200)];
-	//[postView setFrame: NSMakeRect(50, 200, 200, 200)];
-	[[self contentView] addSubview: postView];
+	NSView *contentView = [self contentView];
+	NSRect frame = [contentView frame];
+	tableView = [[GSTable alloc] initWithFrame: NSMakeRect(0, 0, frame.size.width, frame.size.height)];
+	[contentView addSubview: tableView];
 	
 	networkSource = [[FrontPageNetworkSource alloc] init];
 	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
 	NSLog(@"Fetching network source.");
-	[NSThread detachNewThreadSelector: @selector(fetch) toTarget: networkSource withObject: nil];
+	[networkSource performSelectorInBackground: @selector(fetch) withObject: nil];
 }
 
 -(void)testFunc: (Post*)sender {
@@ -44,14 +44,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)networkSourceTest: (NSArray*)threads {
 	NSLog(@"Called network source success with thread %@", threads);
 	NSLog(@"First object: %@", [threads firstObject]);
-	NSArray *posts = [[threads firstObject] getPosts];
-	id post = [posts firstObject];
-	if (post) {
-		NSLog(@"Post was not null");
-		NSLog(@"post %@", post);
-		[postView configureForPost: post];
-	} else {
-		NSLog(@"Post was null!?");
+	[tableView addColumn];
+	for (int i = 0; i < [threads count]; i++) {
+		Post *op = [[[threads objectAtIndex: i] getPosts] firstObject];
+		NSRect frame = NSMakeRect(
+			0, 0, 200, 100
+		);
+		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
+		//[postView configureForPost: op];
+		[tableView addRow];
+		[tableView putView: postView atRow: i column: 0];
+		
 	}
 }
 

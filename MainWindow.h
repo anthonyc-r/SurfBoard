@@ -15,11 +15,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "Net/FrontPageNetworkSource.h"
+#import "GNUstepGUI/GSTable.h"
 
 @interface MainWindow : NSWindow
 {
-  id newOutlet;
-  id postView;
-  FrontPageNetworkSource *networkSource;
+	NSScrollView *scrolView;
+	GSTable *tableView;
+  	FrontPageNetworkSource *networkSource;
 }
 @end

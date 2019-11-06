@@ -16,18 +16,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import "ImageNetworkSource.h"
+#import "NSURL+Utils.h"
 
 @implementation ImageNetworkSource
 
--(id)initWithUrl: (NSURL*)aURL {
+-(id)initWithURL: (NSURL*)aURL {
 	if ((self = [super init])) {
 		URL = aURL;
+		[aURL retain];
 	}
 	return self;
 }
 
+-(void)dealloc {
+	[super dealloc];
+	[URL release];
+}
+
 -(void)fetch {
-	NSLog(@"TODO Impl");
+	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
+	NSLog(@"Fetching request %@", request);
+	// TODO: - Handle errors
+	NSURLResponse *response = [NSURLResponse alloc];
+	NSError *error = [NSError alloc];
+	NSData *data = [NSURLConnection sendSynchronousRequest: request
+		returningResponse: &response
+		error: &error];
+	if (error != nil) {
+		NSLog(@"Error fetching image! %@", error);
+	}
+	NSImage *image = [[NSImage alloc] initWithData: data];
+	// TODO: - release response error and data?
+
+	[successTarget performSelectorOnMainThread: successSelector 
+		withObject: image
+		waitUntilDone: YES];
+	[image release];
 }
 
 -(void)performOnSuccess: (SEL)selector target: (id)target {
