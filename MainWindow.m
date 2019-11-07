@@ -26,9 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[super awakeFromNib];
 	NSLog(@"MainWindow loaded.");
 	NSView *contentView = [self contentView];
-	NSRect frame = [contentView frame];
-	tableView = [[GSTable alloc] initWithFrame: NSMakeRect(0, 0, frame.size.width, frame.size.height)];
-	[contentView addSubview: tableView];
+	NSRect frame = [contentView bounds];
+	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	tableView = [GSTable alloc];
+	scrollView = [[NSScrollView alloc] initWithFrame: frame];
+	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+	[contentView addSubview: scrollView];
 	
 	networkSource = [[FrontPageNetworkSource alloc] init];
 	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
@@ -44,18 +47,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)networkSourceTest: (NSArray*)threads {
 	NSLog(@"Called network source success with thread %@", threads);
 	NSLog(@"First object: %@", [threads firstObject]);
-	[tableView addColumn];
+	CGFloat width = [[self contentView] bounds].size.width;
+	[tableView removeFromSuperview];
+	[tableView initWithNumberOfRows: [threads count] numberOfColumns: 1];
+	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	for (int i = 0; i < [threads count]; i++) {
 		Post *op = [[[threads objectAtIndex: i] getPosts] firstObject];
 		NSRect frame = NSMakeRect(
-			0, 0, 200, 100
+			0, 0, width, 200
 		);
 		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
-		//[postView configureForPost: op];
-		[tableView addRow];
+		[postView configureForPost: op];
 		[tableView putView: postView atRow: i column: 0];
-		
+		[tableView setYResizingEnabled: YES forRow: i];
+		[tableView setXResizingEnabled: YES forColumn: i];
 	}
+	NSLog(@"content: %@", [scrollView contentView]);
+	[scrollView setDocumentView: tableView];
 }
 
 @end
