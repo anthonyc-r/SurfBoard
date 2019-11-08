@@ -31,12 +31,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	tableView = [GSTable alloc];
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+	[scrollView setHasVerticalScroller: YES];
 	[contentView addSubview: scrollView];
 	
 	networkSource = [[FrontPageNetworkSource alloc] init];
 	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
 	NSLog(@"Fetching network source.");
 	[networkSource performSelectorInBackground: @selector(fetch) withObject: nil];
+}
+
+-(void)dealloc {
+	[super dealloc];
+	[scrollView release];
+	[tableView release];
+	[networkSource release];
 }
 
 -(void)testFunc: (Post*)sender {
@@ -64,6 +72,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	NSLog(@"content: %@", [scrollView contentView]);
 	[scrollView setDocumentView: tableView];
+	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 }
 
 @end

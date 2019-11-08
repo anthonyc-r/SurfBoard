@@ -73,9 +73,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	[regexp release];
 	[error release];
-	
 }
+
+-(void)replaceURLEncodingsOf: (NSString*)encoding withSymbol: (NSString*)symbol {
+	while (true) {
+		NSString *string = [self string];
+		NSRange range = [string rangeOfString: encoding];
+		if (range.length <= 0) {
+			break;
+		}
+		[self replaceCharactersInRange: range withString: symbol];
+	}
+}
+
+-(void)replaceHTMLSpanOfClass: (NSString*)class withAttributes: (NSDictionary*)attributes {
+	NSError *error = [NSError alloc];
+	NSString *pattern = [NSString stringWithFormat: @"(<span class=\"%@\">).*(</span>)", class];
+	NSRegularExpression *regexp = [[NSRegularExpression alloc] 
+		initWithPattern: pattern
+		options: 0
+		error: &error
+	];
+
+	while (true) {
+		NSTextCheckingResult *result = [regexp firstMatchInString: 
+			[self string]
+			options: 0
+			range: NSMakeRange(0, [[self string] length])];
+		if (result == nil) {
+			break;
+		}
+		NSRange first = [result rangeAtIndex: 1];
+		NSRange last = [result rangeAtIndex: 2];
+		[self deleteCharactersInRange: first];
+		last.location -= first.length;
+		[self deleteCharactersInRange: last];
+		[self setAttributes: attributes range: NSMakeRange(first.location, last.location - first.location)];
+		 
+	}
+	[regexp release];
+	[error release];
+}
+
 @end
+
 
 @implementation NSAttributedString (HTML)
 
@@ -84,10 +125,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		return nil;
 	}
 	NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString: htmlString attributes: [NSAttributedString normalAttributes]];
+	[string replaceURLEncodingsOf: @"&gt;" withSymbol: @">"];
+	[string replaceURLEncodingsOf: @"&#039;" withSymbol: @"'"];
 	[string replaceHTMLBreakWithNewline];
 	[string replaceHTMLLinksWithText];
 	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString htmlBoldAttributes]];
 	[string replaceHTMLTag: @"u" withAttributes: [NSAttributedString htmlUnderlineAttributes]];
+	[string replaceHTMLSpanOfClass: @"quote" withAttributes: [NSAttributedString htmlQuoteAttributes]];
 	[string autorelease];
 	return string;
 }
@@ -107,6 +151,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSDictionary*)htmlUnderlineAttributes {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithInt: NSUnderlineStyleSingle], NSUnderlineStyleAttributeName, nil
+	];
+}
+
++(NSDictionary*)htmlQuoteAttributes {
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSColor greenColor], NSForegroundColorAttributeName, nil
 	];
 }
 
