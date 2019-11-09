@@ -38,7 +38,7 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		[viewButton setTarget: self];
 		[viewButton setAction: @selector(didTapView)];
 		[viewButton setHidden: YES];
-		[upperTextView setDrawsBackground: YES];
+		[upperTextView setDrawsBackground: NO];
 		[upperTextView setVerticallyResizable: NO];
 		[upperTextView setEditable: NO];
 		[upperTextView setRichText: YES];
@@ -55,8 +55,9 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 }
 
 -(void)drawRect: (NSRect)rect {
-	[[NSColor blueColor] set];
-	[[NSBezierPath bezierPathWithRect: [self bounds]] fill];
+	[[NSColor colorWithDeviceRed: 0.9 green: 0.9 blue: 0.9 alpha: 0.9] set];
+	[[NSBezierPath bezierPathWithRoundedRect: [self bounds]
+		xRadius: 5 yRadius: 5] fill];
 }
 
 -(void)setFrame: (NSRect)frameRect {
