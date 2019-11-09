@@ -157,8 +157,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 +(NSDictionary*)htmlQuoteAttributes {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSColor greenColor], NSForegroundColorAttributeName, nil
+	NSColor *color = [NSColor colorWithDeviceRed: 0.3 green: 0.65 blue: 0.07 alpha: 1.0];
+	return [NSDictionary dictionaryWithObjectsAndKeys: color, 
+		NSForegroundColorAttributeName, nil
 	];
 }
 
