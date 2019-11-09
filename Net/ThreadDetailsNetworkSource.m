@@ -14,43 +14,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import "ImageNetworkSource.h"
-#import "NSURL+Utils.h"
+#import "ThreadDetailsNetworkSource.h"
+#import "Data/Thread.h"
+#import "Net/NSURL+Utils.h"
 
-@implementation ImageNetworkSource
+@implementation ThreadDetailsNetworkSource
 
--(id)initWithURL: (NSURL*)aURL {
+-(id)initWithThread: (Thread*)aThread {
 	if ((self = [super init])) {
-		URL = aURL;
-		[aURL retain];
+		thread = aThread;
 	}
 	return self;
 }
 
--(void)dealloc {
-	[super dealloc];
-	[URL release];
-}
-
 -(void)makeSynchronousRequest {
-	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
-	NSLog(@"Fetching request %@", request);
-	// TODO: - Handle errors
+	NSURL *url = [NSURL urlForThreadDetails: thread];
+	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSURLResponse *response;
 	NSError *error;
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
 		returningResponse: &response
 		error: &error];
-	if (error != nil) {
-		NSLog(@"Error fetching image! %@", error);
+	if (error) {
 		[self failure: error];
-		return;
 	}
-	NSImage *image = [[NSImage alloc] initWithData: data];
-	[self success: image];
-	[image release];
+	NSDictionary *dict = [NSJSONSerialization JSONObjectWithData: data 
+			options: 0 
+			error: &error];
+	if (error) {
+		[self failure: error];
+	}
+	Thread *detailedThread = [[Thread alloc] initWithDictionary: dict];
+	[self success: detailedThread];
 }
-
 
 @end

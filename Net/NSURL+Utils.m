@@ -15,11 +15,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "Data/Post.h"
+#import "Data/Thread.h"
 
 //BASE+Board+GeneratedImgName+ex/+s.jpg
 static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@.%@";
 static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
 static NSString *const INDEX_URL = @"https://a.4cdn.org/%@/%@.json";
+static NSString *const THREAD_DETAILS = @"https://a.4cdn.org/%@/thread/%@.json";
 
 @implementation NSURL (Utils)
 
@@ -30,6 +32,9 @@ static NSString *const INDEX_URL = @"https://a.4cdn.org/%@/%@.json";
 }
 
 +(NSURL*)urlForThumbnail: (Post*)post {
+	if ([post getImageResName] == nil) {
+		return nil;
+	}
 	NSString *urlString = [NSString stringWithFormat: THUMB_URL,
 		[post getBoard], [post getImageResName]];
 	return [NSURL URLWithString: urlString];
@@ -38,6 +43,13 @@ static NSString *const INDEX_URL = @"https://a.4cdn.org/%@/%@.json";
 +(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board {
 	NSString *urlString = [NSString stringWithFormat: INDEX_URL,
 		board, index];
+	return [NSURL URLWithString: urlString];
+}
+
++(NSURL*)urlForThreadDetails: (Thread*)thread {
+	Post *op = [thread getOP];
+	NSString *urlString = [NSString stringWithFormat: THREAD_DETAILS,
+		[op getBoard], [op getNumber]];
 	return [NSURL URLWithString: urlString];
 }
 

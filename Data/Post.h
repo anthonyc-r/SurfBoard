@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSString*)getImageResName;
 -(NSString*)getImageExt;
 -(NSString*)getBoard;
+-(NSNumber*)getNumber;
 -(void)performWithImages: (SEL)selector target: (id)target;
 -(void)performWithThumbnail: (SEL)selector target: (id)target;
 @end

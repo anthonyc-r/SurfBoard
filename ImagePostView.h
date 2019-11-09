@@ -15,7 +15,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "Data/Post.h"
+#import "Data/Thread.h"
 #import "Net/ImageNetworkSource.h"
+
+@class ImagePostView;
+
+@protocol ImagePostViewDelegate
+-(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread;
+@end
 
 @interface ImagePostView : NSView
 {
@@ -23,11 +30,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   NSTextView *upperTextView;
   CGFloat maximumPostHeight;
   ImageNetworkSource *activeImageSource;
+  NSButton *viewButton;
+  Thread *displayedThread;
+  id<ImagePostViewDelegate> delegate;
 }
 -(void)configureForPost: (Post*)post;
+-(void)configureForThread: (Thread*)thread;
 -(void)setPostBody: (NSString*)postBody;
 -(void)setImage: (NSImage*)image;
 -(CGFloat)getRequestedHeight;
 -(CGFloat)getMaximumPostHeight;
 -(void)setMaximumPostHight: (CGFloat)height;
+-(void)didTapView;
+-(void)setDelegate: (id<ImagePostViewDelegate>)aDelegate;
 @end

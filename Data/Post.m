@@ -73,6 +73,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return board;
 }
 
+-(NSNumber*)getNumber {
+	return number;
+}
+
 -(NSAttributedString*)getAttributedBody {
 	return attributedBody;
 }

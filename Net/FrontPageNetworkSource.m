@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation FrontPageNetworkSource
 
--(void)fetch {
+-(void)makeSynchronousRequest {
 	NSURL *url = [NSURL urlForIndex: [NSNumber numberWithInt: 1] ofBoard: @"g"];
 	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSLog(@"Fetching request: %@", request);
@@ -44,37 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			[threads addObject: thread];
 		}
 		NSLog(@"idx 0: %@", [threads firstObject]);
-		[successTarget performSelector: successSelector
-			onThread: [NSThread mainThread]
-			withObject: threads
-			waitUntilDone: NO];
+		[self success: threads];
 	}
-}
-
--(void)performOnSuccess: (SEL)selector target: (id)target {
-	successSelector = selector;
-	successTarget = target;
-}
-
--(void)performOnFailure: (SEL)selector target: (id)target {
-	failureSelector = selector;
-	failureTarget = target;
-}
-
--(void)connectionDidFinishLoading: (NSURLConnection*)connection {
-	NSLog(@"Finished loading");
-}
-
--(void)connection: (NSURLConnection*)connection didReceiveData: (NSData*)data {
-	NSLog(@"Did Receive Data");
-}
-
--(void)connection: (NSURLConnection*)connection didRecieveResponse: (NSURLResponse*)response {
-	NSLog(@"Received response %@", response);
-}
-
--(void)connection: (NSURLConnection*)connection didFailWithError: (NSError*)error {
-	NSLog(@"Error, %@", error);
 }
 
 @end

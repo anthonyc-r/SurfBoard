@@ -13,7 +13,15 @@
 	Actions = (
 	);
 	Outlets = (
-	    scrollView
+	    scrollView,
+	    threadWindow
+	);
+	Super = NSWindow;
+    };
+    ThreadWindow = {
+	Actions = (
+	);
+	Outlets = (
 	);
 	Super = NSWindow;
     };

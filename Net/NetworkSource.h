@@ -14,13 +14,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
-#import "Data/Thread.h"
 
-@interface NSURL (Utils)
+@interface NetworkSource: NSObject {
+	id successTarget;
+	SEL successSelector;
+	id failureTarget;
+	SEL failureSelector;
+}
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
+-(void)fetch;
+-(void)performOnSuccess: (SEL)selector target: (id)target;
+-(void)performOnFailure: (SEL)selector target: (id)target;
+-(void)success: (id)result;
+-(void)failure: (NSError*)error;
+-(void)makeSynchronousRequest;
 @end

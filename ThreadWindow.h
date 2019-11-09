@@ -13,14 +13,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#import <AppKit/AppKit.h>
+#import "GNUstepGUI/GSTable.h"
 #import "Data/Thread.h"
+#import "Net/ThreadDetailsNetworkSource.h"
 
-@interface NSURL (Utils)
+@interface ThreadWindow: NSWindow
+{
+	NSScrollView *scrollView;
+	GSTable *tableView;
+  	ThreadDetailsNetworkSource *networkSource;
+	
+}
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
+-(void)refreshForThread: (Thread*)thread;
+-(void)didFetchDetails: (Thread*)detailedThread;
+-(void)didFailToFetchDetails: (NSError*)error;
 @end

@@ -127,6 +127,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString: htmlString attributes: [NSAttributedString normalAttributes]];
 	[string replaceURLEncodingsOf: @"&gt;" withSymbol: @">"];
 	[string replaceURLEncodingsOf: @"&#039;" withSymbol: @"'"];
+	[string replaceURLEncodingsOf: @"&quot;" withSymbol: @"\""];
+	[string replaceURLEncodingsOf: @"&amp;" withSymbol: @"&"];
 	[string replaceHTMLBreakWithNewline];
 	[string replaceHTMLLinksWithText];
 	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString htmlBoldAttributes]];

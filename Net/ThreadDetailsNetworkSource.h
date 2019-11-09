@@ -14,13 +14,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#import "NetworkSource.h"
 #import "Data/Thread.h"
 
-@interface NSURL (Utils)
+@interface ThreadDetailsNetworkSource: NetworkSource {
+	Thread *thread;
+}
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
+-(id)initWithThread: (Thread*)aThread;
+
 @end

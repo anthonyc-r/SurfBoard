@@ -14,62 +14,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <AppKit/AppKit.h>
-#import "MainWindow.h"
-#import "ImagePostView.h"
-#import "NSView+NibLoadable.h"
+#import "Net/ThreadDetailsNetworkSource.h"
+#import "GNUstepGUI/GSTable.h"
 #import "Data/Thread.h"
-#import "Data/Post.h"
-#import "Net/FrontPageNetworkSource.h"
+#import "ThreadWindow.h"
+#import "ImagePostView.h"
 
-@implementation MainWindow
+@implementation ThreadWindow
 
 -(void)awakeFromNib {
 	[super awakeFromNib];
-	NSLog(@"MainWindow loaded.");
+	NSLog(@"ThreadWindow init.");
 	NSView *contentView = [self contentView];
 	NSRect frame = [contentView bounds];
 	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-	tableView = [GSTable alloc];
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	[scrollView setHasVerticalScroller: YES];
 	[self setContentView: scrollView];
-	
-	networkSource = [[FrontPageNetworkSource alloc] init];
-	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
-	NSLog(@"Fetching network source.");
+}
+
+-(void)refreshForThread: (Thread*)thread {
+	networkSource = [[ThreadDetailsNetworkSource alloc] initWithThread: thread];
+	[networkSource performOnSuccess: @selector(didFetchDetails:) target: self];
+	[networkSource performOnFailure: @selector(didFailToFetchDetails:) target: self];
 	[networkSource fetch];
 }
 
--(void)dealloc {
-	[super dealloc];
-	[scrollView release];
-	[tableView release];
+-(void)didFetchDetails: (Thread*)detailedThread {
+	NSLog(@"Fetched detailed thread");
 	[networkSource release];
-}
 
--(void)close {
-	[super close];
-	[NSApp terminate: self];
-}
-
--(void)networkSourceTest: (NSArray*)threads {
-	NSLog(@"Called network source success with thread %@", threads);
-	NSLog(@"First object: %@", [threads firstObject]);
-	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
-	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
+	NSArray *posts = [detailedThread getPosts];
 	[tableView removeFromSuperview];
-	[tableView initWithNumberOfRows: [threads count] numberOfColumns: 1];
+	//[tableView autorelease];
+	tableView = [[GSTable alloc] initWithNumberOfRows: [posts count] numberOfColumns: 1];
 	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-
-	for (int i = [threads count] - 1; i >= 0; i--) {
+	for (int i = 0; i < [posts count]; i++) {
 		NSRect frame = NSMakeRect(
 			0, 0, width, 200
 		);
 		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
-		[postView configureForThread: [threads objectAtIndex: i]];
-		[postView setDelegate: self];
-		[tableView putView: postView atRow: [threads count] - (i + 1)
+		[postView autorelease];
+		[postView configureForPost: [posts objectAtIndex: i]];
+		[tableView putView: postView atRow: [posts count] - (i + 1) 
 			column: 0 withMargins: 10];
 	}
 	NSLog(@"content: %@", [scrollView contentView]);
@@ -77,10 +65,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 }
 
--(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread {
-	NSLog(@"DidTapView on thread %@", thread);
-	[threadWindow makeKeyAndOrderFront: self];
-	[threadWindow refreshForThread: thread];
+
+-(void)didFailToFetchDetails: (NSError*)error {
+	NSLog(@"Fetched detailed thread");
+	[networkSource release];
 }
 
 @end

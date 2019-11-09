@@ -30,8 +30,14 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		maximumPostHeight = NO_MAXIMUM;
 		imageView = [[NSImageView alloc] init];
 		upperTextView = [[NSTextView alloc] init];
+		viewButton = [[NSButton alloc] init];
 		[self addSubview: imageView];
 		[self addSubview: upperTextView];
+		[self addSubview: viewButton];
+		[viewButton setTitle: @"View"];
+		[viewButton setTarget: self];
+		[viewButton setAction: @selector(didTapView)];
+		[viewButton setHidden: YES];
 		[upperTextView setDrawsBackground: YES];
 		[upperTextView setVerticallyResizable: NO];
 		[upperTextView setEditable: NO];
@@ -39,6 +45,13 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		[self layoutSubviews];
 	}
 	return self;
+}
+
+-(void)dealloc {
+	[super dealloc];
+	[imageView release];
+	[upperTextView release];
+	[viewButton release];
 }
 
 -(void)drawRect: (NSRect)rect {
@@ -51,13 +64,20 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[self layoutSubviews];
 }
 
+-(void)configureForThread: (Thread*)thread {
+	displayedThread = thread;
+	[viewButton setHidden: NO];
+	[self configureForPost: [thread getOP]];
+}
+
 -(void)configureForPost: (Post*)post {
 	[self setAttributedPostBody: [post getAttributedBody]];
-	activeImageSource = [[ImageNetworkSource alloc] initWithURL: [NSURL urlForThumbnail: post]];
-	[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
-	NSLog(@"Performing on background thread...");
-	[activeImageSource performSelectorInBackground: @selector(fetch) withObject: nil];
-	NSLog(@"Test 2");
+	NSURL *imageUrl = [NSURL urlForThumbnail: post];
+	if (imageUrl) {
+		activeImageSource = [[ImageNetworkSource alloc] initWithURL: imageUrl];
+		[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
+		[activeImageSource fetch];
+	}
 }
 
 -(void)setAttributedPostBody: (NSAttributedString*)postBody {
@@ -96,15 +116,27 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		100, 100
 	)];
 	[upperTextView setFrame: NSMakeRect(
-		120, 10, 
+		120, 40, 
 		rect.size.width - 130,
-		rect.size.height - 20
+		rect.size.height - 50
+	)];
+	[viewButton setFrame: NSMakeRect(
+		rect.size.width - 60, 10,
+		50, 20
 	)];
 }
 
 -(void)onFetchedImage: (NSImage*)image {
 	NSLog(@"Fetched image!!");
 	[imageView setImage: image];
+}
+
+-(void)setDelegate: (id<ImagePostViewDelegate>)aDelegate {
+	delegate = aDelegate;
+}
+
+-(void)didTapView {
+	[delegate imagePostView: self didTapViewOnThread: displayedThread];
 }
 
 @end
