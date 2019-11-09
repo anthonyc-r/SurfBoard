@@ -30,11 +30,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+	[scrollView setLineScroll: 25];
 	[scrollView setHasVerticalScroller: YES];
 	[self setContentView: scrollView];
 }
 
 -(void)refreshForThread: (Thread*)thread {
+	displayedThread = thread;
 	networkSource = [[ThreadDetailsNetworkSource alloc] initWithThread: thread];
 	[networkSource performOnSuccess: @selector(didFetchDetails:) target: self];
 	[networkSource performOnFailure: @selector(didFailToFetchDetails:) target: self];
@@ -70,6 +72,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didFailToFetchDetails: (NSError*)error {
 	NSLog(@"Fetched detailed thread");
 	[networkSource release];
+}
+
+-(void)refresh: (id)sender {
+	NSLog(@"Thread Window Refresh");
+	if (displayedThread) {
+		[self refreshForThread: displayedThread];
+	}
 }
 
 @end

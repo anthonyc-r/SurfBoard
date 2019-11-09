@@ -26,4 +26,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   	FrontPageNetworkSource *networkSource;
 	ThreadWindow *threadWindow;
 }
+-(void)refresh: (id)sender;
 @end

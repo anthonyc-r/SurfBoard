@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSScrollView *scrollView;
 	GSTable *tableView;
   	ThreadDetailsNetworkSource *networkSource;
+	Thread *displayedThread;
 	
 }
 
 -(void)refreshForThread: (Thread*)thread;
 -(void)didFetchDetails: (Thread*)detailedThread;
 -(void)didFailToFetchDetails: (NSError*)error;
+-(void)refresh: (id)sender;
 @end

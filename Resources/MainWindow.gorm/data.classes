@@ -1,5 +1,12 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
+    AppDelegate = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSResponder;
+    };
     BoxView = {
 	Actions = (
 	);
@@ -8,6 +15,12 @@
 	    box
 	);
 	Super = NSView;
+    };
+    FirstResponder = {
+	Actions = (
+	    "refresh:"
+	);
+	Super = NSObject;
     };
     MainWindow = {
 	Actions = (

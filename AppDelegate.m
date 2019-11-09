@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation AppDelegate 
 
-- (void) applicationDidFinishLaunching: (NSNotification*)aNotification {
+-(void)applicationDidFinishLaunching: (NSNotification*)aNotification {
 	NSLog(@"NSApp did finish launching..");
 	[NSBundle loadNibNamed: @"MainWindow" owner: self];
 }

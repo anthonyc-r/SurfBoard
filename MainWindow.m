@@ -29,16 +29,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSView *contentView = [self contentView];
 	NSRect frame = [contentView bounds];
 	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-	tableView = [GSTable alloc];
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	[scrollView setHasVerticalScroller: YES];
+	[scrollView setLineScroll: 25];
 	[self setContentView: scrollView];
-	
-	networkSource = [[FrontPageNetworkSource alloc] init];
-	[networkSource performOnSuccess: @selector(networkSourceTest:) target: self];
-	NSLog(@"Fetching network source.");
-	[networkSource fetch];
+	[self refresh: self];
+	[self becomeFirstResponder];
+
 }
 
 -(void)dealloc {
@@ -53,13 +51,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[NSApp terminate: self];
 }
 
--(void)networkSourceTest: (NSArray*)threads {
+-(void)refresh: (id)sender {
+	NSLog(@"Main window refresh?");
+	networkSource = [[FrontPageNetworkSource alloc] init];
+	[networkSource performOnSuccess: @selector(onIndexFetched:) target: self];
+	[networkSource performOnFailure: @selector(onIndexFailure:) target: self];
+	[networkSource fetch];
+}
+
+-(void)onIndexFetched: (NSArray*)threads {
+	[networkSource release];
 	NSLog(@"Called network source success with thread %@", threads);
 	NSLog(@"First object: %@", [threads firstObject]);
 	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
 	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
 	[tableView removeFromSuperview];
-	[tableView initWithNumberOfRows: [threads count] numberOfColumns: 1];
+	// TODO: - Release without crashing!?
+	//[tableView release];
+	tableView = [[GSTable alloc] initWithNumberOfRows: [threads count] numberOfColumns: 1];
 	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 
 	for (int i = [threads count] - 1; i >= 0; i--) {
@@ -75,6 +84,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"content: %@", [scrollView contentView]);
 	[scrollView setDocumentView: tableView];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
+}
+
+-(void)onFirstPageFailure: (NSError*)error {
+	[networkSource release];
+	NSLog(@"Error fetching front page: %@", error);
 }
 
 -(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread {
