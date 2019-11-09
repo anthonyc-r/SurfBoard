@@ -7,24 +7,24 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 # Build a simple Objective-C program
 VERSION = 0.1
-PACKAGE_NAME = RedditPro
-APP_NAME = RedditPro
+PACKAGE_NAME = SurfBoard
+APP_NAME = SurfBoard
 Terminal_APPLICATION_ICON =
 
 # The Objective-C files to compile
-RedditPro_OBJC_FILES = AppDelegate.m MainWindow.m ImagePostView.m TextPostView.m \
+SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m ImagePostView.m TextPostView.m \
 	NSView+NibLoadable.m Theme.m Data/Post.m Net/NSURL+Utils.m Data/Thread.m \
 	ThreadSummaryView.m Net/FrontPageNetworkSource.m Text/NSAttributedString+HTML.m \
 	Text/NSFont+AppFont.m Net/ImageNetworkSource.m ThreadWindow.m Net/NetworkSource.m \
 	Net/ThreadDetailsNetworkSource.m
 	
-RedditPro_H_FILES = AppDelegate.h MainWindow.h ImagePostView.h TextPostView.h \
+SurfBoard_H_FILES = AppDelegate.h MainWindow.h ImagePostView.h TextPostView.h \
 	NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
 	ThreadSummaryView.h Net/FrontPageNetworkSource.h Text/NSAttributedString+HTML.h \
 	Text/NSFont+AppFont.h Net/ImageNetworkSource.h ThreadWindow.h Net/NetworkSource.h \
 	Net/ThreadDetailsNetworkSource.h
 
-RedditPro_RESOURCE_FILES = Resources/MainWindow.gorm Resources/ImagePostView.gorm \
+SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm Resources/ImagePostView.gorm \
 	Resources/TextPostView.gorm
 
 

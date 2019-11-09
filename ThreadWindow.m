@@ -44,7 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didFetchDetails: (Thread*)detailedThread {
 	NSLog(@"Fetched detailed thread");
 	[networkSource release];
-
+	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
+	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
 	NSArray *posts = [detailedThread getPosts];
 	[tableView removeFromSuperview];
 	//[tableView autorelease];

@@ -1,3 +1,3 @@
-# Reddit Browser Pro
+# SurfBoard
 
-Desktop app so that I can browse /g/ in comfort.
+Desktop image board app.
