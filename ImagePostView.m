@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Net/ImageNetworkSource.h"
 #import "Net/NSURL+Utils.h"
 #import "GNUstepGUI/GSTable.h"
+#import "ClickableImageView.h"
 
 static const CGFloat TOTAL_VERTICAL_MARGIN = 20.0;
 static const CGFloat NO_MAXIMUM = 1000.0;
@@ -28,7 +29,7 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 -initWithFrame: (NSRect)frame {
 	if ((self = [super initWithFrame: frame])) {
 		maximumPostHeight = NO_MAXIMUM;
-		imageView = [[NSImageView alloc] init];
+		imageView = [[ClickableImageView alloc] initWithAction: @selector(didTapImage) target: self];
 		upperTextView = [[NSTextView alloc] init];
 		viewButton = [[NSButton alloc] init];
 		[self addSubview: imageView];
@@ -67,11 +68,13 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)configureForThread: (Thread*)thread {
 	displayedThread = thread;
+	displayedPost = [thread getOP];
 	[viewButton setHidden: NO];
 	[self configureForPost: [thread getOP]];
 }
 
 -(void)configureForPost: (Post*)post {
+	displayedPost = post;
 	[self setAttributedPostBody: [post getAttributedBody]];
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
 	if (imageUrl) {
@@ -138,6 +141,10 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)didTapView {
 	[delegate imagePostView: self didTapViewOnThread: displayedThread];
+}
+
+-(void)didTapImage {
+	[delegate imagePostView: self didTapImageOnPost: displayedPost];
 }
 
 @end

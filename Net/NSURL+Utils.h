@@ -23,4 +23,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSURL*)urlForThumbnail: (Post*)post;
 +(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
 +(NSURL*)urlForThreadDetails: (Thread*)thread;
++(NSURL*)urlForFullPostImage: (Post*)post;
 @end

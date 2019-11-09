@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Thread.h"
 #import "ThreadWindow.h"
 #import "ImagePostView.h"
+#import "ClickableImageView.h"
 
 @implementation ThreadWindow
 
@@ -60,6 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
 		[postView autorelease];
 		[postView configureForPost: [posts objectAtIndex: i]];
+		[postView setDelegate: self];
 		[tableView putView: postView atRow: [posts count] - (i + 1) 
 			column: 0 withMargins: 10];
 	}
@@ -79,6 +81,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (displayedThread) {
 		[self refreshForThread: displayedThread];
 	}
+}
+
+-(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread {
+
+}
+
+-(void)imagePostView: (ImagePostView*)imagePostView didTapImageOnPost: (Post*)post {
+	NSLog(@"Did tap image on post %@", post);
+	[imageWindow makeKeyAndOrderFront: self];
+	[imageWindow loadImageForPost: post];
 }
 
 @end

@@ -22,12 +22,22 @@
 	);
 	Super = NSObject;
     };
+    ImageWindow = {
+	Actions = (
+	);
+	Outlets = (
+	    imageView,
+	    newOutlet
+	);
+	Super = NSWindow;
+    };
     MainWindow = {
 	Actions = (
 	);
 	Outlets = (
 	    scrollView,
-	    threadWindow
+	    threadWindow,
+	    imageWindow
 	);
 	Super = NSWindow;
     };
@@ -35,6 +45,7 @@
 	Actions = (
 	);
 	Outlets = (
+	    imageWindow
 	);
 	Super = NSWindow;
     };

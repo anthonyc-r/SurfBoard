@@ -17,13 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "GNUstepGUI/GSTable.h"
 #import "Data/Thread.h"
 #import "Net/ThreadDetailsNetworkSource.h"
+#import "ImageWindow.h"
+#import "ImagePostView.h"
 
-@interface ThreadWindow: NSWindow
+@interface ThreadWindow: NSWindow<ImagePostViewDelegate>
 {
 	NSScrollView *scrollView;
 	GSTable *tableView;
   	ThreadDetailsNetworkSource *networkSource;
 	Thread *displayedThread;
+	ImageWindow *imageWindow;
 	
 }
 

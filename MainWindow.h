@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "GNUstepGUI/GSTable.h"
 #import "ImagePostView.h"
 #import "ThreadWindow.h"
+#import "ImageWindow.h"
 
 @interface MainWindow : NSWindow<ImagePostViewDelegate>
 {
@@ -25,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	GSTable *tableView;
   	FrontPageNetworkSource *networkSource;
 	ThreadWindow *threadWindow;
+	ImageWindow *imageWindow;
 }
 -(void)refresh: (id)sender;
 @end

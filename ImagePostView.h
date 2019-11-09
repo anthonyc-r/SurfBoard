@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @protocol ImagePostViewDelegate
 -(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread;
+-(void)imagePostView: (ImagePostView*)imagePostView didTapImageOnPost: (Post*)post;
 @end
 
 @interface ImagePostView : NSView
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ImageNetworkSource *activeImageSource;
   NSButton *viewButton;
   Thread *displayedThread;
+  Post *displayedPost;
   id<ImagePostViewDelegate> delegate;
 }
 -(void)configureForPost: (Post*)post;
@@ -43,4 +45,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)setMaximumPostHight: (CGFloat)height;
 -(void)didTapView;
 -(void)setDelegate: (id<ImagePostViewDelegate>)aDelegate;
+-(void)didTapImage;
 @end

@@ -97,4 +97,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[threadWindow refreshForThread: thread];
 }
 
+-(void)imagePostView: (ImagePostView*)imagePostView didTapImageOnPost: (Post*)post {
+	NSLog(@"Did tap image on post %@", post);
+	[imageWindow makeKeyAndOrderFront: self];
+	[imageWindow loadImageForPost: post];
+}
+
 @end
