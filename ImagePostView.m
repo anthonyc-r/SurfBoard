@@ -32,9 +32,11 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		imageView = [[ClickableImageView alloc] initWithAction: @selector(didTapImage) target: self];
 		upperTextView = [[NSTextView alloc] init];
 		viewButton = [[NSButton alloc] init];
+		headlineLabel = [[NSTextView alloc] init];
 		[self addSubview: imageView];
 		[self addSubview: upperTextView];
 		[self addSubview: viewButton];
+		[self addSubview: headlineLabel];
 		[viewButton setTitle: @"View"];
 		[viewButton setTarget: self];
 		[viewButton setAction: @selector(didTapView)];
@@ -43,6 +45,9 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 		[upperTextView setVerticallyResizable: NO];
 		[upperTextView setEditable: NO];
 		[upperTextView setRichText: YES];
+		[headlineLabel setDrawsBackground: NO];
+		[headlineLabel setEditable: NO];
+		[headlineLabel setRichText: YES];
 		[self layoutSubviews];
 	}
 	return self;
@@ -53,6 +58,7 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[imageView release];
 	[upperTextView release];
 	[viewButton release];
+	[headlineLabel release];
 }
 
 -(void)drawRect: (NSRect)rect {
@@ -75,6 +81,7 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)configureForPost: (Post*)post {
 	displayedPost = post;
+	[headlineLabel setText: [post getHeadline]];
 	[self setAttributedPostBody: [post getAttributedBody]];
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
 	if (imageUrl) {
@@ -115,14 +122,18 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)layoutSubviews {
 	NSRect rect = [self bounds];
+	[headlineLabel setFrame: NSMakeRect(
+		10, rect.size.height - 20,
+		rect.size.width - 20, 10
+	)];
 	[imageView setFrame: NSMakeRect(
-		10, rect.size.height - 110, 
+		10, rect.size.height - 130, 
 		100, 100
 	)];
 	[upperTextView setFrame: NSMakeRect(
 		120, 40, 
 		rect.size.width - 130,
-		rect.size.height - 50
+		rect.size.height - 70
 	)];
 	[viewButton setFrame: NSMakeRect(
 		rect.size.width - 60, 10,

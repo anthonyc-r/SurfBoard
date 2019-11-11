@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   CGFloat maximumPostHeight;
   ImageNetworkSource *activeImageSource;
   NSButton *viewButton;
+  NSTextView *headlineLabel;
   Thread *displayedThread;
   Post *displayedPost;
   id<ImagePostViewDelegate> delegate;

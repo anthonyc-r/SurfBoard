@@ -31,6 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		} else {
 			attributedBody = nil;
 		}
+		NSNumber *time = [dict objectForKey: @"time"];
+		if (time) {
+			postDate = [NSDate dateWithTimeIntervalSince1970: 
+				[time doubleValue]];
+		}
 		userName = [dict objectForKey: @"name"];
 		[userName retain];
 		imageExt = [dict objectForKey: @"ext"];
@@ -79,6 +84,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(NSAttributedString*)getAttributedBody {
 	return attributedBody;
+}
+
+-(NSString*)getSubject {
+	return subject;
+}
+
+-(NSString*)getUserName {
+	return userName;
+}
+
+-(NSDate*)getPostDate {
+	return postDate;
+}
+
+-(NSString*)getFormattedPostDate {
+	// TODO: - Convert expensive formatter to singleton util class
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat: @"dd/MM/yy(EEE)HH:mm:ss"];
+	return [formatter stringFromDate: [self getPostDate]];
+}
+
+-(NSString*)getHeadline {
+	if ([self getSubject]) {
+		return [NSString stringWithFormat: @"%@ %@ %@ No.%@",
+			[self getSubject], [self getUserName],
+			[self getFormattedPostDate], [self getNumber]];
+	} else {
+		return [NSString stringWithFormat: @"%@ %@ No.%@",
+			[self getUserName], [self getFormattedPostDate],
+			[self getNumber]];
+	}
+}
+
+-(NSAttributedString*)getAttributedHeadline {
+	return nil; // TODO: - Implement.
 }
 
 -(void)performWithImages: (SEL)selector target: (id)target {

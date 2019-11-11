@@ -36,10 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)setBody: (NSString*)bodyContent;
 -(NSString*)getBody;
 -(NSAttributedString*)getAttributedBody;
+-(NSString*)getHeadline;
+-(NSAttributedString*)getAttributedHeadline;
 -(NSString*)getImageResName;
 -(NSString*)getImageExt;
 -(NSString*)getBoard;
+-(NSString*)getSubject;
+-(NSString*)getUserName;
+-(NSString*)getFormattedPostDate;
 -(NSNumber*)getNumber;
+-(NSDate*)getPostDate;
 -(void)performWithImages: (SEL)selector target: (id)target;
 -(void)performWithThumbnail: (SEL)selector target: (id)target;
 @end
