@@ -81,7 +81,7 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)configureForPost: (Post*)post {
 	displayedPost = post;
-	[headlineLabel setText: [post getHeadline]];
+	[headlineLabel replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedHeadline]];
 	[self setAttributedPostBody: [post getAttributedBody]];
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
 	if (imageUrl) {

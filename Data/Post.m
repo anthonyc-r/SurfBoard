@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "Post.h"
 #import "Text/NSAttributedString+HTML.h"
+#import "Text/NSAttributedString+AppAttributes.h"
 
 @implementation Post
 
@@ -118,7 +119,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(NSAttributedString*)getAttributedHeadline {
-	return nil; // TODO: - Implement.
+	NSLog(@"TEST");
+	NSString *headline = [self getHeadline];
+	NSMutableAttributedString *attributedHeadline =
+		[[NSMutableAttributedString alloc] initWithString: headline];
+	[attributedHeadline autorelease];
+	NSRange targetRange = NSMakeRange(0, 0);
+	if ([self getSubject]) {
+		targetRange = [headline rangeOfString: [self getSubject]];
+		[attributedHeadline 
+			setAttributes:[NSAttributedString postSubjectAttributes]
+			range:targetRange
+		];
+	}
+	targetRange = [headline rangeOfString: [self getUserName]];
+	[attributedHeadline 
+		setAttributes: [NSAttributedString postNameAttributes] 
+		range: targetRange
+	];
+	targetRange = [headline rangeOfString: [self getFormattedPostDate]];
+	[attributedHeadline 
+		setAttributes: [NSAttributedString postDateAttributes] 
+		range: targetRange
+	];
+	targetRange = [headline rangeOfString: [[self getNumber] description]];
+	[attributedHeadline 
+		setAttributes: [NSAttributedString postNumberAttributes] 
+		range: targetRange
+	]; 
+	return attributedHeadline;
 }
 
 -(void)performWithImages: (SEL)selector target: (id)target {

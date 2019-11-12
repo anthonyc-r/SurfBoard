@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "NSFont+AppFont.h"
+#import "NSAttributedString+AppAttributes.h"
 
 @implementation NSMutableAttributedString (HTML)
 
@@ -131,36 +132,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[string replaceURLEncodingsOf: @"&amp;" withSymbol: @"&"];
 	[string replaceHTMLBreakWithNewline];
 	[string replaceHTMLLinksWithText];
-	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString htmlBoldAttributes]];
-	[string replaceHTMLTag: @"u" withAttributes: [NSAttributedString htmlUnderlineAttributes]];
-	[string replaceHTMLSpanOfClass: @"quote" withAttributes: [NSAttributedString htmlQuoteAttributes]];
+	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString postBoldAttributes]];
+	[string replaceHTMLTag: @"u" withAttributes: [NSAttributedString postUnderlineAttributes]];
+	[string replaceHTMLSpanOfClass: @"quote" withAttributes: [NSAttributedString postQuoteAttributes]];
 	[string autorelease];
 	return string;
-}
-
-+(NSDictionary*)normalAttributes {
-	return [NSDictionary dictionaryWithObjectsAndKeys: 
-		[NSFont appBodyFont], NSFontAttributeName, nil
-	];
-}
-
-+(NSDictionary*)htmlBoldAttributes {
-	return [NSDictionary dictionaryWithObjectsAndKeys: 
-		[NSFont appBoldBodyFont], NSFontAttributeName, nil
-	];
-}
-
-+(NSDictionary*)htmlUnderlineAttributes {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithInt: NSUnderlineStyleSingle], NSUnderlineStyleAttributeName, nil
-	];
-}
-
-+(NSDictionary*)htmlQuoteAttributes {
-	NSColor *color = [NSColor colorWithDeviceRed: 0.3 green: 0.65 blue: 0.07 alpha: 1.0];
-	return [NSDictionary dictionaryWithObjectsAndKeys: color, 
-		NSForegroundColorAttributeName, nil
-	];
 }
 
 @end
