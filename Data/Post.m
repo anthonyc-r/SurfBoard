@@ -132,22 +132,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			range:targetRange
 		];
 	}
-	targetRange = [headline rangeOfString: [self getUserName]];
-	[attributedHeadline 
-		setAttributes: [NSAttributedString postNameAttributes] 
-		range: targetRange
-	];
-	targetRange = [headline rangeOfString: [self getFormattedPostDate]];
-	[attributedHeadline 
-		setAttributes: [NSAttributedString postDateAttributes] 
-		range: targetRange
-	];
-	targetRange = [headline rangeOfString: [[self getNumber] description]];
-	[attributedHeadline 
-		setAttributes: [NSAttributedString postNumberAttributes] 
-		range: targetRange
-	]; 
+	if ([self getUserName]) {
+		targetRange = [headline rangeOfString: [self getUserName]];
+		[attributedHeadline 
+			setAttributes: [NSAttributedString postNameAttributes] 
+			range: targetRange
+		];
+	}
+	if ([self getFormattedPostDate]) {
+		targetRange = [headline rangeOfString: 
+			[self getFormattedPostDate]];
+		[attributedHeadline 
+			setAttributes: [NSAttributedString postDateAttributes] 
+			range: targetRange
+		];
+	}
+	if ([self getNumber]) {
+		targetRange = [headline rangeOfString: 
+			[[self getNumber] description]];
+		[attributedHeadline 
+			setAttributes: [NSAttributedString postNumberAttributes] 
+			range: targetRange
+		]; 
+	}
 	return attributedHeadline;
+}
+
+-(BOOL)hasImage {
+	return imageResName != nil && ![imageExt isEqualToString: @"webm"];;
 }
 
 -(void)performWithImages: (SEL)selector target: (id)target {

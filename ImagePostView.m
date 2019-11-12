@@ -81,18 +81,16 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 
 -(void)configureForPost: (Post*)post {
 	displayedPost = post;
-	[headlineLabel replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedHeadline]];
-	[self setAttributedPostBody: [post getAttributedBody]];
+	[headlineLabel replaceCharactersInRange: NSMakeRange(0, 0)
+		withAttributedString: [post getAttributedHeadline]];
+	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) 
+		withAttributedString: [post getAttributedBody]];
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
 	if (imageUrl) {
 		activeImageSource = [[ImageNetworkSource alloc] initWithURL: imageUrl];
 		[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
 		[activeImageSource fetch];
 	}
-}
-
--(void)setAttributedPostBody: (NSAttributedString*)postBody {
-	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: postBody];
 }
 
 -(void)setPostBody: (NSString*)postBody {

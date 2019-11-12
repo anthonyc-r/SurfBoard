@@ -18,7 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface TextPostView : NSView
 {
-  id textView;
+  id upperTextView;
+  id headlineLabel;
+  Post *displayedPost;
+  CGFloat maximumPostHeight;
 }
 
 -(void)configureForPost: (Post*)post;

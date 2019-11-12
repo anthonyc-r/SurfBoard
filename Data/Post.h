@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSString*)getFormattedPostDate;
 -(NSNumber*)getNumber;
 -(NSDate*)getPostDate;
+-(BOOL)hasImage;
 -(void)performWithImages: (SEL)selector target: (id)target;
 -(void)performWithThumbnail: (SEL)selector target: (id)target;
 @end

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "ThreadWindow.h"
 #import "ImagePostView.h"
 #import "ClickableImageView.h"
+#import "TextPostView.h"
 
 @implementation ThreadWindow
 
@@ -58,11 +59,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		NSRect frame = NSMakeRect(
 			0, 0, width, 200
 		);
-		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
-		[postView autorelease];
-		[postView configureForPost: [posts objectAtIndex: i]];
-		[postView setDelegate: self];
-		[tableView putView: postView atRow: [posts count] - (i + 1) 
+		Post *post = [posts objectAtIndex: i];
+		NSView *view;
+		if ([post hasImage]) {
+			ImagePostView *postView = [[ImagePostView alloc] 
+				initWithFrame: frame];
+			[postView autorelease];
+			[postView configureForPost: post];
+			[postView setDelegate: self];
+			view = postView;
+		} else {
+			TextPostView *postView = [[TextPostView alloc]
+				initWithFrame: frame];
+			[postView autorelease];
+			[postView configureForPost: post];
+			view = postView;
+		}
+		[tableView putView: view atRow: [posts count] - (i + 1) 
 			column: 0 withMargins: 10];
 	}
 	NSLog(@"content: %@", [scrollView contentView]);

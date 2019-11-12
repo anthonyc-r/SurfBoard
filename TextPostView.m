@@ -16,23 +16,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <AppKit/AppKit.h>
 #include "TextPostView.h"
 
+static const CGFloat NO_MAXIMUM = 1000.0;
+
 @implementation TextPostView
 
 -initWithFrame: (NSRect)frame {
 	if ((self = [super initWithFrame: frame])) {
-		textView = [[NSTextView alloc] init];
-		[textView setDrawsBackground: YES];
-		[textView setRichText: YES];
-		[textView setEditable: NO];
-		[self addSubview: textView];
+		maximumPostHeight = NO_MAXIMUM;
+		upperTextView = [[NSTextView alloc] init];
+		headlineLabel = [[NSTextView alloc] init];
+		[self addSubview: upperTextView];
+		[self addSubview: headlineLabel];
+		[upperTextView setDrawsBackground: NO];
+		[upperTextView setVerticallyResizable: NO];
+		[upperTextView setEditable: NO];
+		[upperTextView setRichText: YES];
+		[headlineLabel setDrawsBackground: NO];
+		[headlineLabel setEditable: NO];
+		[headlineLabel setRichText: YES];
 		[self layoutSubviews];
 	}
 	return self;
 }
 
+-(void)dealloc {
+	[super dealloc];
+	[upperTextView release];
+	[headlineLabel release];
+}
+
 -(void)drawRect: (NSRect)rect {
-	[[NSColor blueColor] set];
-	[[NSBezierPath bezierPathWithRect: [self bounds]] fill];
+	[[NSColor colorWithDeviceRed: 0.9 green: 0.9 blue: 0.9 alpha: 0.9] set];
+	[[NSBezierPath bezierPathWithRoundedRect: [self bounds]
+		xRadius: 5 yRadius: 5] fill];
 }
 
 -(void)setFrame: (NSRect)frameRect {
@@ -41,15 +57,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)configureForPost: (Post*)post {
-	[textView replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedBody]];
+	displayedPost = post;
+	[headlineLabel replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedHeadline]];
+	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) 
+		withAttributedString: [post getAttributedBody]];
 }
 
--(void) layoutSubviews {
-	NSRect frame = [self frame];
-	[textView setFrame: NSMakeRect(
-		10, 10,
-		frame.size.width - 20,
-		frame.size.height - 20
+-(void)layoutSubviews {
+	NSRect rect = [self bounds];
+	[headlineLabel setFrame: NSMakeRect(
+		10, rect.size.height - 20,
+		rect.size.width - 20, 10
+	)];
+	[upperTextView setFrame: NSMakeRect(
+		10, 10, 
+		rect.size.width - 20,
+		rect.size.height - 40
 	)];
 }
 
