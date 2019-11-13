@@ -38,6 +38,7 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 		if (time) {
 			postDate = [NSDate dateWithTimeIntervalSince1970: 
 				[time doubleValue]];
+			[postDate retain];
 		}
 		userName = [dict objectForKey: @"name"];
 		[userName retain];
@@ -56,7 +57,16 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 }
 
 -(void)deinit {
-	// TODO: - Release everything.
+	[number release];
+	[body release];
+	[attributedBody release];
+	[postDate release];
+	[userName release];
+	[imageExt release];
+	[imageName release];
+	[subject release];
+	[imageResName release];
+	[board release];
 }
 
 -(NSString*)getBody {
