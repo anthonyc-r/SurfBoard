@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Text/NSAttributedString+HTML.h"
 #import "Text/NSAttributedString+AppAttributes.h"
 
+static const NSUInteger MAX_SUBJECT_LEN = 25;
+
 @implementation Post
 
 -(id)initWithDictionary: (NSDictionary*)dict board: (NSString*)aBoard {
@@ -99,6 +101,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return postDate;
 }
 
+-(NSString*)getClippedSubject {
+	if ([subject length] > MAX_SUBJECT_LEN) {
+		NSString *clipped = [subject substringToIndex: MAX_SUBJECT_LEN];
+		return [NSString stringWithFormat: @"%@\u2026", clipped];
+	} else {
+		return subject;
+	}
+}
+
 -(NSString*)getFormattedPostDate {
 	// TODO: - Convert expensive formatter to singleton util class
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -109,7 +120,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSString*)getHeadline {
 	if ([self getSubject]) {
 		return [NSString stringWithFormat: @"%@ %@ %@ No.%@",
-			[self getSubject], [self getUserName],
+			[self getClippedSubject], [self getUserName],
 			[self getFormattedPostDate], [self getNumber]];
 	} else {
 		return [NSString stringWithFormat: @"%@ %@ No.%@",
@@ -125,8 +136,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[[NSMutableAttributedString alloc] initWithString: headline];
 	[attributedHeadline autorelease];
 	NSRange targetRange = NSMakeRange(0, 0);
-	if ([self getSubject]) {
-		targetRange = [headline rangeOfString: [self getSubject]];
+	if ([self getClippedSubject]) {
+		targetRange = [headline rangeOfString: [self getClippedSubject]];
 		[attributedHeadline 
 			setAttributes:[NSAttributedString postSubjectAttributes]
 			range:targetRange

@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSString*)getImageExt;
 -(NSString*)getBoard;
 -(NSString*)getSubject;
+-(NSString*)getClippedSubject;
 -(NSString*)getUserName;
 -(NSString*)getFormattedPostDate;
 -(NSNumber*)getNumber;
