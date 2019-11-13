@@ -13,6 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <math.h>
+
 #import <AppKit/AppKit.h>
 #import "ImagePostView.h"
 #import "Net/ImageNetworkSource.h"
@@ -20,15 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "GNUstepGUI/GSTable.h"
 #import "ClickableImageView.h"
 
-static const CGFloat TOTAL_VERTICAL_MARGIN = 20.0;
-static const CGFloat NO_MAXIMUM = 1000.0;
+static const CGFloat TOTAL_VERTICAL_MARGIN = 90.0;
+static const CGFloat MINIMUM_HEIGHT = 170.0;
+static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 @implementation ImagePostView
 
 
 -initWithFrame: (NSRect)frame {
 	if ((self = [super initWithFrame: frame])) {
-		maximumPostHeight = NO_MAXIMUM;
+		maximumPostHeight = DEFAULT_MAXIMUM;
 		imageView = [[ClickableImageView alloc] initWithAction: @selector(didTapImage) target: self];
 		upperTextView = [[NSTextView alloc] init];
 		viewButton = [[NSButton alloc] init];
@@ -61,15 +64,15 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[headlineLabel release];
 }
 
+-(void)setFrame: (NSRect)frame {
+	[super setFrame: frame];
+	[self layoutSubviews];
+}
+
 -(void)drawRect: (NSRect)rect {
 	[[NSColor colorWithDeviceRed: 0.9 green: 0.9 blue: 0.9 alpha: 0.9] set];
 	[[NSBezierPath bezierPathWithRoundedRect: [self bounds]
 		xRadius: 5 yRadius: 5] fill];
-}
-
--(void)setFrame: (NSRect)frameRect {
-	[super setFrame: frameRect];
-	[self layoutSubviews];
 }
 
 -(void)configureForThread: (Thread*)thread {
@@ -103,7 +106,14 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 }
 
 -(CGFloat)getRequestedHeight {
-	return [upperTextView frame].size.height + TOTAL_VERTICAL_MARGIN;
+	NSAttributedString *displayedBody = [displayedPost getAttributedBody];
+	CGFloat width = [upperTextView frame].size.width;
+	NSRect rect = [displayedBody 
+		boundingRectWithSize: NSMakeSize(width, maximumPostHeight) 
+		options: NSStringDrawingUsesLineFragmentOrigin];
+	NSLog(@"calculated frame height: %f, %f", rect.size.width, rect.size.height);
+	return fmax(rect.size.height + TOTAL_VERTICAL_MARGIN, MINIMUM_HEIGHT);
+	
 }
 
 -(CGFloat)getMaximumPostHeight {

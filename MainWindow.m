@@ -77,6 +77,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		);
 		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
 		[postView configureForThread: [threads objectAtIndex: i]];
+		frame.size.height = [postView getRequestedHeight];
+		[postView setFrame: frame];
 		[postView setDelegate: self];
 		[tableView putView: postView atRow: [threads count] - (i + 1)
 			column: 0 withMargins: 10];

@@ -56,7 +56,8 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 	return self;
 }
 
--(void)deinit {
+-(void)dealloc {
+	[super dealloc];
 	[number release];
 	[body release];
 	[attributedBody release];
