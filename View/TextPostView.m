@@ -16,13 +16,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <AppKit/AppKit.h>
 #include "TextPostView.h"
 
-static const CGFloat NO_MAXIMUM = 1000.0;
+static const CGFloat TOTAL_VERTICAL_MARGIN = 60.0;
+static const CGFloat MINIMUM_HEIGHT = 75.0;
+static const CGFloat DEFAULT_MAXIMUM = 300.0;
+
+// TODO: - Reduce copypaste between post and image post.
 
 @implementation TextPostView
 
 -initWithFrame: (NSRect)frame {
 	if ((self = [super initWithFrame: frame])) {
-		maximumPostHeight = NO_MAXIMUM;
+		maximumPostHeight = DEFAULT_MAXIMUM;
 		upperTextView = [[NSTextView alloc] init];
 		headlineLabel = [[NSTextView alloc] init];
 		[self addSubview: upperTextView];
@@ -61,6 +65,17 @@ static const CGFloat NO_MAXIMUM = 1000.0;
 	[headlineLabel replaceCharactersInRange: NSMakeRange(0, 0) withAttributedString: [post getAttributedHeadline]];
 	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) 
 		withAttributedString: [post getAttributedBody]];
+}
+
+-(CGFloat)getRequestedHeight {
+	NSAttributedString *displayedBody = [displayedPost getAttributedBody];
+	CGFloat width = [upperTextView frame].size.width;
+	NSRect rect = [displayedBody 
+		boundingRectWithSize: NSMakeSize(width, maximumPostHeight) 
+		options: NSStringDrawingUsesLineFragmentOrigin];
+	NSLog(@"calculated frame height: %f, %f", rect.size.width, rect.size.height);
+	return fmax(rect.size.height + TOTAL_VERTICAL_MARGIN, MINIMUM_HEIGHT);
+	
 }
 
 -(void)layoutSubviews {

@@ -66,6 +66,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				initWithFrame: frame];
 			[postView autorelease];
 			[postView configureForPost: post];
+			frame.size.height = [postView getRequestedHeight];
+			[postView setFrame: frame];
 			[postView setDelegate: self];
 			view = postView;
 		} else {
@@ -73,6 +75,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				initWithFrame: frame];
 			[postView autorelease];
 			[postView configureForPost: post];
+			frame.size.height = [postView getRequestedHeight];
+			[postView setFrame: frame];
 			view = postView;
 		}
 		[tableView putView: view atRow: [posts count] - (i + 1) 

@@ -13,17 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "Data/Post.h"
 
-@interface TextPostView : NSView
-{
-  id upperTextView;
-  id headlineLabel;
-  Post *displayedPost;
-  CGFloat maximumPostHeight;
-}
+@protocol PostHeightAware
 
--(void)configureForPost: (Post*)post;
--(CGFloat)getRequestedHeight;
+-(Post*)displayedPost;
+-(CGFloat)totalVerticalMargin;
+-(CGFloat)requestedHeight;
+
 @end
