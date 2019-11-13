@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Thread.h"
 #import "Net/ThreadDetailsNetworkSource.h"
 #import "ImageWindow.h"
-#import "ImagePostView.h"
+#import "View/ImagePostView.h"
 
 @interface ThreadWindow: NSWindow<ImagePostViewDelegate>
 {

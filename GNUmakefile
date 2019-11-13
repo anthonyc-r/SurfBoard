@@ -12,18 +12,18 @@ APP_NAME = SurfBoard
 Terminal_APPLICATION_ICON =
 
 # The Objective-C files to compile
-SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m ImagePostView.m TextPostView.m \
-	NSView+NibLoadable.m Theme.m Data/Post.m Net/NSURL+Utils.m Data/Thread.m \
-	ThreadSummaryView.m Net/FrontPageNetworkSource.m Text/NSAttributedString+HTML.m \
+SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/ImagePostView.m View/TextPostView.m \
+	View/NSView+NibLoadable.m Theme.m Data/Post.m Net/NSURL+Utils.m Data/Thread.m \
+	View/ThreadSummaryView.m Net/FrontPageNetworkSource.m Text/NSAttributedString+HTML.m \
 	Text/NSFont+AppFont.m Net/ImageNetworkSource.m ThreadWindow.m Net/NetworkSource.m \
-	Net/ThreadDetailsNetworkSource.m ImageWindow.m ClickableImageView.m \
+	Net/ThreadDetailsNetworkSource.m ImageWindow.m View/ClickableImageView.m \
 	Text/NSAttributedString+AppAttributes.m
 	
-SurfBoard_H_FILES = AppDelegate.h MainWindow.h ImagePostView.h TextPostView.h \
-	NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
-	ThreadSummaryView.h Net/FrontPageNetworkSource.h Text/NSAttributedString+HTML.h \
+SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/ImagePostView.h View/TextPostView.h \
+	View/NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
+	View/ThreadSummaryView.h Net/FrontPageNetworkSource.h Text/NSAttributedString+HTML.h \
 	Text/NSFont+AppFont.h Net/ImageNetworkSource.h ThreadWindow.h Net/NetworkSource.h \
-	Net/ThreadDetailsNetworkSource.h ImageWindow.h ClickableImageView.h \
+	Net/ThreadDetailsNetworkSource.h ImageWindow.h View/ClickableImageView.h \
 	Text/NSAttributedString+AppAttributes.h
 
 SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm Resources/ImagePostView.gorm \

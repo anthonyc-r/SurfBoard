@@ -15,8 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "MainWindow.h"
-#import "ImagePostView.h"
-#import "NSView+NibLoadable.h"
+#import "View/ImagePostView.h"
+#import "View/NSView+NibLoadable.h"
 #import "Data/Thread.h"
 #import "Data/Post.h"
 #import "Net/FrontPageNetworkSource.h"
