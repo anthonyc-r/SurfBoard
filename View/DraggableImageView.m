@@ -15,18 +15,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "Data/Post.h"
-#import "Net/ImageNetworkSource.h"
-#import "View/ZoomingScrollView.h"
+#import "DraggableImageView.h"
 
-@interface ImageWindow: NSWindow {
-	ZoomingScrollView *scrollView;
-	NSImageView *imageView;
-	ImageNetworkSource *networkSource;
+@implementation DraggableImageView
+-(void)mouseDown: (NSEvent*)event {
+	// Prevent default implementation from stealing mouseDragged events.
 }
-
--(void)loadImageForPost: (Post*)post;
--(void)onFetchImage: (NSImage*)image;
--(void)onFetchFail: (NSError*)error;
-
 @end

@@ -17,12 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import "ImageWindow.h"
 #import "Net/NSURL+Utils.h"
+#import "View/DraggableImageView.h"
 
 @implementation ImageWindow
 
 -(void)dealloc {
 	[super dealloc];
 	[networkSource release];
+}
+
+-(void)awakeFromNib {
+	[super awakeFromNib];
+	NSRect bounds = [[self contentView] bounds];
+	imageView = [[DraggableImageView alloc] initWithFrame: bounds];
+	[imageView setImageScaling: NSImageScaleProportionallyUpOrDown];
+	[scrollView setDocumentView: imageView];
+	[scrollView setHasHorizontalScroller: NO];
+	[scrollView setHasVerticalScroller: NO];
 }
 
 -(void)loadImageForPost: (Post*)post {
@@ -36,7 +47,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)onFetchImage: (NSImage*)image {
 	NSLog(@"Image window fetched image, %@", image);
 	[imageView setImage: image];
+	NSRect bounds = [[self contentView] bounds];
+	[imageView setFrame: bounds];	
+	// TODO: - Fix crash on release...
 	//[networkSource release];
+	[self setNextResponder: nil];
+	[self becomeFirstResponder];
 }
 
 -(void)onFetchFail: (NSError*)error {
