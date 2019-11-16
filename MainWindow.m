@@ -15,7 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "MainWindow.h"
-#import "View/ImagePostView.h"
+#import "View/PostView.h"
 #import "View/NSView+NibLoadable.h"
 #import "Data/Thread.h"
 #import "Data/Post.h"
@@ -62,7 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)onIndexFetched: (NSArray*)threads {
 	[networkSource release];
 	NSLog(@"Called network source success with thread %@", threads);
-	NSLog(@"First object: %@", [threads firstObject]);
 	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
 	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
 	[tableView removeFromSuperview];
@@ -75,7 +74,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		NSRect frame = NSMakeRect(
 			0, 0, width, 200
 		);
-		ImagePostView *postView = [[ImagePostView alloc] initWithFrame: frame];
+		PostView *postView = [[PostView alloc] initWithFrame: frame];
 		[postView configureForThread: [threads objectAtIndex: i]];
 		frame.size.height = [postView getRequestedHeight];
 		[postView setFrame: frame];
@@ -83,7 +82,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[tableView putView: postView atRow: [threads count] - (i + 1)
 			column: 0 withMargins: 10];
 	}
-	NSLog(@"content: %@", [scrollView contentView]);
 	[scrollView setDocumentView: tableView];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 }
@@ -93,13 +91,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Error fetching front page: %@", error);
 }
 
--(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread {
+-(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread {
 	NSLog(@"DidTapView on thread %@", thread);
 	[threadWindow makeKeyAndOrderFront: self];
 	[threadWindow refreshForThread: thread];
 }
 
--(void)imagePostView: (ImagePostView*)imagePostView didTapImageOnPost: (Post*)post {
+-(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post {
 	NSLog(@"Did tap image on post %@", post);
 	[imageWindow makeKeyAndOrderFront: self];
 	[imageWindow loadImageForPost: post];

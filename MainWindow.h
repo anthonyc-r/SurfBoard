@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import "Net/FrontPageNetworkSource.h"
 #import "GNUstepGUI/GSTable.h"
-#import "View/ImagePostView.h"
+#import "View/PostView.h"
 #import "ThreadWindow.h"
 #import "ImageWindow.h"
 
-@interface MainWindow : NSWindow<ImagePostViewDelegate>
+@interface MainWindow : NSWindow<PostViewDelegate>
 {
 	NSScrollView *scrollView;
 	GSTable *tableView;

@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			[thread autorelease];
 			[threads addObject: thread];
 		}
-		NSLog(@"idx 0: %@", [threads firstObject]);
 		[self success: threads];
 	}
 }

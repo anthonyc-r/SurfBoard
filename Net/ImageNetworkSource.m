@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)makeSynchronousRequest {
 	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
-	NSLog(@"Fetching request %@", request);
 	// TODO: - Handle errors
 	NSURLResponse *response;
 	NSError *error;

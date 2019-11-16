@@ -67,4 +67,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return [NSAttributedString normalAttributes];
 }
 
++(NSDictionary*)linkAttributesForLink: (NSString*)link {
+	return [NSDictionary dictionaryWithObjectsAndKeys: 
+		link, NSLinkAttributeName, nil
+	];
+}
+
 @end

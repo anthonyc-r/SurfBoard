@@ -16,26 +16,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #import <AppKit/AppKit.h>
-#import "ImagePostView.h"
+#import "PostView.h"
 #import "Net/ImageNetworkSource.h"
 #import "Net/NSURL+Utils.h"
 #import "GNUstepGUI/GSTable.h"
 #import "ClickableImageView.h"
+#import "NonScrollableTextView.h"
 
-static const CGFloat TOTAL_VERTICAL_MARGIN = 90.0;
-static const CGFloat MINIMUM_HEIGHT = 170.0;
+static const CGFloat TEXT_VERTICAL_MARGIN = 60.0;
+static const CGFloat IMAGE_VERTICAL_MARGIN = 90.0;
+static const CGFloat IMAGE_MINIMUM_HEIGHT = 170.0;
+static const CGFloat TEXT_MINIMUM_HEIGHT = 75.0;
 static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
-@implementation ImagePostView
-
+@implementation PostView
 
 -initWithFrame: (NSRect)frame {
 	if ((self = [super initWithFrame: frame])) {
 		maximumPostHeight = DEFAULT_MAXIMUM;
 		imageView = [[ClickableImageView alloc] initWithAction: @selector(didTapImage) target: self];
-		upperTextView = [[NSTextView alloc] init];
+		upperTextView = [[NonScrollableTextView alloc] init];
 		viewButton = [[NSButton alloc] init];
-		headlineLabel = [[NSTextView alloc] init];
+		headlineLabel = [[NonScrollableTextView alloc] init];
 		[self addSubview: imageView];
 		[self addSubview: upperTextView];
 		[self addSubview: viewButton];
@@ -89,11 +91,14 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	[upperTextView replaceCharactersInRange: NSMakeRange(0, 0) 
 		withAttributedString: [post getAttributedBody]];
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
-	if (imageUrl) {
+	if ([post hasImage] && imageUrl) {
+		[imageView setHidden: NO];
 		activeImageSource = [[ImageNetworkSource alloc] initWithURL: imageUrl];
 		[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
 		[activeImageSource fetch];
-	}
+	} else {
+		[imageView setHidden: YES];
+	}	
 }
 
 -(void)setPostBody: (NSString*)postBody {
@@ -106,22 +111,17 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(CGFloat)getRequestedHeight {
+	CGFloat minimumHeight = [displayedPost hasImage] ?
+		IMAGE_MINIMUM_HEIGHT : TEXT_MINIMUM_HEIGHT;
+	CGFloat verticalMargin = [displayedPost hasImage] ?
+		IMAGE_VERTICAL_MARGIN : TEXT_VERTICAL_MARGIN;
 	NSAttributedString *displayedBody = [displayedPost getAttributedBody];
 	CGFloat width = [upperTextView frame].size.width;
 	NSRect rect = [displayedBody 
 		boundingRectWithSize: NSMakeSize(width, maximumPostHeight) 
 		options: NSStringDrawingUsesLineFragmentOrigin];
-	NSLog(@"calculated frame height: %f, %f", rect.size.width, rect.size.height);
-	return fmax(rect.size.height + TOTAL_VERTICAL_MARGIN, MINIMUM_HEIGHT);
+	return fmax(rect.size.height + verticalMargin, minimumHeight);
 	
-}
-
--(CGFloat)getMaximumPostHeight {
-	return maximumPostHeight;
-}
-
--(void)setMaximumPostHight: (CGFloat)height {
-	maximumPostHeight = height;
 }
 
 -(void)scrollToBottom {
@@ -129,6 +129,14 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(void)layoutSubviews {
+	if ([displayedPost hasImage]) {
+		[self layoutForImagePost];
+	} else {
+		[self layoutForTextPost];
+	}	
+}
+
+-(void)layoutForImagePost {
 	NSRect rect = [self bounds];
 	[headlineLabel setFrame: NSMakeRect(
 		10, rect.size.height - 20,
@@ -149,21 +157,33 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	)];
 }
 
+-(void)layoutForTextPost {
+	NSRect rect = [self bounds];
+	[headlineLabel setFrame: NSMakeRect(
+		10, rect.size.height - 20,
+		rect.size.width - 20, 10
+	)];
+	[upperTextView setFrame: NSMakeRect(
+		10, 10, 
+		rect.size.width - 20,
+		rect.size.height - 40
+	)];
+}
+
 -(void)onFetchedImage: (NSImage*)image {
-	NSLog(@"Fetched image!!");
 	[imageView setImage: image];
 }
 
--(void)setDelegate: (id<ImagePostViewDelegate>)aDelegate {
+-(void)setDelegate: (id<PostViewDelegate>)aDelegate {
 	delegate = aDelegate;
 }
 
 -(void)didTapView {
-	[delegate imagePostView: self didTapViewOnThread: displayedThread];
+	[delegate postView: self didTapViewOnThread: displayedThread];
 }
 
 -(void)didTapImage {
-	[delegate imagePostView: self didTapImageOnPost: displayedPost];
+	[delegate postView: self didTapImageOnPost: displayedPost];
 }
 
 @end

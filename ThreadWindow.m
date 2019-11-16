@@ -18,9 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "GNUstepGUI/GSTable.h"
 #import "Data/Thread.h"
 #import "ThreadWindow.h"
-#import "View/ImagePostView.h"
+#import "View/PostView.h"
 #import "View/ClickableImageView.h"
-#import "View/TextPostView.h"
 
 @implementation ThreadWindow
 
@@ -61,24 +60,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		);
 		Post *post = [posts objectAtIndex: i];
 		NSView *view;
-		if ([post hasImage]) {
-			ImagePostView *postView = [[ImagePostView alloc] 
-				initWithFrame: frame];
-			[postView autorelease];
-			[postView configureForPost: post];
-			frame.size.height = [postView getRequestedHeight];
-			[postView setFrame: frame];
-			[postView setDelegate: self];
-			view = postView;
-		} else {
-			TextPostView *postView = [[TextPostView alloc]
-				initWithFrame: frame];
-			[postView autorelease];
-			[postView configureForPost: post];
-			frame.size.height = [postView getRequestedHeight];
-			[postView setFrame: frame];
-			view = postView;
-		}
+		PostView *postView = [[PostView alloc] 
+			initWithFrame: frame];
+		[postView autorelease];
+		[postView configureForPost: post];
+		frame.size.height = [postView getRequestedHeight];
+		[postView setFrame: frame];
+		[postView setDelegate: self];
+		view = postView;
 		[tableView putView: view atRow: [posts count] - (i + 1) 
 			column: 0 withMargins: 10];
 	}
@@ -100,11 +89,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 }
 
--(void)imagePostView: (ImagePostView*)imagePostView didTapViewOnThread: (Thread*)thread {
+-(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread {
 
 }
 
--(void)imagePostView: (ImagePostView*)imagePostView didTapImageOnPost: (Post*)post {
+-(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post {
 	NSLog(@"Did tap image on post %@", post);
 	[imageWindow makeKeyAndOrderFront: self];
 	[imageWindow loadImageForPost: post];

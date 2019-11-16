@@ -12,20 +12,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "NSAttributedString+AppAttributes.h"
 
-@interface NSAttributedString (AppAttributes)
-
-+(NSDictionary*)normalAttributes;
-+(NSDictionary*)postBoldAttributes;
-+(NSDictionary*)postUnderlineAttributes;
-+(NSDictionary*)postQuoteAttributes;
-+(NSDictionary*)postSubjectAttributes;
-+(NSDictionary*)postNameAttributes;
-+(NSDictionary*)postDateAttributes;
-+(NSDictionary*)postNumberAttributes;
-+(NSDictionary*)linkAttributesForLink: (NSString*)link;
+@interface NonScrollableTextView: NSTextView
 
 @end

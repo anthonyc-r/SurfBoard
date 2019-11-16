@@ -141,7 +141,6 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 }
 
 -(NSAttributedString*)getAttributedHeadline {
-	NSLog(@"TEST");
 	NSString *headline = [self getHeadline];
 	NSMutableAttributedString *attributedHeadline =
 		[[NSMutableAttributedString alloc] initWithString: headline];

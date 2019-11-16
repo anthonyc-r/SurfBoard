@@ -39,20 +39,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self addAttributes: attributes range: attributeRange];
 }
 
--(void)replaceHTMLBreakWithNewline {
+-(void)replaceHTMLVoidTag: (NSString*)tag withSymbol: (NSString*)symbol {
 	while (true) {
-		NSRange range = [[self string] rangeOfString: @"<br>"];
+		NSString *target = [NSString stringWithFormat: @"<%@>", tag];
+		NSRange range = [[self string] rangeOfString: target];
 		if (range.length == 0) {
 			break;
 		}
-		[self replaceCharactersInRange: range withString: @"\n"];
+		[self replaceCharactersInRange: range withString: symbol];
 	}
 }
 
 -(void)replaceHTMLLinksWithText {
 	NSError *error = [NSError alloc];
 	NSRegularExpression *regexp = [[NSRegularExpression alloc] 
-		initWithPattern: @"(<a href=\".+\">).*(<\\/a>)"
+		initWithPattern: @"(<a href=\"(.+?)\"( class=\".+?\")?>).*?(<\\/a>)"
 		options: 0
 		error: &error
 	];
@@ -65,12 +66,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		if (result == nil) {
 			break;
 		}
+		NSRange linkRange = [result rangeAtIndex: 2];
 		NSRange first = [result rangeAtIndex: 1];
-		NSRange last = [result rangeAtIndex: 2];
+		NSRange last = [result rangeAtIndex: 4];
+		NSString *link = [[self string] substringWithRange: linkRange];
+		NSLog(@"link: %@", link);
+
 		[self deleteCharactersInRange: first];
 		last.location -= first.length;
 		[self deleteCharactersInRange: last];
-		 
+		NSRange attrRange = NSMakeRange(
+			first.location, 
+			last.location - first.location);
+		if (attrRange.length > 0) {
+			[self setAttributes: [NSAttributedString linkAttributesForLink: link] range: attrRange];
+		} 
 	}
 	[regexp release];
 	[error release];
@@ -130,7 +140,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[string replaceURLEncodingsOf: @"&#039;" withSymbol: @"'"];
 	[string replaceURLEncodingsOf: @"&quot;" withSymbol: @"\""];
 	[string replaceURLEncodingsOf: @"&amp;" withSymbol: @"&"];
-	[string replaceHTMLBreakWithNewline];
+	[string replaceHTMLVoidTag: @"br" withSymbol: @"\n"];
+	[string replaceHTMLVoidTag: @"wbr" withSymbol: @""];
 	[string replaceHTMLLinksWithText];
 	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString postBoldAttributes]];
 	[string replaceHTMLTag: @"u" withAttributes: [NSAttributedString postUnderlineAttributes]];

@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Thread.h"
 #import "Net/ThreadDetailsNetworkSource.h"
 #import "ImageWindow.h"
-#import "View/ImagePostView.h"
+#import "View/PostView.h"
 
-@interface ThreadWindow: NSWindow<ImagePostViewDelegate>
+@interface ThreadWindow: NSWindow<PostViewDelegate>
 {
 	NSScrollView *scrollView;
 	GSTable *tableView;
