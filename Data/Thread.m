@@ -64,4 +64,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 }
 
+-(Post*)getPostWithNumber: (NSNumber*)postNumber {
+	// TODO: - Implement.	
+	return [self getOP];
+}
+
 @end

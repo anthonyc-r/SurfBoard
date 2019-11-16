@@ -19,15 +19,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation Theme
 
 +(NSColor*)postBackgroundColor {
-	return [NSColor cyanColor];
+	return [NSColor colorWithDeviceRed: 0.9 green: 0.9 blue: 0.9 alpha: 0.9];
 }
 
 +(NSColor*)mainBackgroundColor {
-	return [NSColor whiteColor];
+	return [NSColor grayColor];
 }
 
 +(NSColor*)postBodyColor {
 	return [NSColor blackColor];
+}
+
++(NSColor*)postBackgroundHighlightColor {
+	return [NSColor colorWithDeviceRed: 0.85 green: 0.85 blue: 0.85 alpha: 0.9];
+}
+
++(NSColor*)postBodyQuoteColor {
+	return [NSColor colorWithDeviceRed: 0.3 green: 0.65 blue: 0.07 alpha: 1.0];
+}
+
++(NSColor*)postSubjectColor {
+	return [NSColor colorWithDeviceRed: 0.05 green: 0.05 
+		blue: 0.4 alpha: 1.0];
+}
+
++(NSColor*)postNameColor {
+	return [NSColor colorWithDeviceRed: 0.05 green: 0.5 
+		blue: 0.2 alpha: 1.0];
 }
 
 @end

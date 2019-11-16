@@ -20,5 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSColor*)postBackgroundColor;
 +(NSColor*)mainBackgroundColor;
 +(NSColor*)postBodyColor;
-
++(NSColor*)postBackgroundHighlightColor;
++(NSColor*)postBodyQuoteColor;
++(NSColor*)postSubjectColor;
++(NSColor*)postNameColor;
 @end

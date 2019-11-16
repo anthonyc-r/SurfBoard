@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "GNUstepGUI/GSTable.h"
 #import "ClickableImageView.h"
 #import "NonScrollableTextView.h"
+#import "Theme.h"
 
 static const CGFloat TEXT_VERTICAL_MARGIN = 60.0;
 static const CGFloat IMAGE_VERTICAL_MARGIN = 90.0;
@@ -38,6 +39,8 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		upperTextView = [[NonScrollableTextView alloc] init];
 		viewButton = [[NSButton alloc] init];
 		headlineLabel = [[NonScrollableTextView alloc] init];
+		backgroundColor = [Theme postBackgroundColor];
+		[backgroundColor retain];
 		[self addSubview: imageView];
 		[self addSubview: upperTextView];
 		[self addSubview: viewButton];
@@ -63,6 +66,7 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	[imageView release];
 	[upperTextView release];
 	[viewButton release];
+	[backgroundColor release];
 	[headlineLabel release];
 }
 
@@ -72,7 +76,7 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(void)drawRect: (NSRect)rect {
-	[[NSColor colorWithDeviceRed: 0.9 green: 0.9 blue: 0.9 alpha: 0.9] set];
+	[backgroundColor set];
 	[[NSBezierPath bezierPathWithRoundedRect: [self bounds]
 		xRadius: 5 yRadius: 5] fill];
 }
@@ -128,6 +132,10 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	[upperTextView scrollRangeToVisible: NSMakeRange(1, 1)];
 }
 
+-(Post*)displayedPost {
+	return displayedPost;
+}
+
 -(void)layoutSubviews {
 	if ([displayedPost hasImage]) {
 		[self layoutForImagePost];
@@ -176,6 +184,18 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 -(void)setDelegate: (id<PostViewDelegate>)aDelegate {
 	delegate = aDelegate;
+	[upperTextView setDelegate: aDelegate];
+}
+
+-(void)setHighlight: (BOOL)highlight {
+	[backgroundColor release];
+	if (highlight) {
+		backgroundColor = [Theme postBackgroundHighlightColor];
+	} else {
+		backgroundColor = [Theme postBackgroundColor];
+	}
+	[backgroundColor retain];
+	[self setNeedsDisplay: YES];
 }
 
 -(void)didTapView {

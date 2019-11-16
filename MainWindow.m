@@ -103,4 +103,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[imageWindow loadImageForPost: post];
 }
 
+-(BOOL)textView: (NSTextView*)textView clickedOnLink: (id)link atIndex: (NSUInteger)charIndex {
+	NSLog(@"clicked link: %@", link);
+	return YES;
+}
+
 @end

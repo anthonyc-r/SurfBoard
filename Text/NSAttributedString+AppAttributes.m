@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import "NSFont+AppFont.h"
 #import "NSAttributedString+AppAttributes.h"
+#import "Theme.h"
 
 @implementation NSAttributedString (AppAttributes)
 
@@ -39,22 +40,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 +(NSDictionary*)postQuoteAttributes {
-	NSColor *color = [NSColor colorWithDeviceRed: 0.3 green: 0.65 blue: 0.07 alpha: 1.0];
+	NSColor *color = [Theme postBodyQuoteColor];
 	return [NSDictionary dictionaryWithObjectsAndKeys: color, 
 		NSForegroundColorAttributeName, nil
 	];
 }
 
 +(NSDictionary*)postSubjectAttributes {
-	NSColor *color = [NSColor colorWithDeviceRed: 0.05 green: 0.05 
-		blue: 0.4 alpha: 1.0];
+	NSColor *color = [Theme postSubjectColor];
 	return [NSDictionary dictionaryWithObjectsAndKeys: color,
 		NSForegroundColorAttributeName, nil];
 }
 
 +(NSDictionary*)postNameAttributes {
-	NSColor *color = [NSColor colorWithDeviceRed: 0.05 green: 0.5 
-		blue: 0.2 alpha: 1.0];
+	NSColor *color = [Theme postNameColor];
 	return [NSDictionary dictionaryWithObjectsAndKeys: color,
 		NSForegroundColorAttributeName, nil];
 }

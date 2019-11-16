@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   	ThreadDetailsNetworkSource *networkSource;
 	Thread *displayedThread;
 	ImageWindow *imageWindow;
+	PostView *highlightedPost;
 	
 }
 

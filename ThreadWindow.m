@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "ThreadWindow.h"
 #import "View/PostView.h"
 #import "View/ClickableImageView.h"
+#import "Text/NSString+Links.h"
 
 @implementation ThreadWindow
 
@@ -97,6 +98,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Did tap image on post %@", post);
 	[imageWindow makeKeyAndOrderFront: self];
 	[imageWindow loadImageForPost: post];
+}
+
+-(BOOL)textView: (NSTextView*)textView clickedOnLink: (id)link atIndex: (NSUInteger)charIndex {
+	NSLog(@"clicked link: %@", link);
+	NSNumber *postNumber = [link linkPostNumber];
+	return [self focusPostWithNumber: postNumber];
+}
+
+-(BOOL)focusPostWithNumber: (NSNumber*)postNumber {
+	// TODO: - Consider indexing the views by post number at refresh.
+	NSLog(@"Focus post number %@", postNumber);
+	NSArray *postViews = [self displayedPostViews];
+	for (int i = 0; i < [postViews count]; i++) {
+		PostView *view = [postViews objectAtIndex: i];
+		Post *otherPost = [view displayedPost];
+		if ([postNumber isEqualToNumber: [otherPost getNumber]]) {
+			NSView *jailView = [view superview];
+			NSPoint target = [jailView frame].origin;
+			target.y -= [scrollView frame].size.height - [jailView frame].size.height;
+			[tableView scrollPoint: target];
+			[highlightedPost setHighlight: NO];
+			[view setHighlight: YES];
+			highlightedPost = view;
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+-(NSArray*)displayedPostViews {
+	NSMutableArray *postViews = [NSMutableArray array];
+	NSArray *subviews = [tableView subviews];
+	for (int i = 0; i < [subviews count]; i++) {
+		NSView *view = [[[subviews objectAtIndex: i] subviews]
+			objectAtIndex: 0];
+		if ([view isKindOfClass: [PostView class]]) {	
+			[postViews addObject: view];
+		}
+	}
+	return postViews;
 }
 
 @end

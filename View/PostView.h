@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @class PostView;
 
-@protocol PostViewDelegate
+@protocol PostViewDelegate<NSTextViewDelegate>
 -(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread;
 -(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post;
 @end
@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Thread *displayedThread;
   Post *displayedPost;
   id<PostViewDelegate> delegate;
+  NSColor *backgroundColor;
 }
 -(void)configureForPost: (Post*)post;
 -(void)configureForThread: (Thread*)thread;
@@ -45,4 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didTapView;
 -(void)setDelegate: (id<PostViewDelegate>)aDelegate;
 -(void)didTapImage;
+-(Post*)displayedPost;
+-(void)setHighlight: (BOOL)highlight;
 @end

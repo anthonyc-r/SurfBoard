@@ -12,18 +12,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#import <Foundation/Foundation.h>
-#import "Data/Post.h"
+#include <string.h>
 
-@interface Thread: NSObject {
-@private
-	NSArray *posts;
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+#import "NSString+Links.h"
+
+@implementation NSString (Links)
+
+-(NSNumber*)linkPostNumber {
+	NSRange range = [self rangeOfString: @"#p" options: NSBackwardsSearch];
+	if (range.length > 0 && [self length] > NSMaxRange(range)) {
+		NSString *substring = [self substringFromIndex: NSMaxRange(range)];
+		long postNumber = strtol([substring lossyCString], NULL, 10);
+		if (postNumber > 0) {
+			return [NSNumber numberWithLong: postNumber];
+		}
+	}
+	return nil;
 }
--(id)initWithDictionary: (NSDictionary*)dict;
--(NSArray*)getPosts;
--(void)setPosts: (NSArray*)somePosts;
--(Post*)getOP;
--(NSArray*)getLatestPosts;
--(Post*)getPostWithNumber: (NSNumber*)postNumber;
 
 @end

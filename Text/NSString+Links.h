@@ -12,18 +12,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#import <Foundation/Foundation.h>
-#import "Data/Post.h"
 
-@interface Thread: NSObject {
-@private
-	NSArray *posts;
-}
--(id)initWithDictionary: (NSDictionary*)dict;
--(NSArray*)getPosts;
--(void)setPosts: (NSArray*)somePosts;
--(Post*)getOP;
--(NSArray*)getLatestPosts;
--(Post*)getPostWithNumber: (NSNumber*)postNumber;
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+@interface NSString (Links)
+
+-(NSNumber*)linkPostNumber;
 
 @end
