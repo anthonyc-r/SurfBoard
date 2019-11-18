@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/PostView.h"
 #import "ThreadWindow.h"
 #import "ImageWindow.h"
+#import "OpenBoardPanel.h"
 
 @interface MainWindow : NSWindow<PostViewDelegate>
 {
@@ -27,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   	FrontPageNetworkSource *networkSource;
 	ThreadWindow *threadWindow;
 	ImageWindow *imageWindow;
+	OpenBoardPanel *openBoardPanel;
 }
 -(void)refresh: (id)sender;
 @end

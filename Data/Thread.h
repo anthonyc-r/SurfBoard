@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @private
 	NSArray *posts;
 }
--(id)initWithDictionary: (NSDictionary*)dict;
+-(id)initWithDictionary: (NSDictionary*)dict onBoard: (NSString*)aBoard;
 -(NSArray*)getPosts;
 -(void)setPosts: (NSArray*)somePosts;
 -(Post*)getOP;

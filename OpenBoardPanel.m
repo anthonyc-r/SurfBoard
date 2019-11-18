@@ -12,13 +12,37 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#import <Foundation/Foundation.h>
-#import <Data/Thread.h>
-#import "NetworkSource.h"
 
-@interface FrontPageNetworkSource: NetworkSource {
-	NSString *code;
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+#import "OpenBoardPanel.h"
+
+@implementation OpenBoardPanel
+
+-(void)awakeFromNib {
+	[super awakeFromNib];
+	[textField setDelegate: self];
 }
 
--(id)initWithCode: (NSString*)aCode;
+-(void)didTapOK: (id)sender {
+	[pickedValue release];
+	pickedValue = [textField stringValue];
+	[pickedValue retain];
+	[self close];
+}
+
+
+-(void)didTapCancel: (id)sender {
+	pickedValue = nil;
+	[self close];
+}
+
+-(NSString*)pickedValue {
+	return pickedValue;
+}
+
+-(void)controlTextDidEndEditing: (NSControl*)control {
+	[self makeFirstResponder: okButton];;
+}
+
 @end

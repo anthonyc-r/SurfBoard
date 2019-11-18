@@ -44,7 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (error) {
 		[self failure: error];
 	}
-	Thread *detailedThread = [[Thread alloc] initWithDictionary: dict];
+	Thread *detailedThread = [[Thread alloc] initWithDictionary: dict
+		onBoard: [[thread getOP] getBoard]];
 	[self success: detailedThread];
 }
 

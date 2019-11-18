@@ -18,6 +18,8 @@
     };
     FirstResponder = {
 	Actions = (
+	    "didTapOK:",
+	    "didTapCancel:",
 	    "refresh:"
 	);
 	Super = NSObject;
@@ -36,9 +38,21 @@
 	Outlets = (
 	    scrollView,
 	    threadWindow,
-	    imageWindow
+	    imageWindow,
+	    openBoardPanel
 	);
 	Super = NSWindow;
+    };
+    OpenBoardPanel = {
+	Actions = (
+	    "didTapOK:",
+	    "didTapCancel:"
+	);
+	Outlets = (
+	    okButton,
+	    textField
+	);
+	Super = NSPanel;
     };
     ThreadWindow = {
 	Actions = (

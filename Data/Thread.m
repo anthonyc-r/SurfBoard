@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation Thread
 
--(id)initWithDictionary: (NSDictionary*)dict {
+-(id)initWithDictionary: (NSDictionary*)dict onBoard: (NSString*)aBoard {
 	self = [super init];
 	if (self) {
 		NSMutableArray *somePosts = [[NSMutableArray alloc] init];
 		NSArray *postsJson = [dict objectForKey: @"posts"];
 		for (int i = 0; i < [postsJson count]; i++) {
 			NSDictionary *json = [postsJson objectAtIndex: i];
-			Post *aPost = [[Post alloc] initWithDictionary: json board: @"g"];
+			Post *aPost = [[Post alloc] initWithDictionary: json board: aBoard];
 			[somePosts addObject: aPost];
 			[aPost release];
 		}

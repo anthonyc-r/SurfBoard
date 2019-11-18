@@ -18,10 +18,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Thread.h"
 #import "Net/NSURL+Utils.h"
 
+// TODO: - Set code to 'home board' preference in init
+static NSString *const DEFAULT_CODE = @"g";
+
 @implementation FrontPageNetworkSource
 
+-(id)init {
+	if ((self = [super init])) {
+		code = DEFAULT_CODE;
+	}
+	return self;
+}
+
+-(id)initWithCode: (NSString*)aCode {
+	if ((self = [super init])) {
+		code = aCode;
+	}
+	return self;
+}
+
 -(void)makeSynchronousRequest {
-	NSURL *url = [NSURL urlForIndex: [NSNumber numberWithInt: 1] ofBoard: @"g"];
+	NSURL *url = [NSURL urlForIndex: [NSNumber numberWithInt: 1] ofBoard: code];
 	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSLog(@"Fetching request: %@", request);
 	// TODO: - Dealloc
@@ -39,7 +56,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			error: &error];
 		NSArray *threadsJson = [json objectForKey: @"threads"];
 		for (int i = 0; i < [threadsJson count]; i++) {
-			Thread *thread = [[Thread alloc] initWithDictionary: [threadsJson objectAtIndex: i]];
+			Thread *thread = [[Thread alloc] 
+				initWithDictionary: [threadsJson objectAtIndex: i]
+				onBoard: code];
 			[thread autorelease];
 			[threads addObject: thread];
 		}

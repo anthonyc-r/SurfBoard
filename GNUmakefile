@@ -18,7 +18,8 @@ SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/PostView.m \
 	Text/NSFont+AppFont.m Net/ImageNetworkSource.m ThreadWindow.m Net/NetworkSource.m \
 	Net/ThreadDetailsNetworkSource.m ImageWindow.m View/ClickableImageView.m \
 	Text/NSAttributedString+AppAttributes.m View/ZoomingScrollView.m \
-	View/DraggableImageView.m View/NonScrollableTextView.m Text/NSString+Links.m
+	View/DraggableImageView.m View/NonScrollableTextView.m Text/NSString+Links.m \
+	OpenBoardPanel.m
 	
 SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	View/NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
@@ -26,10 +27,10 @@ SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	Text/NSFont+AppFont.h Net/ImageNetworkSource.h ThreadWindow.h Net/NetworkSource.h \
 	Net/ThreadDetailsNetworkSource.h ImageWindow.h View/ClickableImageView.h \
 	Text/NSAttributedString+AppAttributes.h View/ZoomingScrollView.h \
-	View/DraggableImageView.h NonScrollableTextView.h Text/NSString+Links.h
+	View/DraggableImageView.h NonScrollableTextView.h Text/NSString+Links.h \
+	OpenBoardPanel.h
 
-SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm Resources/ImagePostView.gorm \
-	Resources/TextPostView.gorm
+SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm
 
 
 -include GNUmakefile.preamble

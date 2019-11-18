@@ -59,6 +59,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[networkSource fetch];
 }
 
+-(void)open: (id)sender {
+	NSLog(@"Open...");
+	[NSApp runModalForWindow: openBoardPanel];
+	NSString *board = [openBoardPanel pickedValue];
+	NSLog(@"Opening board... %@", board);
+	if (board == nil) {
+		return;
+	}
+	networkSource = [[FrontPageNetworkSource alloc] initWithCode: board];
+	[networkSource performOnSuccess: @selector(onIndexFetched:) target: self];
+	[networkSource performOnFailure: @selector(onIndexFailure:) target: self];
+	[networkSource fetch];
+}
+
 -(void)onIndexFetched: (NSArray*)threads {
 	[networkSource release];
 	NSLog(@"Called network source success with thread %@", threads);

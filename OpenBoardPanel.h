@@ -12,13 +12,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#import <Foundation/Foundation.h>
-#import <Data/Thread.h>
-#import "NetworkSource.h"
 
-@interface FrontPageNetworkSource: NetworkSource {
-	NSString *code;
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+@interface OpenBoardPanel: NSPanel<NSTextFieldDelegate> {
+	NSTextField *textField;
+	NSString *pickedValue;
+	NSButton *okButton;
 }
 
--(id)initWithCode: (NSString*)aCode;
+-(void)didTapOK: (id)sender;
+-(void)didTapCancel: (id)sender;
+-(NSString*)pickedValue;
+
 @end
