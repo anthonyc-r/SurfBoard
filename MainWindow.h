@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	ThreadWindow *threadWindow;
 	ImageWindow *imageWindow;
 	OpenBoardPanel *openBoardPanel;
+	NSString *displayedBoard;
 }
 -(void)refresh: (id)sender;
 @end

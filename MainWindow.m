@@ -53,7 +53,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)refresh: (id)sender {
 	NSLog(@"Main window refresh?");
-	networkSource = [[FrontPageNetworkSource alloc] init];
+	NSString *code = displayedBoard;
+	if (code == nil) {
+		// TODO: - Make home board
+		code = @"g";
+	}
+	networkSource = [[FrontPageNetworkSource alloc] initWithCode: code];
 	[networkSource performOnSuccess: @selector(onIndexFetched:) target: self];
 	[networkSource performOnFailure: @selector(onIndexFailure:) target: self];
 	[networkSource fetch];
@@ -67,10 +72,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (board == nil || [board length] < 1) {
 		return;
 	}
-	networkSource = [[FrontPageNetworkSource alloc] initWithCode: board];
-	[networkSource performOnSuccess: @selector(onIndexFetched:) target: self];
-	[networkSource performOnFailure: @selector(onIndexFailure:) target: self];
-	[networkSource fetch];
+	[displayedBoard release];
+	displayedBoard = board;
+	[displayedBoard retain];
+	[self refresh: nil];
 }
 
 -(void)onIndexFetched: (NSArray*)threads {
