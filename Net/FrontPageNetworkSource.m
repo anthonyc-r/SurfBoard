@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "FrontPageNetworkSource.h"
 #import "Data/Thread.h"
 #import "Net/NSURL+Utils.h"
+#import "NSError+AppErrors.h"
 
 // TODO: - Set code to 'home board' preference in init
 static NSString *const DEFAULT_CODE = @"g";
@@ -55,6 +56,10 @@ static NSString *const DEFAULT_CODE = @"g";
 			options: 0 
 			error: &error];
 		NSArray *threadsJson = [json objectForKey: @"threads"];
+		if (threadsJson == nil) {
+			[self failure: [NSError invalidBoardCodeError]];
+			return;
+		}
 		for (int i = 0; i < [threadsJson count]; i++) {
 			Thread *thread = [[Thread alloc] 
 				initWithDictionary: [threadsJson objectAtIndex: i]

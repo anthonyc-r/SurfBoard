@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)awakeFromNib {
 	[super awakeFromNib];
 	[textField setDelegate: self];
+	[okButton setKeyEquivalent: @"\r"];
+}
+
+-(void)becomeKeyWindow {
+	[super becomeKeyWindow];
+	[self makeFirstResponder: textField];
+	[textField selectText: self];
 }
 
 -(void)didTapOK: (id)sender {

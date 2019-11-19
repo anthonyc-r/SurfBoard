@@ -19,7 +19,7 @@ SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/PostView.m \
 	Net/ThreadDetailsNetworkSource.m ImageWindow.m View/ClickableImageView.m \
 	Text/NSAttributedString+AppAttributes.m View/ZoomingScrollView.m \
 	View/DraggableImageView.m View/NonScrollableTextView.m Text/NSString+Links.m \
-	OpenBoardPanel.m
+	OpenBoardPanel.m NSError+AppErrors.m
 	
 SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	View/NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
@@ -28,7 +28,7 @@ SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	Net/ThreadDetailsNetworkSource.h ImageWindow.h View/ClickableImageView.h \
 	Text/NSAttributedString+AppAttributes.h View/ZoomingScrollView.h \
 	View/DraggableImageView.h NonScrollableTextView.h Text/NSString+Links.h \
-	OpenBoardPanel.h
+	OpenBoardPanel.h NSError+AppErrors.h
 
 SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm
 

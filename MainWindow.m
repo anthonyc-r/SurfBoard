@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[NSApp runModalForWindow: openBoardPanel];
 	NSString *board = [openBoardPanel pickedValue];
 	NSLog(@"Opening board... %@", board);
-	if (board == nil) {
+	if (board == nil || [board length] < 1) {
 		return;
 	}
 	networkSource = [[FrontPageNetworkSource alloc] initWithCode: board];
@@ -100,7 +100,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 }
 
--(void)onFirstPageFailure: (NSError*)error {
+-(void)onIndexFailure: (NSError*)error {
 	[networkSource release];
 	NSLog(@"Error fetching front page: %@", error);
 }
