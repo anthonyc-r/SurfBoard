@@ -77,8 +77,9 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 -(void)drawRect: (NSRect)rect {
 	[backgroundColor set];
+	CGFloat cornerRadius = [Theme postCornerRadius];
 	[[NSBezierPath bezierPathWithRoundedRect: [self bounds]
-		xRadius: 5 yRadius: 5] fill];
+		xRadius: cornerRadius yRadius: cornerRadius] fill];
 }
 
 -(void)configureForThread: (Thread*)thread {

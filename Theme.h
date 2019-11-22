@@ -24,4 +24,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSColor*)postBodyQuoteColor;
 +(NSColor*)postSubjectColor;
 +(NSColor*)postNameColor;
++(CGFloat)postCornerRadius;
 @end

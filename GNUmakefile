@@ -9,7 +9,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 VERSION = 0.1
 PACKAGE_NAME = SurfBoard
 APP_NAME = SurfBoard
-Terminal_APPLICATION_ICON =
+SurfBoard_APPLICATION_ICON = SurfBoard.tiff
 
 # The Objective-C files to compile
 SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/PostView.m \
@@ -30,7 +30,7 @@ SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	View/DraggableImageView.h NonScrollableTextView.h Text/NSString+Links.h \
 	OpenBoardPanel.h NSError+AppErrors.h
 
-SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm
+SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm SurfBoardInfo.plist Resources/SurfBoard.tiff
 
 
 -include GNUmakefile.preamble

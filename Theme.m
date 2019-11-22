@@ -48,4 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		blue: 0.2 alpha: 1.0];
 }
 
++(CGFloat)postCornerRadius {
+	return 0;
+}
+
 @end
