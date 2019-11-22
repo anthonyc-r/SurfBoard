@@ -36,9 +36,13 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	if ((self = [super initWithFrame: frame])) {
 		maximumPostHeight = DEFAULT_MAXIMUM;
 		imageView = [[ClickableImageView alloc] initWithAction: @selector(didTapImage) target: self];
+		[imageView autorelease];
 		upperTextView = [[NonScrollableTextView alloc] init];
+		[upperTextView autorelease];
 		viewButton = [[NSButton alloc] init];
+		[viewButton autorelease];
 		headlineLabel = [[NonScrollableTextView alloc] init];
+		[headlineLabel autorelease];
 		backgroundColor = [Theme postBackgroundColor];
 		[backgroundColor retain];
 		[self addSubview: imageView];
@@ -62,12 +66,9 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(void)dealloc {
-	[super dealloc];
-	[imageView release];
-	[upperTextView release];
-	[viewButton release];
+	NSLog(@"Post view dealloc");
 	[backgroundColor release];
-	[headlineLabel release];
+	[super dealloc];
 }
 
 -(void)setFrame: (NSRect)frame {

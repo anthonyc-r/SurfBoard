@@ -29,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)dealloc {
-	[super dealloc];
 	[URL release];
+	[super dealloc];
 }
 
 -(void)makeSynchronousRequest {

@@ -43,8 +43,8 @@ static NSString *const DEFAULT_CODE = @"g";
 	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSLog(@"Fetching request: %@", request);
 	// TODO: - Dealloc
-	NSURLResponse *response = [NSURLResponse alloc];
-	NSError *error = [NSError alloc];
+	NSURLResponse *response;
+	NSError *error;
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
 		returningResponse: &response
 		error: &error];
@@ -68,6 +68,7 @@ static NSString *const DEFAULT_CODE = @"g";
 			[threads addObject: thread];
 		}
 		[self success: threads];
+		[threads release];
 	}
 }
 

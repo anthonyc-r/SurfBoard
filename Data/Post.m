@@ -57,7 +57,7 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 }
 
 -(void)dealloc {
-	[super dealloc];
+	NSLog(@"Post dealloc");
 	[number release];
 	[body release];
 	[attributedBody release];
@@ -68,6 +68,7 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 	[subject release];
 	[imageResName release];
 	[board release];
+	[super dealloc];
 }
 
 -(NSString*)getBody {

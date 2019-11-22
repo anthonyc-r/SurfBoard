@@ -70,7 +70,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		NSRange first = [result rangeAtIndex: 1];
 		NSRange last = [result rangeAtIndex: 4];
 		NSString *link = [[self string] substringWithRange: linkRange];
-		NSLog(@"link: %@", link);
 
 		[self deleteCharactersInRange: first];
 		last.location -= first.length;

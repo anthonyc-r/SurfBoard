@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSRect frame = [contentView bounds];
 	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
+	[scrollView autorelease];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	[scrollView setHasVerticalScroller: YES];
 	[scrollView setLineScroll: 25];
@@ -40,10 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)dealloc {
-	[super dealloc];
-	[scrollView release];
-	[tableView release];
 	[networkSource release];
+	[super dealloc];
 }
 
 -(void)close {
@@ -80,13 +79,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)onIndexFetched: (NSArray*)threads {
 	[networkSource release];
+	NSLog(@"displayed count retain %lu", [displayedThreads retainCount]);
+	[displayedThreads release];
+	displayedThreads = threads;
+	[displayedThreads retain];
 	NSLog(@"Called network source success with thread %@", threads);
 	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
 	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
-	[tableView removeFromSuperview];
-	// TODO: - Release without crashing!?
-	//[tableView release];
 	tableView = [[GSTable alloc] initWithNumberOfRows: [threads count] numberOfColumns: 1];
+	[tableView autorelease];
 	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 
 	for (int i = [threads count] - 1; i >= 0; i--) {
@@ -94,6 +95,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			0, 0, width, 200
 		);
 		PostView *postView = [[PostView alloc] initWithFrame: frame];
+		[postView autorelease];
 		[postView configureForThread: [threads objectAtIndex: i]];
 		frame.size.height = [postView getRequestedHeight];
 		[postView setFrame: frame];
