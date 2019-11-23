@@ -116,6 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber {
 	// TODO: - Consider indexing the views by post number at refresh.
+	// TODO: - OR just use a propper log time search given they're ordered!!!
 	NSLog(@"Focus post number %@", postNumber);
 	NSArray *postViews = [self displayedPostViews];
 	for (int i = 0; i < [postViews count]; i++) {
