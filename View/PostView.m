@@ -66,8 +66,9 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(void)dealloc {
-	NSLog(@"Post view dealloc");
 	[backgroundColor release];
+	[activeImageSource cancel];
+	[activeImageSource release];
 	[super dealloc];
 }
 
@@ -101,6 +102,7 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		[imageView setHidden: NO];
 		activeImageSource = [[ImageNetworkSource alloc] initWithURL: imageUrl];
 		[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
+		[activeImageSource performOnFailure: @selector(onImageFail:) target: self];
 		[activeImageSource fetch];
 	} else {
 		[imageView setHidden: YES];
@@ -181,7 +183,14 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 -(void)onFetchedImage: (NSImage*)image {
+	[activeImageSource release];
+	activeImageSource = nil;
 	[imageView setImage: image];
+}
+
+-(void)onImageFail: (NSError*)error {
+	[activeImageSource release];
+	activeImageSource = nil;
 }
 
 -(void)setDelegate: (id<PostViewDelegate>)aDelegate {

@@ -51,6 +51,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)refresh: (id)sender {
+	if (networkSource) {
+		NSLog(@"Refresh already in progress, ignoring");
+		return;
+	}
+
 	NSLog(@"Main window refresh?");
 	NSString *code = displayedBoard;
 	if (code == nil) {
@@ -78,18 +83,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)onIndexFetched: (NSArray*)threads {
+	NSLog(@"Called network source success with thread %@", threads);
 	[networkSource release];
-	NSLog(@"displayed count retain %lu", [displayedThreads retainCount]);
+	networkSource = nil;
 	[displayedThreads release];
 	displayedThreads = threads;
 	[displayedThreads retain];
-	NSLog(@"Called network source success with thread %@", threads);
 	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
 	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
 	tableView = [[GSTable alloc] initWithNumberOfRows: [threads count] numberOfColumns: 1];
 	[tableView autorelease];
 	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-
 	for (int i = [threads count] - 1; i >= 0; i--) {
 		NSRect frame = NSMakeRect(
 			0, 0, width, 200
@@ -105,10 +109,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	[scrollView setDocumentView: tableView];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
+	NSLog(@"Finished displaying threads %lu", [networkSource retainCount]);
 }
 
 -(void)onIndexFailure: (NSError*)error {
 	[networkSource release];
+	networkSource = nil;
 	NSLog(@"Error fetching front page: %@", error);
 }
 

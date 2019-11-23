@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Post.h"
 #import "Text/NSAttributedString+HTML.h"
 #import "Text/NSAttributedString+AppAttributes.h"
+#import "Text/DateFormatter.h"
 
 static const NSUInteger MAX_SUBJECT_LEN = 25;
 
@@ -57,7 +58,6 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 }
 
 -(void)dealloc {
-	NSLog(@"Post dealloc");
 	[number release];
 	[body release];
 	[attributedBody release];
@@ -123,10 +123,8 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 }
 
 -(NSString*)getFormattedPostDate {
-	// TODO: - Convert expensive formatter to singleton util class
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setDateFormat: @"dd/MM/yy(EEE)HH:mm:ss"];
-	return [formatter stringFromDate: [self getPostDate]];
+	return [DateFormatter stringForDate: [self getPostDate] 
+		inFormat: DateFormatPostHeadline];
 }
 
 -(NSString*)getHeadline {

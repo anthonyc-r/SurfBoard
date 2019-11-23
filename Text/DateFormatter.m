@@ -14,14 +14,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import "NetworkSource.h"
+#import "DateFormatter.h"
 
-@interface ImageNetworkSource: NetworkSource {
-	NSURL *URL;
-	BOOL isCancelled;
+static NSDateFormatter *dateFormatter;
+
+@implementation DateFormatter
+
++(void)initialize {
+	dateFormatter = [[NSDateFormatter alloc] init];
 }
 
--(id)initWithURL: (NSURL*)URL;
--(void)cancel;
+// TODO: - Make thread safe.
++(NSString*)stringForDate: (NSDate*)date inFormat: (DateFormat)format {
+	NSString *formatString = [DateFormatter formatStringForDateFormat:
+		format];
+	[dateFormatter setDateFormat: formatString];
+	return [dateFormatter stringFromDate: date];
+}
+
++(NSString*)formatStringForDateFormat: (DateFormat)format {
+	switch (format) {
+	case DateFormatPostHeadline:
+		return @"dd/MM/yy(EEE)HH:mm:ss";
+	default:
+		return @"";
+	}
+}
+
 @end

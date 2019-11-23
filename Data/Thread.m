@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)dealloc {
-	NSLog(@"Thread dealloc");
 	[posts dealloc];
 	[super dealloc];
 }

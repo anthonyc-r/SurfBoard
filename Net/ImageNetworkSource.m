@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if ((self = [super init])) {
 		URL = aURL;
 		[aURL retain];
+		isCancelled = NO;
 	}
 	return self;
 }
@@ -33,7 +34,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[super dealloc];
 }
 
+// TODO: - Consider adding general implementation for NetworkSource
+-(void)cancel {
+	isCancelled = YES;
+}
+
 -(void)makeSynchronousRequest {
+	[self retain];
 	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
 	// TODO: - Handle errors
 	NSURLResponse *response;
@@ -41,6 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
 		returningResponse: &response
 		error: &error];
+	if (isCancelled) {
+		[self release];
+		return;
+	}
 	if (error != nil) {
 		NSLog(@"Error fetching image! %@", error);
 		[self failure: error];
@@ -49,6 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSImage *image = [[NSImage alloc] initWithData: data];
 	[self success: image];
 	[image release];
+	[self release];
 }
 
 

@@ -34,15 +34,20 @@ static NSString *const DEFAULT_CODE = @"g";
 -(id)initWithCode: (NSString*)aCode {
 	if ((self = [super init])) {
 		code = aCode;
+		[code retain];
 	}
 	return self;
+}
+
+-(void)dealloc {
+	[code release];
+	[super dealloc];
 }
 
 -(void)makeSynchronousRequest {
 	NSURL *url = [NSURL urlForIndex: [NSNumber numberWithInt: 1] ofBoard: code];
 	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSLog(@"Fetching request: %@", request);
-	// TODO: - Dealloc
 	NSURLResponse *response;
 	NSError *error;
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
@@ -50,7 +55,6 @@ static NSString *const DEFAULT_CODE = @"g";
 		error: &error];
 	NSMutableArray *threads = [[NSMutableArray alloc] init];
 	if (data != nil) {
-		NSLog(@"Successfully made request for threads");
 		NSDictionary *json = [NSJSONSerialization 
 			JSONObjectWithData: data 
 			options: 0 

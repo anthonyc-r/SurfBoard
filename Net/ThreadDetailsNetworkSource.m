@@ -23,11 +23,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(id)initWithThread: (Thread*)aThread {
 	if ((self = [super init])) {
 		thread = aThread;
+		[thread retain];
 	}
 	return self;
 }
 
+-(void)dealloc {
+	[thread release];
+	[super dealloc];
+}
+
 -(void)makeSynchronousRequest {
+	[super makeSynchronousRequest];
 	NSURL *url = [NSURL urlForThreadDetails: thread];
 	NSURLRequest *request = [NSURLRequest requestWithURL: url];
 	NSURLResponse *response;
@@ -47,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	Thread *detailedThread = [[Thread alloc] initWithDictionary: dict
 		onBoard: [[thread getOP] getBoard]];
 	[self success: detailedThread];
+	[detailedThread release];
 }
 
 @end

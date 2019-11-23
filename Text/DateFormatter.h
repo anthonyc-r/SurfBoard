@@ -13,25 +13,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#import <AppKit/AppKit.h>
-#import "GNUstepGUI/GSTable.h"
-#import "Data/Thread.h"
-#import "Net/ThreadDetailsNetworkSource.h"
-#import "ImageWindow.h"
-#import "View/PostView.h"
+#import <Foundation/Foundation.h>
 
-@interface ThreadWindow: NSWindow<PostViewDelegate>
-{
-	NSScrollView *scrollView;
-	GSTable *tableView;
-  	ThreadDetailsNetworkSource *networkSource;
-	Thread *displayedThread;
-	ImageWindow *imageWindow;
-	PostView *highlightedPost;	
+typedef NS_ENUM(NSUInteger, DateFormat) {
+	DateFormatPostHeadline
+};
+
+@interface DateFormatter: NSObject {
 }
 
--(void)refreshForThread: (Thread*)thread;
--(void)didFetchDetails: (Thread*)detailedThread;
--(void)didFailToFetchDetails: (NSError*)error;
--(void)refresh: (id)sender;
++(NSString*)stringForDate: (NSDate*)date inFormat: (DateFormat)format;
+
 @end

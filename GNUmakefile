@@ -5,6 +5,8 @@
 # Include the common variables defined by the Makefile Package
 include $(GNUSTEP_MAKEFILES)/common.make
 
+OPTFLAGS="-g"
+
 # Build a simple Objective-C program
 VERSION = 0.1
 PACKAGE_NAME = SurfBoard
@@ -19,7 +21,7 @@ SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/PostView.m \
 	Net/ThreadDetailsNetworkSource.m ImageWindow.m View/ClickableImageView.m \
 	Text/NSAttributedString+AppAttributes.m View/ZoomingScrollView.m \
 	View/DraggableImageView.m View/NonScrollableTextView.m Text/NSString+Links.m \
-	OpenBoardPanel.m NSError+AppErrors.m
+	OpenBoardPanel.m NSError+AppErrors.m Text/DateFormatter.m
 	
 SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	View/NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
@@ -28,7 +30,7 @@ SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	Net/ThreadDetailsNetworkSource.h ImageWindow.h View/ClickableImageView.h \
 	Text/NSAttributedString+AppAttributes.h View/ZoomingScrollView.h \
 	View/DraggableImageView.h NonScrollableTextView.h Text/NSString+Links.h \
-	OpenBoardPanel.h NSError+AppErrors.h
+	OpenBoardPanel.h NSError+AppErrors.h Text/DateFormatter.h
 
 SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm SurfBoardInfo.plist Resources/SurfBoard.tiff
 

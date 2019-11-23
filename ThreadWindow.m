@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSRect frame = [contentView bounds];
 	NSLog(@"frame: %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 	scrollView = [[NSScrollView alloc] initWithFrame: frame];
+	[scrollView autorelease];
 	[scrollView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	[scrollView setLineScroll: 25];
 	[scrollView setHasVerticalScroller: YES];
@@ -38,7 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)refreshForThread: (Thread*)thread {
-	displayedThread = thread;
 	networkSource = [[ThreadDetailsNetworkSource alloc] initWithThread: thread];
 	[networkSource performOnSuccess: @selector(didFetchDetails:) target: self];
 	[networkSource performOnFailure: @selector(didFailToFetchDetails:) target: self];
@@ -48,12 +48,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didFetchDetails: (Thread*)detailedThread {
 	NSLog(@"Fetched detailed thread");
 	[networkSource release];
+	networkSource = nil;
+	[displayedThread release];
+	displayedThread = detailedThread;
+	[displayedThread retain];
 	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
 	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
 	NSArray *posts = [detailedThread getPosts];
-	[tableView removeFromSuperview];
-	//[tableView autorelease];
 	tableView = [[GSTable alloc] initWithNumberOfRows: [posts count] numberOfColumns: 1];
+	[tableView autorelease];
 	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
 	for (int i = 0; i < [posts count]; i++) {
 		NSRect frame = NSMakeRect(
@@ -72,19 +75,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[tableView putView: view atRow: [posts count] - (i + 1) 
 			column: 0 withMargins: 10];
 	}
-	NSLog(@"content: %@", [scrollView contentView]);
 	[scrollView setDocumentView: tableView];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 }
 
 
 -(void)didFailToFetchDetails: (NSError*)error {
-	NSLog(@"Fetched detailed thread");
+	NSLog(@"Fetched detailed thread fail");
 	[networkSource release];
+	networkSource = nil;
 }
 
 -(void)refresh: (id)sender {
 	NSLog(@"Thread Window Refresh");
+	if (networkSource) {
+		NSLog(@"Refresh in progress, ignoring");
+		return;
+	}
 	if (displayedThread) {
 		[self refreshForThread: displayedThread];
 	}
