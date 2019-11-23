@@ -14,15 +14,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
-#import "Data/Thread.h"
+#import "NetworkSource.h"
+#import "NSURL+Utils.h"
+#import "PassNetworkSource.h"
 
-@interface NSURL (Utils)
+@implementation PassNetworkSource
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
-+(NSURL*)urlForFullPostImage: (Post*)post;
-+(NSURL*)urlForPassAuth;
+-initWithToken: (NSString*)aToken pin: (NSString*)aPin {
+	if ((self = [super init])) {
+		token = aToken;
+		pin = aPin;
+	}
+	return self;
+}
+
+
+-(void)makeSynchronousRequest {
+	NSString *body = [NSString stringWithFormat: @"act=do_login&id=%@&pin=%@", token, pin];
+
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: [NSURL urlForPassAuth]];
+	[request setHTTPMethod: @"POST"];
+	[request setHTTPBody: 
+		[body dataUsingEncoding: NSASCIIStringEncoding]];
+	
+}
+
 @end

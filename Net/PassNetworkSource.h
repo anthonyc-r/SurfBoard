@@ -14,15 +14,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
-#import "Data/Thread.h"
+#import "NetworkSource.h"
 
-@interface NSURL (Utils)
+@interface PassNetworkSource: NetworkSource {
+	NSString *token;
+	NSString *pin;
+}
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
-+(NSURL*)urlForFullPostImage: (Post*)post;
-+(NSURL*)urlForPassAuth;
+-initWithToken: (NSString*)aToken pin: (NSString*)aPin;
+
 @end

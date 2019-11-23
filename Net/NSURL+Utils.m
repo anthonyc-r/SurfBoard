@@ -22,6 +22,7 @@ static NSString *const IMAGE_URL = @"https://i.4cdn.org/%@/%@%@";
 static NSString *const THUMB_URL = @"https://i.4cdn.org/%@/%@s.jpg";
 static NSString *const INDEX_URL = @"https://a.4cdn.org/%@/%@.json";
 static NSString *const THREAD_DETAILS = @"https://a.4cdn.org/%@/thread/%@.json";
+static NSString *const PASS_AUTH = @"https://sys.4chan.org/auth";
 
 @implementation NSURL (Utils)
 
@@ -57,6 +58,10 @@ static NSString *const THREAD_DETAILS = @"https://a.4cdn.org/%@/thread/%@.json";
 	NSString *urlString = [NSString stringWithFormat: IMAGE_URL,
 		[post getBoard], [post getImageResName], [post getImageExt]];
 	return [NSURL URLWithString: urlString];
+}
+
++(NSURL*)urlForPassAuth {
+	return [NSURL URLWithString: PASS_AUTH];
 }
 
 @end
