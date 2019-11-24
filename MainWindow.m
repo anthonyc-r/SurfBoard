@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Thread.h"
 #import "Data/Post.h"
 #import "Net/FrontPageNetworkSource.h"
+#import "Net/PassNetworkSource.h"
 
 @implementation MainWindow
 
@@ -38,6 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self refresh: self];
 	[self becomeFirstResponder];
 
+	// TEST
+	PassNetworkSource *source = [[PassNetworkSource alloc] initWithToken: @"" pin: @""];
+	[source fetch];
 }
 
 -(void)dealloc {
@@ -110,6 +114,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[scrollView setDocumentView: tableView];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 	NSLog(@"Finished displaying threads %lu", [networkSource retainCount]);
+}
+
+-(void)postThread: (id)sender {
+	NSLog(@"Post new thread");
 }
 
 -(void)onIndexFailure: (NSError*)error {

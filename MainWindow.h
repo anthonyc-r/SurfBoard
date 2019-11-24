@@ -33,4 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSArray *displayedThreads;
 }
 -(void)refresh: (id)sender;
+-(void)open: (id)sender;
+-(void)postThread: (id)sender;
 @end

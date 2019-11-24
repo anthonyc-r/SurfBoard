@@ -18,8 +18,10 @@
     };
     FirstResponder = {
 	Actions = (
-	    "didTapOK:",
 	    "didTapCancel:",
+	    "didTapOK:",
+	    "postReply:",
+	    "postThread:",
 	    "refresh:"
 	);
 	Super = NSObject;
