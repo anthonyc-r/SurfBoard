@@ -40,7 +40,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self becomeFirstResponder];
 
 	// TEST
-	PassNetworkSource *source = [[PassNetworkSource alloc] initWithToken: @"" pin: @""];
+	NSString *token = [[NSUserDefaults standardUserDefaults] stringForKey: @"pass_token"];
+	NSString *pin = [[NSUserDefaults standardUserDefaults] stringForKey: @"pass_pin"];
+	NSLog(@"token: %@, pin: %@", token, pin);
+	PassNetworkSource *source = [[PassNetworkSource alloc] initWithToken: token pin: pin];
 	[source fetch];
 }
 

@@ -31,40 +31,42 @@ static NSString *const BODY_FORMAT = @"act=do_login&id=%@&pin=%@&long_login=1";
 @interface NSURLResponse (Additions)
 @end
 
+// Implementation which folds multiple Set-Cookie headers using the & character.
+
 @implementation NSURLResponse (Additions)
 
 -(void)_setHeaders: (id)headers {
-  NSLog(@"Set headers!!");
-  NSEnumerator	*e;
-  NSString	*v;
+	NSLog(@"Set headers!!");
+	NSEnumerator *e;
+	NSString *v;
 
-  if ([headers isKindOfClass: [NSDictionary class]] == YES)
-    {
-      NSString		*k;
-
-      e = [(NSDictionary*)headers keyEnumerator];
-      while ((k = [e nextObject]) != nil)
-	{
-	  v = [(NSDictionary*)headers objectForKey: k];
-	  [self _setValue: v forHTTPHeaderField: k];
-	}
-    }
-  else if ([headers isKindOfClass: [NSArray class]] == YES)
-    {
-      GSMimeHeader	*h;
-
-      e = [(NSArray*)headers objectEnumerator];
-      while ((h = [e nextObject]) != nil)
-        {
-	  NSString	*n = [h namePreservingCase: YES];
-	  NSString	*v = [h fullValue];
-	  if ([n isEqualTo: @"Set-Cookie"]) {
-		NSLog(@"name: %@, value: %@", n, v);
-	}
-	  [self _setValue: v forHTTPHeaderField: n];
-	}
-    }
-  [self _checkHeaders];
+	if ([headers isKindOfClass: [NSDictionary class]] == YES) {
+		NSString *k;
+		e = [(NSDictionary*)headers keyEnumerator];
+		while ((k = [e nextObject]) != nil) {
+			v = [(NSDictionary*)headers objectForKey: k];
+			[self _setValue: v forHTTPHeaderField: k];
+		}
+	} else if ([headers isKindOfClass: [NSArray class]] == YES) {
+		GSMimeHeader *h;
+		e = [(NSArray*)headers objectEnumerator];
+		NSMutableString *cookies = [[NSMutableString alloc] init];
+		while ((h = [e nextObject]) != nil) {
+			NSString *n = [h namePreservingCase: YES];
+			NSString *v = [h fullValue];
+			if ([n isEqualTo: @"Set-Cookie"]) {
+				[cookies appendFormat: @"&%@", v];
+			} else {
+				[self _setValue: v forHTTPHeaderField: n];
+			}
+		}
+		if ([cookies length] > 0) {
+			[cookies deleteCharactersInRange: NSMakeRange(0, 1)];
+			[self _setValue: cookies 
+				forHTTPHeaderField: @"Set-Cookie"];
+		}
+    	}
+	[self _checkHeaders];
 }
 
 @end
