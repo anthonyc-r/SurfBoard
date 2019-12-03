@@ -17,6 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "NSFont+AppFont.h"
 #import "NSAttributedString+AppAttributes.h"
 
+@interface NSMutableAttributedString (HTML)
+-(void)replaceHTMLTag: (NSString*)tag withAttributes: (NSDictionary*)attributes;
+-(void)replaceHTMLVoidTag: (NSString*)tag withSymbol: (NSString*)symbol;
+-(void)replaceHTMLLinksWithText;
+-(void)replaceURLEncodingsOf: (NSString*)encoding withSymbol: (NSString*)symbol;
+-(void)replaceHTMLSpanOfClass: (NSString*)class withAttributes: (NSDictionary*)attributes;
+@end
+
 @implementation NSMutableAttributedString (HTML)
 
 -(void)replaceHTMLTag: (NSString*)tag withAttributes: (NSDictionary*)attributes {

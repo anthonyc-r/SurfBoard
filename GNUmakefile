@@ -41,5 +41,5 @@ SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm SurfBoardInfo.plist Resourc
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/application.make
 
-ADDITIONAL_FLAGS += -std=c99
+ADDITIONAL_FLAGS += -std=gnu99
 -include GNUmakefile.postamble

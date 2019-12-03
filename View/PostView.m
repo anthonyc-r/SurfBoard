@@ -30,6 +30,13 @@ static const CGFloat IMAGE_MINIMUM_HEIGHT = 170.0;
 static const CGFloat TEXT_MINIMUM_HEIGHT = 75.0;
 static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
+
+@interface PostView (private)
+-(void)layoutSubviews;
+-(void)layoutForTextPost;
+-(void)layoutForImagePost;
+@end
+
 @implementation PostView
 
 -initWithFrame: (NSRect)frame {
@@ -218,3 +225,4 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 }
 
 @end
+

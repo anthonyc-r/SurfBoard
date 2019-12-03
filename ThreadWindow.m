@@ -22,6 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/ClickableImageView.h"
 #import "Text/NSString+Links.h"
 
+@interface ThreadWindow (private)
+-(BOOL)focusPostWithNumber: (NSNumber*)postNumber;
+-(NSArray*)displayedPostViews;
+@end
+
 @implementation ThreadWindow
 
 -(void)awakeFromNib {

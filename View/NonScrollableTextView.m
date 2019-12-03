@@ -25,8 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)mouseScroll: (NSEvent*)event {
-	NSLog(@"Test");
-	[[self nextResponder] mouseScroll: event];
+	id responder = [self nextResponder];;
+	if ([responder respondsToSelector: @selector(mouseScroll:)]) {
+		[responder mouseScroll: event];
+	}
 }
 
 @end
