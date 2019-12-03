@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation NetworkSource
 
 -(void)fetch {
-	[self performSelectorInBackground: @selector(makeSynchronousRequest) withObject: nil];
+	[self performSelectorInBackground: @selector(makeSynchronousRequestWithPool) withObject: nil];
 }
 
 
@@ -39,6 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)failure: (NSError*)error {
 	[failureTarget performSelectorOnMainThread: failureSelector withObject: error waitUntilDone: YES];
+}
+
+
+-(void)makeSynchronousRequestWithPool {
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	[self makeSynchronousRequest];
+	[pool release];	
 }
 
 -(void)makeSynchronousRequest {
