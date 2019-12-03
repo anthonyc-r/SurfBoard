@@ -40,4 +40,6 @@ SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm SurfBoardInfo.plist Resourc
 # Include in the rules for making GNUstep command-line programs
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/application.make
+
+ADDITIONAL_FLAGS += -std=c99
 -include GNUmakefile.postamble
