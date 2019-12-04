@@ -27,137 +27,6 @@ static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; r
 static NSString *const PASS_KEY = @"pass_id";
 static NSString *const BODY_FORMAT = @"act=do_login&id=%@&pin=%@&long_login=1";
 
-static const unsigned char whitespace[32] = {
-  '\x00',
-  '\x3f',
-  '\x00',
-  '\x00',
-  '\x01',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-  '\x00',
-};
-
-#define IS_BIT_SET(a,i) ((((a) & (1<<(i)))) > 0)
-
-#define GS_IS_WHITESPACE(X) IS_BIT_SET(whitespace[(X)/8], (X) % 8)
-
-typedef	struct	{
-  const unsigned char	*ptr;
-  unsigned	end;
-  unsigned	pos;
-  unsigned	lin;
-  NSString	*err;
-  int           opt;
-  BOOL		key;
-  BOOL		old;
-} pldata;
-
-static BOOL skipSpace(pldata *pld)
-{
-  unsigned char	c;
-
-  while (pld->pos < pld->end)
-    {
-      c = pld->ptr[pld->pos];
-
-      if (GS_IS_WHITESPACE(c) == NO)
-	{
-	  return YES;
-	}
-      if (c == '\n')
-	{
-	  pld->lin++;
-	}
-      pld->pos++;
-    }
-  pld->err = @"reached end of string";
-  return NO;
-}
-
-static NSRange 
-GSRangeOfCookie(NSString *string)
-{
-  pldata		_pld;
-  pldata		*pld = &_pld;
-  NSData		*d;
-  NSRange               range;
-
-  /*
-   * An empty string is a nil property list.
-   */
-  range = NSMakeRange(NSNotFound, NSNotFound);
-  if ([string length] == 0)
-    {
-      return range;
-    }
-
-  d = [string dataUsingEncoding: NSUTF8StringEncoding];
-  NSCAssert(d, @"Couldn't get utf8 data from string.");
-  _pld.ptr = (unsigned char*)[d bytes];
-  _pld.pos = 0;
-  _pld.end = [d length];
-  _pld.err = nil;
-  _pld.lin = 0;
-  _pld.opt = 0;
-  _pld.key = NO;
-  _pld.old = YES;	// OpenStep style
-
-  while (skipSpace(pld) == YES)
-    {
-      if (pld->ptr[pld->pos] == ',')
-	{
-	  /* Look ahead for something that will tell us if this is a
-	     separate cookie or not */
-          unsigned saved_pos = pld->pos;
-	  while (pld->ptr[pld->pos] != '=' && pld->ptr[pld->pos] != ';'
-		&& pld->ptr[pld->pos] != ',' && pld->pos < pld->end )
-	    pld->pos++;
-	  if (pld->ptr[pld->pos] == '=')
-	    {
-	      /* Separate comment */
-	      range = NSMakeRange(0, saved_pos-1);
-	      break;
-	    }
-	  pld->pos = saved_pos;
-	}
-      pld->pos++;
-    }
-  if (range.location == NSNotFound)
-    range = NSMakeRange(0, [string length]);
-
-  return range;
-}
-
-
-
-@interface NSURLResponse (Additions)
-@end
-
 // Implementation which folds multiple Set-Cookie headers using the , character.
 
 @implementation NSURLResponse (Additions)
@@ -196,8 +65,11 @@ GSRangeOfCookie(NSString *string)
 
 @end
 
-@implementation PassNetworkSource
+@interface PassNetworkSource (private)
+-(NSString*)extractPassIDFromCookie: (NSString*)cookie;
+@end
 
+@implementation PassNetworkSource
 
 -(id)initWithToken: (NSString*)aToken pin: (NSString*)aPin {
 	if ((self = [super init])) {
@@ -241,26 +113,38 @@ GSRangeOfCookie(NSString *string)
 		[self failure: [NSError unexpectedResponseError]];
 		return;
 	}
-	NSString *result = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-	NSLog(@"reuslt: %@", result);
 	NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
 	NSDictionary *headers = [httpResponse allHeaderFields];
-	NSString *cookies = @"domain=test.com; expires=Thu, 12-Sep-2109 14:58:04 GMT; session=foo,bar=baz"; 
-    	//[headers objectForKey: @"Set-Cookie"];
-	//NSLog(@"cookers %@", cookies);
-	
-	while (1) {
-		NSRange range = GSRangeOfCookie(cookies);
-		NSLog(@"range: %d, %d", range.location, range.length);
-		if (range.location == NSNotFound) {
-			break;
-		}
-		NSLog(@"Substring: %@", [cookies substringWithRange: range]);
-		if ([cookies length] <= NSMaxRange(range)) {
-			break;
-		}
-		cookies = [cookies substringFromIndex: NSMaxRange(range) + 1];
+	NSString *cookies = [headers objectForKey: @"Set-Cookie"];
+	NSString *passId = [self extractPassIDFromCookie: cookies];
+	if (passId != nil) {
+		NSLog(@"Succeeded with passId: %@", passId);
+		[self success: passId];
+	} else {
+		[self failure: [NSError unexpectedResponseError]];
 	}
+}
+
+-(NSString*)extractPassIDFromCookie: (NSString*)cookie {
+	NSError *error = nil;
+	NSString *pattern = @"pass_id=([0-9a-zA-Z.]+)";
+	NSRegularExpression *exp = [[NSRegularExpression alloc] 
+		initWithPattern: pattern
+		options: 0
+		error: &error
+	];
+	if (error != nil) {
+		NSLog(@"Error in pass id regexp");
+		return nil;
+	}
+	NSTextCheckingResult *res = [exp firstMatchInString: cookie
+		options: 0
+		range: NSMakeRange(0, [cookie length])];
+	if (res == nil) {
+		NSLog(@"pass id not found in cookie");
+		return nil;
+	}
+	return [cookie substringWithRange: [res rangeAtIndex: 1]];
 }
 
 @end
