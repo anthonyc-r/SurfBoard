@@ -16,8 +16,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-@interface NSView(NibLoadable)
+@class PassLoginView;
+@protocol PassLoginViewDelegate 
+-(void)passLoginView: (PassLoginView*)passLoginView didRequestActivationWithToken: (NSString*)token andPIN: (NSString*)PIN;
+-(void)passLoginViewDidRequestDeactivation: (PassLoginView*)passLoginView;
+@end 
 
-+(id)loadFromNibNamed: (NSString*)nibName;
+@interface PassLoginView: NSBox {
+	NSButton *activateButton;
+	NSButton *deactivateButton;
+	NSTextField *tokenTextField;
+	NSTextField *pinTextField;
+	id<PassLoginViewDelegate> delegate;
+}
 
+-(void)setDelegate: (id<PassLoginViewDelegate>)aDelegate;
+-(void)configureForActivated;
+-(void)configureForNotActivated;
+-(void)didTapActivate: (id)sender;
+-(void)didTapDeactivate: (id)sender;
 @end

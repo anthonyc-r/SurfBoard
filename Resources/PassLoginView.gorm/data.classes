@@ -1,0 +1,23 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "didTapActivate:",
+	    "didTapDeactivate:"
+	);
+	Super = NSObject;
+    };
+    PassLoginView = {
+	Actions = (
+	    "didTapActivate:",
+	    "didTapDeactivate:"
+	);
+	Outlets = (
+	    activateButton,
+	    deactivateButton,
+	    tokenTextField,
+	    pinTextField
+	);
+	Super = NSBox;
+    };
+}

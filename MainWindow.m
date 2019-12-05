@@ -38,13 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self setContentView: scrollView];
 	[self refresh: self];
 	[self becomeFirstResponder];
-
-	// TEST
-	NSString *token = [[NSUserDefaults standardUserDefaults] stringForKey: @"pass_token"];
-	NSString *pin = [[NSUserDefaults standardUserDefaults] stringForKey: @"pass_pin"];
-	NSLog(@"token: %@, pin: %@", token, pin);
-	PassNetworkSource *source = [[PassNetworkSource alloc] initWithToken: token pin: pin];
-	[source fetch];
 }
 
 -(void)dealloc {
@@ -87,6 +80,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	displayedBoard = board;
 	[displayedBoard retain];
 	[self refresh: nil];
+}
+
+-(void)didTapPreferences: (id)sender {
+	[preferencesWindow makeKeyAndOrderFront: self];
 }
 
 -(void)onIndexFetched: (NSArray*)threads {

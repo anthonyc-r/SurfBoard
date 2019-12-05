@@ -18,27 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation NSView(NibLoadable)
 
-+(id)loadFromNibNamed: (NSString*)nibName owner: (id)owner {
++(id)loadFromNibNamed: (NSString*)nibName {
 	NSNib *nib = [[NSNib alloc] initWithNibNamed: nibName bundle: [NSBundle mainBundle]];
 	if (!nib) {
 		NSLog(@"Error loading nib named %@", nibName);
 		return nil;
+	} else {
+		NSLog(@"Loaded nib object");
 	}
+	NSObject *tempOwner = [NSObject new];
+	[tempOwner autorelease];
 	NSArray *topLevelObjects;
-	[nib instantiateNibWithOwner: owner topLevelObjects: &topLevelObjects];
+	[nib instantiateNibWithOwner: tempOwner topLevelObjects: &topLevelObjects];
 	if ([topLevelObjects count] < 1) {
 		NSLog(@"No objects in nib.");
 		return nil;
 	}
-	NSView *view = [topLevelObjects objectAtIndex: 0];
+	NSLog(@"Getting window from nib");
+	NSWindow *window = [topLevelObjects objectAtIndex: 0];
+	NSLog(@"Found window: %@", window);
+	NSArray *subviews = [[window contentView] subviews];
+	NSView *view = [subviews firstObject];
+	[view retain];
+	[window release];
 	if (!view) {
-		NSLog(@"Object at index 0 was not a NSView or subclass of this.");
+		NSLog(@"Expected the Nib to contain a window top level object, with the target view as it's first subview.");
 	} else {
-		NSLog(@"Loaded nib named %@", nibName);
+		NSLog(@"Loaded nib named %@: %@", nibName, view);
 	}
-	[view autorelease];
-	//[topLevelObjects release];
-	//[nib release];
 	return view;
 }
 

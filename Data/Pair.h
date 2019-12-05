@@ -14,10 +14,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
 
-@interface NSView(NibLoadable)
-
-+(id)loadFromNibNamed: (NSString*)nibName;
-
+@interface Pair: NSObject {
+	id firstObject;
+	id secondObject;
+}
+-(id)initWithFirstObject: (id)first secondObject: (id)second;
+-(id)firstObject;
+-(id)secondObject;
 @end

@@ -14,10 +14,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
+#import "Pair.h"
 
-@interface NSView(NibLoadable)
+@implementation Pair
 
-+(id)loadFromNibNamed: (NSString*)nibName;
+-(id)initWithFirstObject: (id)first secondObject: (id)second {
+	if ((self = [super init])) {
+		firstObject = first;
+		[firstObject retain];
+		secondObject = second;
+		[secondObject retain];
+	}
+	return self;
+}
 
+-(void)dealloc {
+	[firstObject release];
+	[secondObject release];
+	[super dealloc];
+}
+
+-(id)firstObject {
+	return firstObject;
+}
+
+-(id)secondObject {
+	return secondObject;
+}
 @end

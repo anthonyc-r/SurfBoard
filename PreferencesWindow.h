@@ -14,28 +14,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <AppKit/AppKit.h>
-#import "Net/FrontPageNetworkSource.h"
-#import "GNUstepGUI/GSTable.h"
-#import "View/PostView.h"
-#import "ThreadWindow.h"
-#import "ImageWindow.h"
-#import "OpenBoardPanel.h"
-#import "PreferencesWindow.h"
+#import <Foundation/Foundation.h>
+#import "View/PassLoginView.h"
+#import "Net/PassNetworkSource.h"
 
-@interface MainWindow : NSWindow<PostViewDelegate>
-{
-	NSScrollView *scrollView;
-	GSTable *tableView;
-  	FrontPageNetworkSource *networkSource;
-	ThreadWindow *threadWindow;
-	ImageWindow *imageWindow;
-	OpenBoardPanel *openBoardPanel;
-	PreferencesWindow *preferencesWindow;
-	NSString *displayedBoard;
-	NSArray *displayedThreads;
+@interface PreferencesWindow: NSWindow<PassLoginViewDelegate> {
+	NSBox *containerView;
+	NSPopUpButton *preferenceButton;
+	PassLoginView *loginView;
+	NSMutableArray *preferences;
+	PassNetworkSource *networkSource;
 }
--(void)refresh: (id)sender;
--(void)open: (id)sender;
--(void)postThread: (id)sender;
--(void)didTapPreferences: (id)sender;
+
 @end

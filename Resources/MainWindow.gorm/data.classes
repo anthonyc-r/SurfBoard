@@ -18,8 +18,11 @@
     };
     FirstResponder = {
 	Actions = (
+	    "didTap4ChanPass:",
 	    "didTapCancel:",
 	    "didTapOK:",
+	    "didTapPreferences:",
+	    "didTapTheme:",
 	    "postReply:",
 	    "postThread:",
 	    "refresh:"
@@ -36,12 +39,14 @@
     };
     MainWindow = {
 	Actions = (
+	    "didTapPreferences:"
 	);
 	Outlets = (
 	    scrollView,
 	    threadWindow,
 	    imageWindow,
-	    openBoardPanel
+	    openBoardPanel,
+	    preferencesWindow
 	);
 	Super = NSWindow;
     };
@@ -55,6 +60,17 @@
 	    textField
 	);
 	Super = NSPanel;
+    };
+    PreferencesWindow = {
+	Actions = (
+	    "didTap4ChanPass:",
+	    "didTapTheme:"
+	);
+	Outlets = (
+	    containerView,
+	    preferenceButton
+	);
+	Super = NSWindow;
     };
     ThreadWindow = {
 	Actions = (

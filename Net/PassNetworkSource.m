@@ -31,7 +31,6 @@ static NSString *const BODY_FORMAT = @"act=do_login&id=%@&pin=%@&long_login=1";
 
 @implementation NSURLResponse (Additions)
 -(void)_setHeaders: (id)headers {
-	NSLog(@"Set headers!!");
 	NSEnumerator *e;
 	NSString *v;
 
