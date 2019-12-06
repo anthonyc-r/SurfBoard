@@ -19,7 +19,9 @@ static NSString *const AppErrorDomain = @"AppErrorDomain";
 typedef enum {
 	AppErrorCodeInvalidBoardCode,
 	AppErrorCodeUnexpectedResponse,
-	AppErrorCodeOther
+	AppErrorCodeOther,
+	AppErrorCodeNoPassID,
+	AppErrorCodeInvalidPassID
 } AppErrorCode;
 
 
@@ -29,5 +31,7 @@ typedef enum {
 +(NSError*)invalidBoardCodeError;
 +(NSError*)unexpectedResponseError;
 +(NSError*)otherError;
++(NSError*)noPassError;
++(NSError*)invalidPassError;
 
 @end

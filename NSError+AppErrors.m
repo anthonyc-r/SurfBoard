@@ -36,4 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		userInfo: nil];
 }
 
++(NSError*)noPassError {
+	return [NSError errorWithDomain: AppErrorDomain
+		code: AppErrorCodeNoPassID
+		userInfo: nil];
+}
++(NSError*)invalidPassError {
+	return [NSError errorWithDomain: AppErrorDomain
+		code: AppErrorCodeInvalidPassID
+		userInfo: nil];
+}
+
+
 @end

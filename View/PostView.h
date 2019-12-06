@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Post *displayedPost;
   id<PostViewDelegate> delegate;
   NSColor *backgroundColor;
+  NSButton *selectPostButton;
 }
 -(void)configureForPost: (Post*)post;
 -(void)configureForThread: (Thread*)thread;

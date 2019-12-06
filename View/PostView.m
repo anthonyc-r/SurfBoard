@@ -50,12 +50,15 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		[viewButton autorelease];
 		headlineLabel = [[NonScrollableTextView alloc] init];
 		[headlineLabel autorelease];
+		selectPostButton = [[NSButton alloc] init];
+		[selectPostButton autorelease];
 		backgroundColor = [Theme postBackgroundColor];
 		[backgroundColor retain];
 		[self addSubview: imageView];
 		[self addSubview: upperTextView];
 		[self addSubview: viewButton];
 		[self addSubview: headlineLabel];
+		[self addSubview: selectPostButton];
 		[viewButton setTitle: @"View"];
 		[viewButton setTarget: self];
 		[viewButton setAction: @selector(didTapView)];
@@ -67,6 +70,8 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		[headlineLabel setDrawsBackground: NO];
 		[headlineLabel setEditable: NO];
 		[headlineLabel setRichText: YES];
+		[selectPostButton setButtonType: NSSwitchButton];
+		[selectPostButton setTitle: @""];
 		[self layoutSubviews];
 	}
 	return self;
@@ -157,9 +162,13 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 -(void)layoutForImagePost {
 	NSRect rect = [self bounds];
+	[selectPostButton setFrame: NSMakeRect(
+		7, rect.size.height - 22,
+		20, 20
+	)];
 	[headlineLabel setFrame: NSMakeRect(
-		10, rect.size.height - 20,
-		rect.size.width - 20, 10
+		25, rect.size.height - 20,
+		rect.size.width - 40, 10
 	)];
 	[imageView setFrame: NSMakeRect(
 		10, rect.size.height - 130, 
@@ -178,9 +187,13 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 -(void)layoutForTextPost {
 	NSRect rect = [self bounds];
+	[selectPostButton setFrame: NSMakeRect(
+		7, rect.size.height - 22,
+		20, 20
+	)];
 	[headlineLabel setFrame: NSMakeRect(
-		10, rect.size.height - 20,
-		rect.size.width - 20, 10
+		25, rect.size.height - 20,
+		rect.size.width - 40, 10
 	)];
 	[upperTextView setFrame: NSMakeRect(
 		10, 10, 
