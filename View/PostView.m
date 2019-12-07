@@ -72,6 +72,8 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		[headlineLabel setRichText: YES];
 		[selectPostButton setButtonType: NSSwitchButton];
 		[selectPostButton setTitle: @""];
+		[selectPostButton setTarget: self];
+		[selectPostButton setAction: @selector(didChangeSelection:)];
 		[self layoutSubviews];
 	}
 	return self;
@@ -235,6 +237,20 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 
 -(void)didTapImage {
 	[delegate postView: self didTapImageOnPost: displayedPost];
+}
+
+-(void)didChangeSelection: (NSButton*)sender {
+	if ([sender state] == NSOnState) {
+		[delegate postView: self didSetSelected: YES 
+			forPost: displayedPost];
+	} else {
+		[delegate postView: self didSetSelected: NO
+			forPost: displayedPost];
+	}
+}
+
+-(void)deselect {
+	[selectPostButton setState: NSOffState];
 }
 
 @end

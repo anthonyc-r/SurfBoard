@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Post.h"
 #import "Net/FrontPageNetworkSource.h"
 #import "Net/PassNetworkSource.h"
+#import "MenuItemTag.h"
+
 
 @implementation MainWindow
 
@@ -90,6 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Called network source success with thread %@", threads);
 	[networkSource release];
 	networkSource = nil;
+	selectedOP = nil;
 	[displayedThreads release];
 	displayedThreads = threads;
 	[displayedThreads retain];
@@ -120,6 +123,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Post new thread");
 }
 
+-(void)postReply: (id)sender {
+	NSLog(@"Reply to thread");
+}
+
+-(BOOL)validateMenuItem: (NSMenuItem*)menuItem {
+	switch ([menuItem tag]) {
+	case MenuItemTagReply:
+		return selectedOP != nil;
+	default:
+		return YES;
+	}	
+}
+
 -(void)onIndexFailure: (NSError*)error {
 	[networkSource release];
 	networkSource = nil;
@@ -136,6 +152,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Did tap image on post %@", post);
 	[imageWindow makeKeyAndOrderFront: self];
 	[imageWindow loadImageForPost: post];
+}
+
+-(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post {
+	if (selectedOP != nil) {
+		[selectedOP deselect];
+		selectedOP = nil;
+	}
+	if (isSelected) {
+		selectedOP = postView;
+	}
 }
 
 -(BOOL)textView: (NSTextView*)textView clickedOnLink: (id)link atIndex: (NSUInteger)charIndex {

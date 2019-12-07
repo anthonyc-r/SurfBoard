@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/PostView.h"
 #import "View/ClickableImageView.h"
 #import "Text/NSString+Links.h"
+#import "SubmitPostWindow.h"
 
 @interface ThreadWindow (private)
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber;
@@ -41,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[scrollView setLineScroll: 25];
 	[scrollView setHasVerticalScroller: YES];
 	[self setContentView: scrollView];
+	selectedPostViews = [NSMutableArray new];
 }
 
 -(void)refreshForThread: (Thread*)thread {
@@ -54,6 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Fetched detailed thread");
 	[networkSource release];
 	networkSource = nil;
+	[selectedPostViews removeAllObjects];
 	highlightedPost = nil;
 	[displayedThread release];
 	displayedThread = detailedThread;
@@ -103,14 +106,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 }
 
--(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread {
+-(void)postReply: (id)sender {
+	NSLog(@"Selected posts: %@", selectedPostViews);
+	NSEnumerator *selections = [selectedPostViews objectEnumerator];
+	PostView *postView;
+	while ((postView = [selections nextObject])) {
+		[postView deselect];
+	}
+	NSLog(@"%@", submitPostWindow);
+	[submitPostWindow makeKeyAndOrderFront: self];
+	
+}
 
+-(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread {
+	// Do nothing.
 }
 
 -(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post {
 	NSLog(@"Did tap image on post %@", post);
 	[imageWindow makeKeyAndOrderFront: self];
 	[imageWindow loadImageForPost: post];
+}
+
+-(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post {
+	if (isSelected && ![selectedPostViews containsObject: postView]) {
+		[selectedPostViews addObject: postView];
+	} else if (!isSelected) {
+		[selectedPostViews removeObject: postView];
+	}
 }
 
 -(BOOL)textView: (NSTextView*)textView clickedOnLink: (id)link atIndex: (NSUInteger)charIndex {

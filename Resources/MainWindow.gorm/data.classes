@@ -23,6 +23,7 @@
 	    "didTapOK:",
 	    "didTapPreferences:",
 	    "didTapTheme:",
+	    "didTapPost:",
 	    "postReply:",
 	    "postThread:",
 	    "refresh:"
@@ -46,7 +47,8 @@
 	    threadWindow,
 	    imageWindow,
 	    openBoardPanel,
-	    preferencesWindow
+	    preferencesWindow,
+	    submitPostWindow
 	);
 	Super = NSWindow;
     };
@@ -72,11 +74,25 @@
 	);
 	Super = NSWindow;
     };
+    SubmitPostWindow = {
+	Actions = (
+	    "didTapPost:"
+	);
+	Outlets = (
+	    nameTextField,
+	    optionsTextField,
+	    subjectTextField,
+	    contentTextView,
+	    postButton
+	);
+	Super = NSWindow;
+    };
     ThreadWindow = {
 	Actions = (
 	);
 	Outlets = (
-	    imageWindow
+	    imageWindow,
+	    submitPostWindow
 	);
 	Super = NSWindow;
     };

@@ -33,9 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	PreferencesWindow *preferencesWindow;
 	NSString *displayedBoard;
 	NSArray *displayedThreads;
+	PostView *selectedOP;
 }
 -(void)refresh: (id)sender;
 -(void)open: (id)sender;
 -(void)postThread: (id)sender;
+-(BOOL)validateMenuItem: (NSMenuItem*)menuItem;
 -(void)didTapPreferences: (id)sender;
 @end

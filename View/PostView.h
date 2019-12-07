@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @protocol PostViewDelegate<NSTextViewDelegate>
 -(void)postView: (PostView*)postView didTapViewOnThread: (Thread*)thread;
 -(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post;
+-(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post;
 @end
 
 @interface PostView : NSView
@@ -49,4 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didTapImage;
 -(Post*)displayedPost;
 -(void)setHighlight: (BOOL)highlight;
+-(void)didChangeSelection: (NSButton*)sender;
+-(void)deselect;
 @end
