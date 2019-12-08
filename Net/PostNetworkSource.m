@@ -19,29 +19,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "NSURL+Utils.h"
 
 static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-static NSString *const BODY_FORMAT = @"mode=regist&name=%@&email=%@&sub=%@&com=%@&pwd=%@";
+static NSString *const BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@";
 static NSString *const COOKIE = @"pass_enabled=1,pass_id=%@";
 
 @implementation PostNetworkSource
 
--(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment email: (NSString*)anEmail {
+-(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment{
 	if ((self = [super init])) {
 		board = aBoard;
 		name = aName;
 		password = aPassword;
 		subject = aSubject;
 		comment = aComment;
-		email = anEmail;
 		[name retain];
 		[password retain];
 		[subject retain];
 		[comment retain];
-		[email retain];
 	}
 	return self;
 }
 
 -(void)makeSynchronousRequest {
+	NSLog(@"Will make post!");
 	NSString *passId = [[NSUserDefaults standardUserDefaults]
 		objectForKey: @"pass_id"];
 	if (passId == nil) {
@@ -53,7 +52,7 @@ static NSString *const COOKIE = @"pass_enabled=1,pass_id=%@";
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
 	NSString *postBody = [NSString stringWithFormat: BODY_FORMAT,
-		name, email, subject, comment, password];
+		name, subject, comment, password];
 	[request setHTTPBody: [postBody 
 		dataUsingEncoding: NSASCIIStringEncoding]];
 	[request setHTTPMethod: @"POST"];

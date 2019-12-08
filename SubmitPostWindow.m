@@ -16,11 +16,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
 #import "SubmitPostWindow.h"
+#import "Net/PostNetworkSource.h"
 
 @implementation SubmitPostWindow
 
 -(void)didTapPost: (id)sender {
 	NSLog(@"Did tap post");
+	if (networkSource != nil) {
+		NSLog(@"Post already in progress, ignoring.");
+	}
+	NSString *name = [nameTextField stringValue];
+	NSString *options = [optionsTextField stringValue];
+	NSString *subject = [subjectTextField stringValue];
+	NSLog(@"contentView: %@", contentTextView);
+	NSString *content = [contentTextView stringValue];
+	NSLog(@"Content: - %@", content);
+	// TODO: - Store or generate a single password per session
+	NSString *password = [[NSUUID UUID] UUIDString];
+	NSLog(@"Creating nw source");
+	networkSource = [[PostNetworkSource alloc] initForBoard: @"b"
+		withName: name password: password subject: subject 
+		comment: content];
+	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
+	[networkSource performOnFailure: @selector(postFailure:) target: self];
+	NSLog(@"Fetching nw source");
+	[networkSource fetch];
+}
+
+-(void)postSuccess: (id)sender {
+	NSLog(@"Successfully sent post!");
+	[networkSource release];
+	networkSource = nil;
+}
+
+-(void)postFailure: (NSError*)error {
+	NSLog(@"Failed to send post with error: %@", error);
+	[networkSource release];
+	networkSource = nil;
 }
 
 @end 
