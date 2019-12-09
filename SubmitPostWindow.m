@@ -29,12 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *options = [optionsTextField stringValue];
 	NSString *subject = [subjectTextField stringValue];
 	NSLog(@"contentView: %@", contentTextView);
-	NSString *content = [contentTextView stringValue];
+	NSString *content = [contentTextView string];
 	NSLog(@"Content: - %@", content);
 	// TODO: - Store or generate a single password per session
 	NSString *password = [[NSUUID UUID] UUIDString];
 	NSLog(@"Creating nw source");
-	networkSource = [[PostNetworkSource alloc] initForBoard: @"b"
+	networkSource = [[PostNetworkSource alloc] initForThread: targetThread
 		withName: name password: password subject: subject 
 		comment: content];
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
@@ -42,6 +42,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Fetching nw source");
 	[networkSource fetch];
 }
+
+-(void)configureForReplyingToThread: (Thread*)thread {
+	[targetThread release];
+	targetThread = thread;
+	[targetThread retain];
+}
+
 
 -(void)postSuccess: (id)sender {
 	NSLog(@"Successfully sent post!");

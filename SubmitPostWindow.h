@@ -16,19 +16,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
 #import "Net/PostNetworkSource.h"
+#import "Data/Thread.h"
 
 @interface SubmitPostWindow: NSWindow {
 	NSTextField *nameTextField;
 	NSTextField *optionsTextField;
 	NSTextField *subjectTextField;
-	NSTextField *contentTextView;
+	NSTextView *contentTextView;
 	NSButton *postButton;
 	PostNetworkSource *networkSource;
-	
+	Thread *targetThread;
 }
 
 -(void)didTapPost: (id)sender;
 -(void)postSuccess: (id)sender;
 -(void)postFailure: (NSError*)error;
+-(void)configureForReplyingToThread: (Thread*)thread;
 
 @end 

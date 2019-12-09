@@ -19,14 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "NSURL+Utils.h"
 
 static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-static NSString *const BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@";
-static NSString *const COOKIE = @"pass_enabled=1,pass_id=%@";
+static NSString *const NEW_THREAD_BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@";
+static NSString *const REPLY_BODY_FORMAT = @"mode=regist&resto=%@&name=%@&sub=%@&com=%@&pwd=%@";
+static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 
 @implementation PostNetworkSource
 
--(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment{
+-(id)initForThread: (Thread*)aThread withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment {
 	if ((self = [super init])) {
-		board = aBoard;
+		thread = aThread;
 		name = aName;
 		password = aPassword;
 		subject = aSubject;
@@ -35,9 +36,28 @@ static NSString *const COOKIE = @"pass_enabled=1,pass_id=%@";
 		[password retain];
 		[subject retain];
 		[comment retain];
+		[thread retain];
 	}
 	return self;
 }
+
+-(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment{
+	if ((self = [super init])) {
+		board = aBoard;
+		name = aName;
+		password = aPassword;
+		subject = aSubject;
+		comment = aComment;
+		[board retain];
+		[name retain];
+		[password retain];
+		[subject retain];
+		[comment retain];
+	}
+	return self;
+}
+
+
 
 -(void)makeSynchronousRequest {
 	NSLog(@"Will make post!");
@@ -47,17 +67,27 @@ static NSString *const COOKIE = @"pass_enabled=1,pass_id=%@";
 		[self failure: [NSError noPassError]];
 		return;
 	}
-
+	NSString *boardCode;
+	NSString *postBody;
+	if (thread != nil) {
+		boardCode = [[thread getOP] getBoard];
+		NSNumber *postNumber = [[thread getOP] getNumber];
+		postBody = [NSString stringWithFormat: REPLY_BODY_FORMAT,
+		postNumber, name, subject, comment, password];
+	} else {
+		boardCode = board;
+		postBody = [NSString stringWithFormat: NEW_THREAD_BODY_FORMAT,
+		name, subject, comment, password];
+	}
 	NSURL *url = [NSURL urlForPostingToBoard: board];
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
-	NSString *postBody = [NSString stringWithFormat: BODY_FORMAT,
-		name, subject, comment, password];
 	[request setHTTPBody: [postBody 
 		dataUsingEncoding: NSASCIIStringEncoding]];
 	[request setHTTPMethod: @"POST"];
 	[request setValue: USER_AGENT forHTTPHeaderField: @"User-Agent"];
 	NSString *cookie = [NSString stringWithFormat: COOKIE, passId];
+	NSLog(@"Cookie: %@", cookie);
 	[request setValue: cookie forHTTPHeaderField: @"Cookie"];
 	NSURLResponse *response = nil;
 	NSError *error = nil;

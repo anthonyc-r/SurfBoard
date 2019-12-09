@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "NetworkSource.h"
+#import "Data/Thread.h"
 
 
 @interface PostNetworkSource: NetworkSource {
@@ -23,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *subject;
 	NSString *comment;
 	NSString *board;
+	Thread *thread;
 }
 
+-(id)initForThread: (Thread*)aThread withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment;
 -(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment;
 
 @end
