@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/NSView+NibLoadable.h"
 #import "Data/Pair.h"
 #import "Net/PassNetworkSource.h"
+#import "AppUserDefaults.h"
 
 @implementation PreferencesWindow
 
@@ -93,22 +94,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)passLoginViewDidRequestDeactivation: (PassLoginView*)passLoginView {
 	NSLog(@"Did request deactivation");
-	[[NSUserDefaults standardUserDefaults] setObject: nil forKey: @"pass_id"];
+	[AppUserDefaults setPassID: nil];
 	[loginView configureForNotActivated];
 }
 
 -(BOOL)isPassActivated {
-	NSString *passID = [[NSUserDefaults standardUserDefaults] 
-		objectForKey: @"pass_id"];
+	NSString *passID = [AppUserDefaults passID];
 	return passID != nil;
 }
 
 -(void)didFetchPassID: (NSString*)passID {
 	[networkSource release];
 	networkSource = nil;
-	NSLog(@"Successfully fetched pass %@", passID);
-	[[NSUserDefaults standardUserDefaults] setObject: passID 
-		forKey: @"pass_id"];
+	[AppUserDefaults setPassID: passID];
 	[loginView configureForActivated];
 }
 

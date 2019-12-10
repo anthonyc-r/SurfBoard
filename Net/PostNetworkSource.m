@@ -22,6 +22,7 @@ static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; r
 static NSString *const NEW_THREAD_BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@";
 static NSString *const REPLY_BODY_FORMAT = @"mode=regist&resto=%@&name=%@&sub=%@&com=%@&pwd=%@";
 static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
+static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 
 @implementation PostNetworkSource
 
@@ -57,10 +58,19 @@ static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 	return self;
 }
 
+-(void)dealloc {
+	[board release];
+	[thread release];
+	[name release];
+	[password release];
+	[subject release];
+	[comment release];
+	[super dealloc];
+}
+
 
 
 -(void)makeSynchronousRequest {
-	NSLog(@"Will make post!");
 	NSString *passId = [[NSUserDefaults standardUserDefaults]
 		objectForKey: @"pass_id"];
 	if (passId == nil) {
@@ -79,7 +89,7 @@ static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 		postBody = [NSString stringWithFormat: NEW_THREAD_BODY_FORMAT,
 		name, subject, comment, password];
 	}
-	NSURL *url = [NSURL urlForPostingToBoard: board];
+	NSURL *url = [NSURL urlForPostingToBoard: boardCode];
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
 	[request setHTTPBody: [postBody 
@@ -87,7 +97,6 @@ static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 	[request setHTTPMethod: @"POST"];
 	[request setValue: USER_AGENT forHTTPHeaderField: @"User-Agent"];
 	NSString *cookie = [NSString stringWithFormat: COOKIE, passId];
-	NSLog(@"Cookie: %@", cookie);
 	[request setValue: cookie forHTTPHeaderField: @"Cookie"];
 	NSURLResponse *response = nil;
 	NSError *error = nil;
@@ -102,8 +111,13 @@ static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 	NSString *responseString = [[NSString alloc] initWithData: data
 		encoding: NSUTF8StringEncoding];
 	[responseString autorelease];
+	NSRange range = [responseString rangeOfString: SUCCESS_TOKEN];
 	NSLog(@"Response data: %@", responseString);
-	[self failure: [NSError unexpectedResponseError]];
+	if (range.location != NSNotFound) {
+		[self success: self];
+	} else {
+		[self failure: [NSError unexpectedResponseError]];
+	}
 }
 
 @end

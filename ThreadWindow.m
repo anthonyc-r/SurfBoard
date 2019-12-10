@@ -113,7 +113,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	while ((postView = [selections nextObject])) {
 		[postView deselect];
 	}
+	// TODO: - Fill content to quote selected posts.
 	NSLog(@"%@", submitPostWindow);
+	[submitPostWindow configureForReplyingToThread: displayedThread];
 	[submitPostWindow makeKeyAndOrderFront: self];
 	
 }

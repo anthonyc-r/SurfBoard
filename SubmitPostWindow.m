@@ -17,20 +17,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "SubmitPostWindow.h"
 #import "Net/PostNetworkSource.h"
+#import "AppUserDefaults.h"
 
 @implementation SubmitPostWindow
 
+-(void)awakeFromNib {
+	[super awakeFromNib];
+	[nameTextField setStringValue: [AppUserDefaults userName]];
+}
+
+-(void)becomeKeyWindow {
+	[super becomeKeyWindow];
+	[self makeFirstResponder: contentTextView];
+}
+
 -(void)didTapPost: (id)sender {
-	NSLog(@"Did tap post");
 	if (networkSource != nil) {
 		NSLog(@"Post already in progress, ignoring.");
 	}
+	[self setTitle: @"Posting..."];
 	NSString *name = [nameTextField stringValue];
+	// Persist name upon posting...
+	[AppUserDefaults setUserName: name];
 	NSString *options = [optionsTextField stringValue];
 	NSString *subject = [subjectTextField stringValue];
-	NSLog(@"contentView: %@", contentTextView);
 	NSString *content = [contentTextView string];
-	NSLog(@"Content: - %@", content);
 	// TODO: - Store or generate a single password per session
 	NSString *password = [[NSUUID UUID] UUIDString];
 	NSLog(@"Creating nw source");
@@ -47,6 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[targetThread release];
 	targetThread = thread;
 	[targetThread retain];
+	[self configureDefaultTitle];
 }
 
 
@@ -54,12 +66,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Successfully sent post!");
 	[networkSource release];
 	networkSource = nil;
+	[self setTitle: @"Post Success!"];
+	[self scheduleTitleConfigAfterDelay];
+	[contentTextView setString: @""];
 }
 
 -(void)postFailure: (NSError*)error {
 	NSLog(@"Failed to send post with error: %@", error);
 	[networkSource release];
 	networkSource = nil;
+	[self setTitle: @"Post Failure"];
+	[self scheduleTitleConfigAfterDelay];
+}
+
+-(void)scheduleTitleConfigAfterDelay {
+	[NSTimer scheduledTimerWithTimeInterval: 5.0 target: self
+		selector: @selector(configureDefaultTitle) userInfo: nil
+		repeats: false];
+}
+
+-(void)configureDefaultTitle {
+	if (targetThread != nil) {
+		NSString *title = [NSString stringWithFormat: @"Reply To Thread #%@",
+		[[targetThread getOP] getNumber]];
+		[self setTitle: title];
+	} else {
+		[self setTitle: @"New Thread"];
+	}
 }
 
 @end 
