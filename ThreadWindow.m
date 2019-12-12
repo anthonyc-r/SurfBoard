@@ -116,7 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[postView deselect];
 		[postNumbers addObject: [[postView displayedPost] getNumber]];
 	}
-	[submitPostWindow configureForReplyingToThread: displayedThread
+	[submitPostWindow configureForReplyingToOP: [displayedThread getOP]
 		quotingPostNumbers: postNumbers];
 	[submitPostWindow makeKeyAndOrderFront: self];
 	

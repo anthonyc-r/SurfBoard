@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "ImageWindow.h"
 #import "OpenBoardPanel.h"
 #import "PreferencesWindow.h"
+#import "SubmitPostWindow.h"
 
 @interface MainWindow : NSWindow<PostViewDelegate>
 {
@@ -34,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *displayedBoard;
 	NSArray *displayedThreads;
 	PostView *selectedOP;
+	SubmitPostWindow *submitPostWindow;
 }
 -(void)refresh: (id)sender;
 -(void)open: (id)sender;

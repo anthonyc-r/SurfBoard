@@ -25,12 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSTextView *contentTextView;
 	NSButton *postButton;
 	PostNetworkSource *networkSource;
-	Thread *targetThread;
+	Post *targetOP;
+	NSString *targetBoard;
 }
 
 -(void)didTapPost: (id)sender;
 -(void)postSuccess: (id)sender;
 -(void)postFailure: (NSError*)error;
--(void)configureForReplyingToThread: (Thread*)thread quotingPostNumbers: (NSArray*)postNumbers;
+-(void)configureForReplyingToOP: (Post*)op quotingPostNumbers: (NSArray*)postNumbers;
+-(void)configureForNewThreadOnBoard: (NSString*)board;
 
 @end 

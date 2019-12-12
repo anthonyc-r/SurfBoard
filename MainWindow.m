@@ -120,11 +120,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)postThread: (id)sender {
-	NSLog(@"Post new thread");
+	// TODO: - Image upload
+	NSString *board = [[selectedOP displayedPost] getBoard];
+	[submitPostWindow configureForNewThreadOnBoard: board];
+	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
 -(void)postReply: (id)sender {
-	NSLog(@"Reply to thread");
+	[submitPostWindow configureForReplyingToOP: [selectedOP displayedPost]
+		quotingPostNumbers: nil];
+	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
 -(BOOL)validateMenuItem: (NSMenuItem*)menuItem {

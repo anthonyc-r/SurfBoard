@@ -26,6 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[nameTextField setStringValue: [AppUserDefaults userName]];
 }
 
+-(void)dealloc {
+	[targetBoard release];
+	[targetOP release];
+	[super dealloc];
+}
+
 -(void)becomeKeyWindow {
 	[super becomeKeyWindow];
 	[self makeFirstResponder: contentTextView];
@@ -45,19 +51,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	// TODO: - Store or generate a single password per session
 	NSString *password = [[NSUUID UUID] UUIDString];
 	NSLog(@"Creating nw source");
-	networkSource = [[PostNetworkSource alloc] initForThread: targetThread
+	networkSource = [[PostNetworkSource alloc] initForOP: targetOP
 		withName: name password: password subject: subject 
-		comment: content];
+		comment: content options: options];
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
 	[networkSource performOnFailure: @selector(postFailure:) target: self];
 	NSLog(@"Fetching nw source");
 	[networkSource fetch];
 }
 
--(void)configureForReplyingToThread: (Thread*)thread quotingPostNumbers: (NSArray*)postNumbers {
-	[targetThread release];
-	targetThread = thread;
-	[targetThread retain];
+-(void)configureForReplyingToOP: (Post*)op quotingPostNumbers: (NSArray*)postNumbers {
+	[targetBoard release];
+	targetBoard = nil;
+	[targetOP release];
+	targetOP = op;
+	[targetOP retain];
 	[self configureDefaultTitle];
 	NSMutableString *content = [[NSMutableString alloc] init];
 	[content autorelease];
@@ -69,6 +77,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[content appendString: quote];
 	}
 	[contentTextView setString: content];
+}
+
+-(void)configureForNewThreadOnBoard: (NSString*)board {
+	[targetOP release];
+	targetOP = nil;
+	[targetBoard release];
+	targetBoard = board;
+	[targetBoard retain];
+	[self configureDefaultTitle];
 }
 
 
@@ -96,12 +113,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)configureDefaultTitle {
-	if (targetThread != nil) {
+	if (targetOP != nil) {
 		NSString *title = [NSString stringWithFormat: @"Reply To Thread #%@",
-		[[targetThread getOP] getNumber]];
+		[targetOP getNumber]];
 		[self setTitle: title];
 	} else {
-		[self setTitle: @"New Thread"];
+		NSString *title = [NSString stringWithFormat: @"New Thread /%@/", targetBoard];
+		[self setTitle: title];
 	}
 }
 

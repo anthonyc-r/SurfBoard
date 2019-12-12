@@ -15,56 +15,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "PostNetworkSource.h"
+#import "Data/Post.h"
 #import "NSError+AppErrors.h"
 #import "NSURL+Utils.h"
 
 static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-static NSString *const NEW_THREAD_BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@";
-static NSString *const REPLY_BODY_FORMAT = @"mode=regist&resto=%@&name=%@&sub=%@&com=%@&pwd=%@";
+static NSString *const NEW_THREAD_BODY_FORMAT = @"mode=regist&name=%@&sub=%@&com=%@&pwd=%@&email=%@";
+static NSString *const REPLY_BODY_FORMAT = @"mode=regist&resto=%@&name=%@&sub=%@&com=%@&pwd=%@&email=%@";
 static NSString *const COOKIE = @"pass_id=%@; pass_enabled=1";
 static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 
 @implementation PostNetworkSource
 
--(id)initForThread: (Thread*)aThread withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment {
+-(id)initForOP: (Post*)anOP withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions {
 	if ((self = [super init])) {
-		thread = aThread;
+		op = anOP;
 		name = aName;
 		password = aPassword;
 		subject = aSubject;
 		comment = aComment;
+		options = someOptions;
 		[name retain];
 		[password retain];
 		[subject retain];
 		[comment retain];
-		[thread retain];
+		[op retain];
+		[options retain];
 	}
 	return self;
 }
 
--(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment{
+-(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions {
 	if ((self = [super init])) {
 		board = aBoard;
 		name = aName;
 		password = aPassword;
 		subject = aSubject;
 		comment = aComment;
+		options = someOptions;
 		[board retain];
 		[name retain];
 		[password retain];
 		[subject retain];
 		[comment retain];
+		[options retain];
 	}
 	return self;
 }
 
 -(void)dealloc {
 	[board release];
-	[thread release];
+	[op release];
 	[name release];
 	[password release];
 	[subject release];
 	[comment release];
+	[options release];
 	[super dealloc];
 }
 
@@ -79,15 +85,15 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	}
 	NSString *boardCode;
 	NSString *postBody;
-	if (thread != nil) {
-		boardCode = [[thread getOP] getBoard];
-		NSNumber *postNumber = [[thread getOP] getNumber];
+	if (op != nil) {
+		boardCode = [op getBoard];
+		NSNumber *postNumber = [op getNumber];
 		postBody = [NSString stringWithFormat: REPLY_BODY_FORMAT,
-		postNumber, name, subject, comment, password];
+		postNumber, name, subject, comment, password, options];
 	} else {
 		boardCode = board;
 		postBody = [NSString stringWithFormat: NEW_THREAD_BODY_FORMAT,
-		name, subject, comment, password];
+		name, subject, comment, password, options];
 	}
 	NSURL *url = [NSURL urlForPostingToBoard: boardCode];
 	NSMutableURLRequest *request = [NSMutableURLRequest 
