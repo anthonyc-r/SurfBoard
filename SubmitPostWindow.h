@@ -31,6 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didTapPost: (id)sender;
 -(void)postSuccess: (id)sender;
 -(void)postFailure: (NSError*)error;
--(void)configureForReplyingToThread: (Thread*)thread;
+-(void)configureForReplyingToThread: (Thread*)thread quotingPostNumbers: (NSArray*)postNumbers;
 
 @end 

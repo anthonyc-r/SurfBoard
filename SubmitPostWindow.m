@@ -54,11 +54,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[networkSource fetch];
 }
 
--(void)configureForReplyingToThread: (Thread*)thread {
+-(void)configureForReplyingToThread: (Thread*)thread quotingPostNumbers: (NSArray*)postNumbers {
 	[targetThread release];
 	targetThread = thread;
 	[targetThread retain];
 	[self configureDefaultTitle];
+	NSMutableString *content = [[NSMutableString alloc] init];
+	[content autorelease];
+	NSNumber *postNumber = nil;
+	NSEnumerator *enumerator = [postNumbers objectEnumerator];
+	while ((postNumber = [enumerator nextObject])) {
+		NSString *quote = [NSString 
+			stringWithFormat: @">>%@\n", postNumber];
+		[content appendString: quote];
+	}
+	[contentTextView setString: content];
 }
 
 

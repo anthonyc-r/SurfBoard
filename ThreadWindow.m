@@ -110,12 +110,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Selected posts: %@", selectedPostViews);
 	NSEnumerator *selections = [selectedPostViews objectEnumerator];
 	PostView *postView;
+	NSMutableArray *postNumbers = [[NSMutableArray alloc] init];
+	[postNumbers autorelease];
 	while ((postView = [selections nextObject])) {
 		[postView deselect];
+		[postNumbers addObject: [[postView displayedPost] getNumber]];
 	}
-	// TODO: - Fill content to quote selected posts.
-	NSLog(@"%@", submitPostWindow);
-	[submitPostWindow configureForReplyingToThread: displayedThread];
+	[submitPostWindow configureForReplyingToThread: displayedThread
+		quotingPostNumbers: postNumbers];
 	[submitPostWindow makeKeyAndOrderFront: self];
 	
 }
