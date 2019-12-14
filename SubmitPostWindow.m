@@ -53,11 +53,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Creating nw source");
 	networkSource = [[PostNetworkSource alloc] initForOP: targetOP
 		withName: name password: password subject: subject 
-		comment: content options: options];
+		comment: content options: options imageURL: [self
+		selectedImageURL]];
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
 	[networkSource performOnFailure: @selector(postFailure:) target: self];
 	NSLog(@"Fetching nw source");
 	[networkSource fetch];
+}
+
+-(void)didTapPickImage: (id)sender {
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	[openPanel setDirectory: NSHomeDirectory()];
+	[openPanel setAllowedFileTypes: [NSArray arrayWithObjects:
+		@"jpeg", @"jpg", @"gif", @"png", @"webm", nil]];
+	[openPanel runModal];
+	NSURL *fileURL = [openPanel URL];
+	NSLog(@"Picked file: %@", fileURL);
+	[imageTextField setStringValue: [fileURL path]];
 }
 
 -(void)configureForReplyingToOP: (Post*)op quotingPostNumbers: (NSArray*)postNumbers {
@@ -96,6 +108,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self setTitle: @"Post Success!"];
 	[self scheduleTitleConfigAfterDelay];
 	[contentTextView setString: @""];
+	[imageTextField setStringValue: @""];
 }
 
 -(void)postFailure: (NSError*)error {
@@ -121,6 +134,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		NSString *title = [NSString stringWithFormat: @"New Thread /%@/", targetBoard];
 		[self setTitle: title];
 	}
+}
+
+-(NSURL*)selectedImageURL {
+	NSString *path = [imageTextField stringValue];
+	if (path == nil || [path length] < 1) {
+		return nil;
+	}
+	return [NSURL fileURLWithPath: path];
 }
 
 @end 

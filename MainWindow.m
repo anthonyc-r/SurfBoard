@@ -59,11 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 
 	NSLog(@"Main window refresh?");
-	NSString *code = displayedBoard;
-	if (code == nil) {
-		// TODO: - Make home board
-		code = @"g";
-	}
+	NSString *code = [self getDisplayedBoard];
 	networkSource = [[FrontPageNetworkSource alloc] initWithCode: code];
 	[networkSource performOnSuccess: @selector(onIndexFetched:) target: self];
 	[networkSource performOnFailure: @selector(onIndexFailure:) target: self];
@@ -120,15 +116,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)postThread: (id)sender {
-	// TODO: - Image upload
-	NSString *board = [[selectedOP displayedPost] getBoard];
-	[submitPostWindow configureForNewThreadOnBoard: board];
+	[submitPostWindow configureForNewThreadOnBoard: 
+		[self getDisplayedBoard]];
 	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
 -(void)postReply: (id)sender {
-	[submitPostWindow configureForReplyingToOP: [selectedOP displayedPost]
-		quotingPostNumbers: nil];
+	Post *post = [selectedOP displayedPost];
+	[selectedOP deselect];
+	selectedOP = nil;
+	NSArray *postNumbers = [NSArray arrayWithObject: [post getNumber]];
+	[submitPostWindow configureForReplyingToOP: post 
+		quotingPostNumbers: postNumbers];
 	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
@@ -139,6 +138,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	default:
 		return YES;
 	}	
+}
+
+-(NSString*)getDisplayedBoard {
+	NSString *code = displayedBoard;
+	if (code == nil) {
+		// TODO: - Make home board
+		code = @"g";
+	}
+	return code;
 }
 
 -(void)onIndexFailure: (NSError*)error {

@@ -25,10 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *comment;
 	NSString *board;
 	NSString *options;
+	NSURL *imageURL;
 	Post *op;
 }
 
--(id)initForOP: (Post*)anOP withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions;
--(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions;
-
+-(id)initForOP: (Post*)anOP withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions imageURL: (NSURL*)anImageURL;
+-(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions imageURL: (NSURL*)anImageURL;
+-(NSString*)boardCode;
 @end

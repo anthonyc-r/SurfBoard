@@ -42,4 +42,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)postThread: (id)sender;
 -(BOOL)validateMenuItem: (NSMenuItem*)menuItem;
 -(void)didTapPreferences: (id)sender;
+-(NSString*)getDisplayedBoard;
 @end

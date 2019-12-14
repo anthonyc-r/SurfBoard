@@ -27,7 +27,7 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 
 @implementation PostNetworkSource
 
--(id)initForOP: (Post*)anOP withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions {
+-(id)initForOP: (Post*)anOP withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions imageURL: (NSURL*)anImageURL {
 	if ((self = [super init])) {
 		op = anOP;
 		name = aName;
@@ -35,17 +35,19 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		subject = aSubject;
 		comment = aComment;
 		options = someOptions;
+		imageURL = anImageURL;
 		[name retain];
 		[password retain];
 		[subject retain];
 		[comment retain];
 		[op retain];
 		[options retain];
+		[imageURL retain];
 	}
 	return self;
 }
 
--(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions {
+-(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions imageURL: (NSURL*)anImageURL {
 	if ((self = [super init])) {
 		board = aBoard;
 		name = aName;
@@ -53,12 +55,14 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		subject = aSubject;
 		comment = aComment;
 		options = someOptions;
+		imageURL = anImageURL;
 		[board retain];
 		[name retain];
 		[password retain];
 		[subject retain];
 		[comment retain];
 		[options retain];
+		[imageURL retain];
 	}
 	return self;
 }
@@ -71,6 +75,7 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	[subject release];
 	[comment release];
 	[options release];
+	[imageURL release];
 	[super dealloc];
 }
 
@@ -83,27 +88,57 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		[self failure: [NSError noPassError]];
 		return;
 	}
-	NSString *boardCode;
-	NSString *postBody;
-	if (op != nil) {
-		boardCode = [op getBoard];
-		NSNumber *postNumber = [op getNumber];
-		postBody = [NSString stringWithFormat: REPLY_BODY_FORMAT,
-		postNumber, name, subject, comment, password, options];
-	} else {
-		boardCode = board;
-		postBody = [NSString stringWithFormat: NEW_THREAD_BODY_FORMAT,
-		name, subject, comment, password, options];
-	}
-	NSURL *url = [NSURL urlForPostingToBoard: boardCode];
+	NSURL *url = [NSURL urlForPostingToBoard: [self boardCode]];
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
-	[request setHTTPBody: [postBody 
-		dataUsingEncoding: NSASCIIStringEncoding]];
+		
 	[request setHTTPMethod: @"POST"];
 	[request setValue: USER_AGENT forHTTPHeaderField: @"User-Agent"];
 	NSString *cookie = [NSString stringWithFormat: COOKIE, passId];
 	[request setValue: cookie forHTTPHeaderField: @"Cookie"];
+	// TODO: - consider abstracting this http multipart form construction
+	// TODO: - random, long, boundary.
+	NSString *boundary = @"test_boundary";
+	NSString *partDelimiter = [NSString stringWithFormat: @"\n--%@\n",
+		boundary];
+	NSString *contentType = [NSString stringWithFormat: 
+		@"multipart/form-data; boundary=\"%@\"", boundary];
+	[request setValue: contentType forHTTPHeaderField: @"Content-type"];
+
+	NSString *textFieldBody;
+	if (op != nil) {
+		NSNumber *postNumber = [op getNumber];
+		textFieldBody = [NSString stringWithFormat: REPLY_BODY_FORMAT,
+		postNumber, name, subject, comment, password, options];
+	} else {
+		textFieldBody = [NSString stringWithFormat: 
+			NEW_THREAD_BODY_FORMAT, name, subject, comment,
+			password, options];
+	}
+	NSMutableString *postBody = [[NSMutableString new] autorelease];
+	[postBody appendString: partDelimiter];
+	[postBody appendString: 
+		@"Content-type: application/x-www-form-urlencoded\n\n"];
+	[postBody appendString: textFieldBody];
+	[postBody appendString: partDelimiter];
+	NSMutableData *postBodyData = [[postBody dataUsingEncoding:
+		NSASCIIStringEncoding] mutableCopy];
+	if (imageURL != nil) {
+		[postBodyData appendData: 
+			[@"Content-type: application/octet-stream\n\n"
+				dataUsingEncoding: NSASCIIStringEncoding]];
+		[postBodyData appendData: [NSData dataWithContentsOfURL:
+			imageURL]];
+		
+		[postBodyData appendData: [partDelimiter dataUsingEncoding:
+			NSASCIIStringEncoding]];
+		[postBodyData appendData: [@"\n" dataUsingEncoding: 
+			NSASCIIStringEncoding]];
+	}
+	[request setHTTPBody: postBodyData];
+
+	NSLog(@"writing post body to file.");
+	[postBodyData writeToFile: @"/home/meguca/postBody" atomically: NO];
 	NSURLResponse *response = nil;
 	NSError *error = nil;
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
@@ -124,6 +159,16 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	} else {
 		[self failure: [NSError unexpectedResponseError]];
 	}
+}
+
+-(NSString*)boardCode {
+	NSString *boardCode;
+	if (op != nil) {
+		boardCode = [op getBoard];
+	} else {
+		boardCode = board;
+	}
+	return boardCode;
 }
 
 @end

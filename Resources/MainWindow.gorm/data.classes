@@ -21,9 +21,10 @@
 	    "didTap4ChanPass:",
 	    "didTapCancel:",
 	    "didTapOK:",
+	    "didTapPost:",
 	    "didTapPreferences:",
 	    "didTapTheme:",
-	    "didTapPost:",
+	    "didTapPickImage:",
 	    "postReply:",
 	    "postThread:",
 	    "refresh:"
@@ -76,14 +77,17 @@
     };
     SubmitPostWindow = {
 	Actions = (
-	    "didTapPost:"
+	    "didTapPost:",
+	    "didTapPickImage:"
 	);
 	Outlets = (
 	    nameTextField,
 	    optionsTextField,
 	    subjectTextField,
 	    contentTextView,
-	    postButton
+	    postButton,
+	    imageTextField,
+	    pickImageButton
 	);
 	Super = NSWindow;
     };

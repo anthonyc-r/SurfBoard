@@ -22,14 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSTextField *nameTextField;
 	NSTextField *optionsTextField;
 	NSTextField *subjectTextField;
+	NSTextField *imageTextField;
 	NSTextView *contentTextView;
 	NSButton *postButton;
+	NSButton *pickImageButton;
 	PostNetworkSource *networkSource;
 	Post *targetOP;
 	NSString *targetBoard;
 }
 
 -(void)didTapPost: (id)sender;
+-(void)didTapPickImage: (id)sender;
 -(void)postSuccess: (id)sender;
 -(void)postFailure: (NSError*)error;
 -(void)configureForReplyingToOP: (Post*)op quotingPostNumbers: (NSArray*)postNumbers;
