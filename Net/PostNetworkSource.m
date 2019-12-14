@@ -98,12 +98,12 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	[request setValue: cookie forHTTPHeaderField: @"Cookie"];
 	// TODO: - consider abstracting this http multipart form construction
 	// TODO: - random, long, boundary.
-	NSString *boundary = @"test_boundary";
+	NSString *boundary = @"delim";
 	NSString *partDelimiter = [NSString stringWithFormat: @"\n--%@\n",
 		boundary];
 	NSString *contentType = [NSString stringWithFormat: 
 		@"multipart/form-data; boundary=\"%@\"", boundary];
-	[request setValue: contentType forHTTPHeaderField: @"Content-type"];
+	[request setValue: contentType forHTTPHeaderField: @"Content-Type"];
 
 	NSString *textFieldBody;
 	if (op != nil) {
@@ -116,14 +116,22 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 			password, options];
 	}
 	NSMutableString *postBody = [[NSMutableString new] autorelease];
-	[postBody appendString: partDelimiter];
-	[postBody appendString: 
-		@"Content-type: application/x-www-form-urlencoded\n\n"];
-	[postBody appendString: textFieldBody];
-	[postBody appendString: partDelimiter];
+	[postBody appendString: [self bodyContentForTextField: @"mode"
+		withValue: @"regist"]];
+	[postBody appendString: [self bodyContentForTextField: @"pwd"
+		withValue: password]];
+	[postBody appendString: [self bodyContentForTextField: @"name"
+		withValue: name]];
+	[postBody appendString: [self bodyContentForTextField: @"email"
+		withValue: options]];
+	[postBody appendString: [self bodyContentForTextField: @"com"
+		withValue: comment]];
+	[postBody appendFormat: @"--%@\n", boundary];
+	
 	NSMutableData *postBodyData = [[postBody dataUsingEncoding:
 		NSASCIIStringEncoding] mutableCopy];
-	if (imageURL != nil) {
+	if (NO) {//(imageURL != nil) {
+		[postBodyData appendData: [@"Conent-disposition: form-data; name=\"upfile\"; filename=\"test\"\n\n" dataUsingEncoding: NSASCIIStringEncoding]];
 		[postBodyData appendData: 
 			[@"Content-type: application/octet-stream\n\n"
 				dataUsingEncoding: NSASCIIStringEncoding]];
@@ -169,6 +177,10 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		boardCode = board;
 	}
 	return boardCode;
+}
+
+-(NSString*)bodyContentForTextField: (NSString*)field withValue: (NSString*)value {
+	return [NSString stringWithFormat: @"--delim\nContent-Disposition: form-data; name=\"%@\"\n%@\n", field, value];
 }
 
 @end
