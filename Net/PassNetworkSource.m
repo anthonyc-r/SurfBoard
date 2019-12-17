@@ -13,6 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// NOTE: - Posting images over a few KB just doesnt work for whatever reason.
+
 #import <Foundation/Foundation.h>
 
 
@@ -24,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Rando user agent string so we don't get bot rejection response
 static NSString *const USER_AGENT = @"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0";
-static NSString *const PASS_KEY = @"pass_id";
 static NSString *const BODY_FORMAT = @"act=do_login&id=%@&pin=%@&long_login=1";
 
 // Implementation which folds multiple Set-Cookie headers using the , character.

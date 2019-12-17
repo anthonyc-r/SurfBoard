@@ -86,6 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	networkSource = [[PassNetworkSource alloc] initWithToken: token
 		pin: PIN];
+	[networkSource retain];
 	[networkSource performOnSuccess: @selector(didFetchPassID:) target: self];
 	[networkSource performOnFailure: @selector(failedToFetchPassID:)
 		target: self];

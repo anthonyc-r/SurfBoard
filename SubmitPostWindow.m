@@ -51,10 +51,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	// TODO: - Store or generate a single password per session
 	NSString *password = [[NSUUID UUID] UUIDString];
 	NSLog(@"Creating nw source");
-	networkSource = [[PostNetworkSource alloc] initForOP: targetOP
-		withName: name password: password subject: subject 
-		comment: content options: options imageURL: [self
-		selectedImageURL]];
+	if (targetOP != nil) {
+		networkSource = [[PostNetworkSource alloc] initForOP: targetOP
+			withName: name password: password subject: subject 
+			comment: content options: options imageURL: [self
+			selectedImageURL]];
+	} else {
+		networkSource = [[PostNetworkSource alloc] 
+			initForBoard: targetBoard
+			withName: name password: password subject: subject 
+			comment: content options: options imageURL: [self
+			selectedImageURL]];
+	}
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
 	[networkSource performOnFailure: @selector(postFailure:) target: self];
 	NSLog(@"Fetching nw source");
@@ -109,6 +117,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self scheduleTitleConfigAfterDelay];
 	[contentTextView setString: @""];
 	[imageTextField setStringValue: @""];
+	if (targetOP != nil) {
+		[delegate submitPostWindow: self didReplyToPost: targetOP];
+	} else if ([sender isKindOfClass: [NSNumber class]]) {
+		[delegate submitPostWindow: self didCreateNewThreadWithNumber:
+			sender onBoard: targetBoard];
+	}
+	// TODO: - Handle potential errors.
 }
 
 -(void)postFailure: (NSError*)error {
@@ -142,6 +157,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		return nil;
 	}
 	return [NSURL fileURLWithPath: path];
+}
+
+-(void)setDelegate: (id<SubmitPostWindowDelegate>) aDelegate {
+	delegate = aDelegate;
 }
 
 @end 

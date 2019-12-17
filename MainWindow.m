@@ -118,6 +118,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)postThread: (id)sender {
 	[submitPostWindow configureForNewThreadOnBoard: 
 		[self getDisplayedBoard]];
+	[submitPostWindow setDelegate: self];
 	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
@@ -128,6 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSArray *postNumbers = [NSArray arrayWithObject: [post getNumber]];
 	[submitPostWindow configureForReplyingToOP: post 
 		quotingPostNumbers: postNumbers];
+	[submitPostWindow setDelegate: self];
 	[submitPostWindow makeKeyAndOrderFront: self];
 }
 
@@ -180,6 +182,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(BOOL)textView: (NSTextView*)textView clickedOnLink: (id)link atIndex: (NSUInteger)charIndex {
 	NSLog(@"clicked link: %@", link);
 	return YES;
+}
+
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThreadWithNumber: (NSNumber*)number onBoard: (NSString*)board {
+
+}
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToPost: (Post*)post {
+
 }
 
 @end

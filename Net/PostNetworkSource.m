@@ -90,6 +90,7 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		return;
 	}
 	NSURL *url = [NSURL urlForPostingToBoard: [self boardCode]];
+	NSLog(@"post to url: %@", url);
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
 		
@@ -124,6 +125,9 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		NSString *postNumber = [[op getNumber] description];
 		[postBody appendString: [self bodyContentForTextField: @"resto"
 			withValue: postNumber]];
+	} else {
+		[postBody appendString: [self bodyContentForTextField: @"sub"
+			withValue: subject]];
 	}
 	[postBody appendString: [self bodyContentForTextField: @"name"
 		withValue: name]];
@@ -169,7 +173,13 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	NSRange range = [responseString rangeOfString: SUCCESS_TOKEN];
 	NSLog(@"Response data: %@", responseString);
 	if (range.location != NSNotFound) {
-		[self success: self];
+		if (op == nil) {
+			NSNumber *newPostNumber = [self 
+				newPostNumberFromResponse: responseString];
+			[self success: newPostNumber];
+		} else {
+			[self success: op];
+		}
 	} else {
 		[self failure: [NSError unexpectedResponseError]];
 	}
@@ -208,6 +218,31 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 			return [NSString stringWithFormat: @"image/%@", ext];
 		}
 	}
+}
+
+-(NSNumber*)newPostNumberFromResponse: (NSString*)response {
+	NSError *error = nil;
+	NSRegularExpression *regexp = [[NSRegularExpression alloc]
+		initWithPattern: @"<meta http-equiv=\"refresh\".+URL=.+/([0-9]+)\".*>"
+		options: 0
+		error: &error
+	];
+	NSNumber *number = nil;
+	while (true) {
+		NSTextCheckingResult *result = [regexp firstMatchInString: 
+			response
+			options: 0
+			range: NSMakeRange(0, [response length])];
+		if (result == nil) {
+			NSLog(@"No result");
+			break;
+		}
+		NSRange range = [result rangeAtIndex: 1];
+		NSString *string = [response substringWithRange: range];
+		number = [NSNumber numberWithInt: [string intValue]];
+	}
+	NSLog(@"Result number: %@", number);
+	return number;
 }
 
 @end

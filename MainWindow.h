@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "PreferencesWindow.h"
 #import "SubmitPostWindow.h"
 
-@interface MainWindow : NSWindow<PostViewDelegate>
+@interface MainWindow : NSWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
 	NSScrollView *scrollView;
 	GSTable *tableView;
@@ -43,4 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(BOOL)validateMenuItem: (NSMenuItem*)menuItem;
 -(void)didTapPreferences: (id)sender;
 -(NSString*)getDisplayedBoard;
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThreadWithNumber: (NSNumber*)number onBoard: (NSString*)board;
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToPost: (Post*)post;
 @end
