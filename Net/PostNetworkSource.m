@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "PostNetworkSource.h"
 #import "Data/Post.h"
+#import "Data/Thread.h"
 #import "NSError+AppErrors.h"
 #import "NSURL+Utils.h"
 
@@ -173,12 +174,17 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	NSRange range = [responseString rangeOfString: SUCCESS_TOKEN];
 	NSLog(@"Response data: %@", responseString);
 	if (range.location != NSNotFound) {
-		if (op == nil) {
-			NSNumber *newPostNumber = [self 
-				newPostNumberFromResponse: responseString];
-			[self success: newPostNumber];
+		NSNumber *newPostNumber = [self newPostNumberFromResponse: 
+			responseString];
+		Post *post = [[[Post alloc] initStubWithPostNumber:
+			newPostNumber board: [self boardCode]] autorelease];
+		// TODO: - Fully init the post.. image res?
+		if (op != nil) {
+			[self success: post];
 		} else {
-			[self success: op];
+			Thread *thread = [[[Thread alloc] initWithPosts: 
+				[NSArray arrayWithObject: post]] autorelease];
+			[self success: thread];
 		}
 	} else {
 		[self failure: [NSError unexpectedResponseError]];
@@ -222,25 +228,26 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 
 -(NSNumber*)newPostNumberFromResponse: (NSString*)response {
 	NSError *error = nil;
+	NSString *pattern = @"<meta http-equiv=\"refresh\".+URL=.+?([0-9]+)\".*>";
 	NSRegularExpression *regexp = [[NSRegularExpression alloc]
-		initWithPattern: @"<meta http-equiv=\"refresh\".+URL=.+/([0-9]+)\".*>"
+		initWithPattern: pattern
 		options: 0
 		error: &error
 	];
-	NSNumber *number = nil;
-	while (true) {
-		NSTextCheckingResult *result = [regexp firstMatchInString: 
-			response
-			options: 0
-			range: NSMakeRange(0, [response length])];
-		if (result == nil) {
-			NSLog(@"No result");
-			break;
-		}
-		NSRange range = [result rangeAtIndex: 1];
-		NSString *string = [response substringWithRange: range];
-		number = [NSNumber numberWithInt: [string intValue]];
+	[regexp autorelease];
+	if (error != nil) {
+		NSLog(@"error creating regexp: %@", error);
+		return nil;
 	}
+	NSNumber *number = nil;
+	NSTextCheckingResult *result = [regexp firstMatchInString: 
+		response
+		options: 0
+		range: NSMakeRange(0, [response length])];
+	NSLog(@"Getting range");
+	NSRange range = [result rangeAtIndex: 1];
+	NSString *string = [response substringWithRange: range];
+	number = [NSNumber numberWithInt: [string intValue]];
 	NSLog(@"Result number: %@", number);
 	return number;
 }

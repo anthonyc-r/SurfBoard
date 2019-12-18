@@ -34,8 +34,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return self;
 }
 
+-(id)initWithPosts: (NSArray*)somePosts {
+	if ((self = [super init])) {
+		posts = somePosts;
+		[posts retain];
+	}
+	return self;
+}
+
 -(void)dealloc {
-	[posts dealloc];
+	[posts release];
 	[super dealloc];
 }
 

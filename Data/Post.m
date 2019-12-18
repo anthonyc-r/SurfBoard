@@ -57,6 +57,16 @@ static const NSUInteger MAX_SUBJECT_LEN = 25;
 	return self;
 }
 
+-(id)initStubWithPostNumber: (NSNumber*)aNumber board: (NSString*)aBoard {
+	if ((self = [super init])) {
+		number = aNumber;
+		[number retain];
+		board = aBoard;
+		[board retain];
+	}
+	return self;
+}
+
 -(void)dealloc {
 	[number release];
 	[body release];

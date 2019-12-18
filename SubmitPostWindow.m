@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "SubmitPostWindow.h"
 #import "Net/PostNetworkSource.h"
 #import "AppUserDefaults.h"
+#import "Data/Thread.h"
+#import "Data/Post.h"
 
 @implementation SubmitPostWindow
 
@@ -117,13 +119,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[self scheduleTitleConfigAfterDelay];
 	[contentTextView setString: @""];
 	[imageTextField setStringValue: @""];
-	if (targetOP != nil) {
-		[delegate submitPostWindow: self didReplyToPost: targetOP];
-	} else if ([sender isKindOfClass: [NSNumber class]]) {
-		[delegate submitPostWindow: self didCreateNewThreadWithNumber:
-			sender onBoard: targetBoard];
+	if ([sender isKindOfClass: [Thread class]]) {
+		[delegate submitPostWindow: self didCreateNewThread: sender];
+	} else {
+		Thread *thread = [[[Thread alloc] initWithPosts:
+			[NSArray arrayWithObject: targetOP]] autorelease];
+		[delegate submitPostWindow: self didReplyToThread: thread
+			withPost: sender];
 	}
-	// TODO: - Handle potential errors.
 }
 
 -(void)postFailure: (NSError*)error {

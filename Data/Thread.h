@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSArray *posts;
 }
 -(id)initWithDictionary: (NSDictionary*)dict onBoard: (NSString*)aBoard;
+-(id)initWithPosts: (NSArray*)somePosts;
 -(NSArray*)getPosts;
 -(void)setPosts: (NSArray*)somePosts;
 -(Post*)getOP;

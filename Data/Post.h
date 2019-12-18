@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(id)initWithDictionary: (NSDictionary*)dict board: (NSString*)aBoard;
+-(id)initStubWithPostNumber: (NSNumber*)aNumber board: (NSString*)aBoard;
 -(void)setBody: (NSString*)bodyContent;
 -(NSString*)getBody;
 -(NSAttributedString*)getAttributedBody;

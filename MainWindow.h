@@ -43,6 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(BOOL)validateMenuItem: (NSMenuItem*)menuItem;
 -(void)didTapPreferences: (id)sender;
 -(NSString*)getDisplayedBoard;
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThreadWithNumber: (NSNumber*)number onBoard: (NSString*)board;
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToPost: (Post*)post;
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThread: (Thread*)thread;
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post;
 @end

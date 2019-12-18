@@ -184,11 +184,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return YES;
 }
 
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThreadWithNumber: (NSNumber*)number onBoard: (NSString*)board {
+// NOTE: - The SubmitPostWindow delegate methods return partially filled out
+// objects for Thread and Post, enough for ThreadWindow to refresh with them.
 
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThread: (Thread*)thread {
+	NSLog(@"Did create new thread: %@", thread);
+	[threadWindow makeKeyAndOrderFront: self];
+	[threadWindow refreshForThread: thread];
 }
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToPost: (Post*)post {
 
+-(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
+	NSLog(@"Did reply with post: %@", post);
+	[threadWindow makeKeyAndOrderFront: self];
+	[threadWindow refreshForThread: thread];
 }
 
 @end
