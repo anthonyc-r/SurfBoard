@@ -196,6 +196,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
 	NSLog(@"Did reply with post: %@", post);
 	[threadWindow makeKeyAndOrderFront: self];
+	[threadWindow setFocusOnRefresh: post];
 	[threadWindow refreshForThread: thread];
 }
 

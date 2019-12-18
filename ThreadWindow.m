@@ -85,7 +85,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			column: 0 withMargins: 10];
 	}
 	[scrollView setDocumentView: tableView];
-	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
+	BOOL didFocus = [self focusPostWithNumber: [focusOnRefresh
+		getNumber]];
+	[self setFocusOnRefresh: nil];
+	if (!didFocus) {
+		[tableView scrollPoint: NSMakePoint(0, [tableView
+			bounds].size.height)];
+	}
 }
 
 
@@ -118,6 +124,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	[submitPostWindow configureForReplyingToOP: [displayedThread getOP]
 		quotingPostNumbers: postNumbers];
+	[submitPostWindow setDelegate: nil];
 	[submitPostWindow makeKeyAndOrderFront: self];
 	
 }
@@ -145,6 +152,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSNumber *postNumber = [link linkPostNumber];
 	return [self focusPostWithNumber: postNumber];
 }
+
+-(void)setFocusOnRefresh: (Post*)post {
+	[focusOnRefresh release];
+	focusOnRefresh = post;
+	[focusOnRefresh retain];
+}
+
 
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber {
 	// TODO: - Consider indexing the views by post number at refresh.

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	PostView *highlightedPost;
 	SubmitPostWindow *submitPostWindow;
 	NSMutableArray *selectedPostViews;
+	Post *focusOnRefresh;
 }
 
 -(void)refreshForThread: (Thread*)thread;
@@ -38,4 +39,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)didFailToFetchDetails: (NSError*)error;
 -(void)refresh: (id)sender;
 -(void)postReply: (id)sender;
+-(void)setFocusOnRefresh: (Post*)post;
 @end
