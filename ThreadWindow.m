@@ -165,6 +165,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
 	NSLog(@"Did reply to thread.");
+	[self refresh: aSubmitPostWindow];
 }
 
 
@@ -202,6 +203,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		}
 	}
 	return postViews;
+}
+
+-(void)clearAllPosts {
+
+}
+
+-(void)appendPosts: (NSArray*)posts {
+}
+
+-(NSArray*)getNewPostsFromUpdatedPosts: (NSArray*)updatedPosts oldPosts: (NSArray*)oldPosts {
+	// Manually search through them rather than just using the lengths
+	// since posts may have been deleted.
+	NSNumber *latestPostNumber = [[oldPosts lastObject] getNumber];
+	int maxIdx = [updatedPosts count];
+	int splitIdx = -1;
+	for (int i = maxIdx; i >= 0; i--) {
+		Post *post = [updatedPosts objectAtIndex: i];
+		if ([[post getNumber] isEqualToNumber: latestPostNumber]) {
+			splitIdx = i;
+			break;
+		}
+	}
+	if (splitIdx >= 0 && splitIdx < maxIdx) {
+		NSRange range = NSMakeRange(
+			splitIdx + 1,
+			maxIdx - splitIdx
+		);
+		return [updatedPosts subarrayWithRange: range];
+	} else {
+		return [NSArray array];
+	}
 }
 
 @end
