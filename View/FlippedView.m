@@ -15,14 +15,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
+#import "FlippedView.h"
 
-@interface PostListWindow: NSWindow<PostViewDelegate>
+@implementation FlippedView
 
--(NSArray*)displayedPostViews;
--(void)clearPosts;
--(void)appendThreads: (NSArray*)threads;
--(void)appendPosts: (NSArray*)posts;
--(NSScrollView*)scrollView;
--(NSView*)tableView;
--(void)setTableView: (NSView*)aTableView;
+-(BOOL)isFlipped {
+	return YES;
+}
+
 @end

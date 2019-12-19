@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/PostView.h"
 #import "Data/Post.h"
 #import "PostListWindow.h"
-
+#import "View/FlippedView.h"
 
 static const CGFloat POST_MARGIN_H = 10;
 static const CGFloat POST_MARGIN_V = 20;
@@ -40,7 +40,7 @@ static const CGFloat POST_MARGIN_V = 20;
 -(void)clearPosts {
 	CGFloat scrollWidth = [[[self scrollView] verticalScroller] frame].size.width;
 	CGFloat width = [[self scrollView] frame].size.width - scrollWidth;
-	NSView *tableView = [[NSView alloc] initWithFrame: NSMakeRect(
+	NSView *tableView = [[FlippedView alloc] initWithFrame: NSMakeRect(
 		0, 0,
 		width, 0
 	)];
@@ -50,22 +50,41 @@ static const CGFloat POST_MARGIN_V = 20;
 	[[self scrollView] setDocumentView: tableView];
 }
 
+
+-(void)appendThreads: (NSArray*)threads {
+	[self appendPostsAndThreads: threads];
+}
+
 -(void)appendPosts: (NSArray*)posts {
+	[self appendPostsAndThreads: posts];
+}
+
+-(void)appendPostsAndThreads: (NSArray*)postsAndThreads {
+	if ([postsAndThreads count] < 1) {
+		return;
+	}
 	CGFloat width = [[self tableView] bounds].size.width - (2 * POST_MARGIN_H);
 	NSRect currentFrame = [[self tableView] frame];
-	CGFloat heightCursor = currentFrame.size.height + POST_MARGIN_V;
+	CGFloat heightCursor = currentFrame.size.height;
+	if (heightCursor == 0) {
+		heightCursor += POST_MARGIN_V;
+	}
 	
-	NSEnumerator *enumerator = [posts objectEnumerator];
-	Post *post;
+	NSEnumerator *enumerator = [postsAndThreads objectEnumerator];
+	id item;
 	NSMutableArray *appendedPostViews = [NSMutableArray array];
-	while ((post = [enumerator nextObject])) {
+	while ((item = [enumerator nextObject])) {
 		NSRect frame = NSMakeRect(
 			POST_MARGIN_H, heightCursor, width, 200
 		);
 		PostView *postView = [[PostView alloc] 
 			initWithFrame: frame];
 		[postView autorelease];
-		[postView configureForPost: post];
+		if ([item isKindOfClass: [Post class]]) {
+			[postView configureForPost: item];
+		} else if ([item isKindOfClass: [Thread class]]) {
+			[postView configureForThread: item];
+		}
 		frame.size.height = [postView getRequestedHeight];
 		[postView setFrame: frame];
 		[postView setDelegate: self];
@@ -75,16 +94,6 @@ static const CGFloat POST_MARGIN_V = 20;
 	}
 	currentFrame.size.height = heightCursor;
 	[[self tableView] setFrame: currentFrame];
-	// Reshuffle the origins to account for coordinate space
-	enumerator = [appendedPostViews objectEnumerator];
-	PostView *postView;
-	heightCursor -= POST_MARGIN_V;
-	while ((postView = [enumerator nextObject])) {
-		NSRect frame = [postView frame];
-		frame.origin.y = heightCursor - frame.size.height;
-		[postView setFrame: frame];
-		heightCursor -= frame.size.height + POST_MARGIN_V;
-	}
 }
 
 -(NSScrollView*)scrollView {

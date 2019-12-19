@@ -52,7 +52,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)setPosts: (NSArray*)somePosts{
+	[posts release];
 	posts = somePosts;
+	[posts retain];
 }
 
 -(Post*)getOP {

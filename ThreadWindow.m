@@ -67,29 +67,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSLog(@"Fetched detailed thread");
 	[networkSource release];
 	networkSource = nil;
-	[selectedPostViews removeAllObjects];
-	highlightedPost = nil;
 	
 	NSNumber *newThreadOP = [[detailedThread getOP] getNumber];
 	NSNumber *oldThreadOP = [[displayedThread getOP] getNumber];
 	BOOL didThreadChange = ![newThreadOP isEqualToNumber: oldThreadOP];
 	
-	[displayedThread release];
-	displayedThread = detailedThread;
-	[displayedThread retain];
-	
 	if (didThreadChange) {
+		[selectedPostViews removeAllObjects];
+		highlightedPost = nil;
+		[displayedThread release];
+		displayedThread = detailedThread;
+		[displayedThread retain];
 		[self clearPosts];
+		[self appendPosts: [displayedThread getPosts]];
+		if (focusOnRefresh == nil) {
+			[tableView scrollPoint: NSMakePoint(0, 0)];
+		}
+	} else {
+		NSArray *new = [detailedThread getPosts];
+		NSArray *old = [displayedThread getPosts];
+		NSArray *additional = [self getNewPostsFromUpdatedPosts: new
+			oldPosts: old];
+		[displayedThread setPosts: [old arrayByAddingObjectsFromArray:
+			additional]];
+		[self appendPosts: additional];
 	}
-	[self appendPosts: [detailedThread getPosts]];
+
 	
-	BOOL didFocus = [self focusPostWithNumber: [focusOnRefresh
+	[self focusPostWithNumber: [focusOnRefresh
 		getNumber]];
 	[self setFocusOnRefresh: nil];
-	if (!didFocus) {
-		[tableView scrollPoint: NSMakePoint(0, [tableView
-			bounds].size.height)];
-	}
 }
 
 
@@ -122,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	[submitPostWindow configureForReplyingToOP: [displayedThread getOP]
 		quotingPostNumbers: postNumbers];
-	[submitPostWindow setDelegate: nil];
+	[submitPostWindow setDelegate: self];
 	[submitPostWindow makeKeyAndOrderFront: self];
 	
 }
@@ -163,6 +170,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
 	NSLog(@"Did reply to thread.");
+	[self setFocusOnRefresh: post];
 	[self refresh: aSubmitPostWindow];
 }
 
@@ -170,15 +178,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber {
 	// TODO: - Consider indexing the views by post number at refresh.
 	// TODO: - OR just use a propper log time search given they're ordered!!!
+	if (postNumber == nil) {
+		return NO;
+	}
 	NSLog(@"Focus post number %@", postNumber);
 	NSArray *postViews = [self displayedPostViews];
 	for (int i = 0; i < [postViews count]; i++) {
 		PostView *view = [postViews objectAtIndex: i];
 		Post *otherPost = [view displayedPost];
+		NSLog(@"Compare num %@, to %@", postNumber, [otherPost getNumber]);
 		if ([postNumber isEqualToNumber: [otherPost getNumber]]) {
-			NSView *jailView = [view superview];
-			NSPoint target = [jailView frame].origin;
-			target.y -= [scrollView frame].size.height - [jailView frame].size.height;
+			NSPoint target = [view frame].origin;
+			NSLog(@"Scrollpoint: %f, %f", target.x, target.y);
 			[tableView scrollPoint: target];
 			[highlightedPost setHighlight: NO];
 			[view setHighlight: YES];
@@ -193,23 +204,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSArray*)getNewPostsFromUpdatedPosts: (NSArray*)updatedPosts oldPosts: (NSArray*)oldPosts {
 	// Manually search through them rather than just using the lengths
 	// since posts may have been deleted.
-	NSNumber *latestPostNumber = [[oldPosts lastObject] getNumber];
-	int maxIdx = [updatedPosts count];
+	NSDate *latestPostDate = [[oldPosts lastObject] getPostDate];
+	int maxIdx = [updatedPosts count] - 1;
 	int splitIdx = -1;
 	for (int i = maxIdx; i >= 0; i--) {
 		Post *post = [updatedPosts objectAtIndex: i];
-		if ([[post getNumber] isEqualToNumber: latestPostNumber]) {
-			splitIdx = i;
+		NSDate *postDate = [post getPostDate];
+		splitIdx = i;
+		BOOL isPostNewer = [postDate compare: latestPostDate] 
+			== NSOrderedDescending;
+		if (!isPostNewer) { 	
 			break;
 		}
 	}
+	NSLog(@"split index found as: %d out of %d", splitIdx, maxIdx);
 	if (splitIdx >= 0 && splitIdx < maxIdx) {
 		NSRange range = NSMakeRange(
 			splitIdx + 1,
 			maxIdx - splitIdx
 		);
+		NSLog(@"returning updatedPosts from array");
 		return [updatedPosts subarrayWithRange: range];
 	} else {
+		NSLog(@"No updated posts");
 		return [NSArray array];
 	}
 }

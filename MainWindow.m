@@ -104,15 +104,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[displayedThreads release];
 	displayedThreads = threads;
 	[displayedThreads retain];
-	NSMutableArray *OPs = [NSMutableArray array];
-	NSEnumerator *enumerator = [displayedThreads objectEnumerator];
-	Thread *thread;
-	while ((thread = [enumerator nextObject])) {
-		[OPs addObject: [thread getOP]];
-	}
 	[self clearPosts];
-	[self appendPosts: OPs];
-	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
+	[self appendThreads: displayedThreads];
+	[tableView scrollPoint: NSMakePoint(0, 0)];
 	NSLog(@"Finished displaying threads %lu", [networkSource retainCount]);
 }
 
