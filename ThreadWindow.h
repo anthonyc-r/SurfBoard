@@ -14,7 +14,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <AppKit/AppKit.h>
-#import "GNUstepGUI/GSTable.h"
 #import "Data/Thread.h"
 #import "Net/ThreadDetailsNetworkSource.h"
 #import "ImageWindow.h"
@@ -24,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @interface ThreadWindow: NSWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
 	NSScrollView *scrollView;
-	GSTable *tableView;
+	NSView *tableView;
   	ThreadDetailsNetworkSource *networkSource;
 	Thread *displayedThread;
 	ImageWindow *imageWindow;

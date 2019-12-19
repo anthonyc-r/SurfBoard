@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Text/NSString+Links.h"
 #import "SubmitPostWindow.h"
 
+static const CGFloat POST_MARGIN = 10;
+
 @interface ThreadWindow (private)
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber;
 -(NSArray*)displayedPostViews;
@@ -58,33 +60,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	networkSource = nil;
 	[selectedPostViews removeAllObjects];
 	highlightedPost = nil;
+	
+	NSNumber *newThreadOP = [[detailedThread getOP] getNumber];
+	NSNumber *oldThreadOP = [[displayedThread getOP] getNumber];
+	BOOL didThreadChange = ![newThreadOP isEqualToNumber: oldThreadOP];
+	
 	[displayedThread release];
 	displayedThread = detailedThread;
 	[displayedThread retain];
-	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
-	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
-	NSArray *posts = [detailedThread getPosts];
-	tableView = [[GSTable alloc] initWithNumberOfRows: [posts count] numberOfColumns: 1];
-	[tableView autorelease];
-	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-	for (int i = 0; i < [posts count]; i++) {
-		NSRect frame = NSMakeRect(
-			0, 0, width, 200
-		);
-		Post *post = [posts objectAtIndex: i];
-		NSView *view;
-		PostView *postView = [[PostView alloc] 
-			initWithFrame: frame];
-		[postView autorelease];
-		[postView configureForPost: post];
-		frame.size.height = [postView getRequestedHeight];
-		[postView setFrame: frame];
-		[postView setDelegate: self];
-		view = postView;
-		[tableView putView: view atRow: [posts count] - (i + 1) 
-			column: 0 withMargins: 10];
+	
+	if (didThreadChange) {
+		[self clearPosts];
 	}
-	[scrollView setDocumentView: tableView];
+	[self appendPosts: [detailedThread getPosts]];
+	
 	BOOL didFocus = [self focusPostWithNumber: [focusOnRefresh
 		getNumber]];
 	[self setFocusOnRefresh: nil];
@@ -205,11 +194,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return postViews;
 }
 
--(void)clearAllPosts {
-
+-(void)clearPosts {
+	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
+	CGFloat width = [scrollView frame].size.width - scrollWidth;
+	tableView = [[NSView alloc] initWithFrame: NSMakeRect(
+		0, 0,
+		width, 0
+	)];
+	[tableView autorelease];
+	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+	[scrollView setDocumentView: tableView];
 }
 
 -(void)appendPosts: (NSArray*)posts {
+	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
+	CGFloat width = [[self contentView] bounds].size.width - (2 * POST_MARGIN + scrollWidth);
+	NSRect currentFrame = [tableView frame];
+	CGFloat heightCursor = currentFrame.size.height + POST_MARGIN;
+	for (int i = 0; i < [posts count]; i++) {
+		Post *post = [posts objectAtIndex: i];
+		NSRect frame = NSMakeRect(
+			POST_MARGIN, heightCursor, width, 200
+		);
+		PostView *postView = [[PostView alloc] 
+			initWithFrame: frame];
+		[postView autorelease];
+		[postView configureForPost: post];
+		frame.size.height = [postView getRequestedHeight];
+		[postView setFrame: frame];
+		[postView setDelegate: self];
+		[tableView addSubview: postView];	
+		heightCursor += frame.size.height + POST_MARGIN;
+	}
+	currentFrame.size.height = heightCursor;
+	[tableView setFrame: currentFrame];
 }
 
 -(NSArray*)getNewPostsFromUpdatedPosts: (NSArray*)updatedPosts oldPosts: (NSArray*)oldPosts {
