@@ -6,6 +6,6 @@
 	Authors = "Anthony Cohn-Richardby";
 	Copyright = "Copyright (C) 2019 by Anthony Cohn-Richardby";
 	CopyrightDescription = "Released under the terms of the GNU General Public License Version 3 and later.";
-	FullVersionID = 0.1;
+	FullVersionID = 0.2;
 	URL = "";
 }
