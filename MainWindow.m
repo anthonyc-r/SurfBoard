@@ -47,6 +47,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[super dealloc];
 }
 
+-(NSScrollView*)scrollView {
+	return scrollView;
+}
+
+-(NSView*)tableView {
+	return tableView;
+}
+
+-(void)setTableView: (NSView*)aTableView {
+	tableView = aTableView;
+}
+
 -(void)close {
 	[super close];
 	[NSApp terminate: self];
@@ -92,25 +104,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[displayedThreads release];
 	displayedThreads = threads;
 	[displayedThreads retain];
-	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
-	CGFloat width = [[self contentView] bounds].size.width - (20 + scrollWidth);
-	tableView = [[GSTable alloc] initWithNumberOfRows: [threads count] numberOfColumns: 1];
-	[tableView autorelease];
-	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-	for (int i = [threads count] - 1; i >= 0; i--) {
-		NSRect frame = NSMakeRect(
-			0, 0, width, 200
-		);
-		PostView *postView = [[PostView alloc] initWithFrame: frame];
-		[postView autorelease];
-		[postView configureForThread: [threads objectAtIndex: i]];
-		frame.size.height = [postView getRequestedHeight];
-		[postView setFrame: frame];
-		[postView setDelegate: self];
-		[tableView putView: postView atRow: [threads count] - (i + 1)
-			column: 0 withMargins: 10];
+	NSMutableArray *OPs = [NSMutableArray array];
+	NSEnumerator *enumerator = [displayedThreads objectEnumerator];
+	Thread *thread;
+	while ((thread = [enumerator nextObject])) {
+		[OPs addObject: [thread getOP]];
 	}
-	[scrollView setDocumentView: tableView];
+	[self clearPosts];
+	[self appendPosts: OPs];
 	[tableView scrollPoint: NSMakePoint(0, [tableView bounds].size.height)];
 	NSLog(@"Finished displaying threads %lu", [networkSource retainCount]);
 }

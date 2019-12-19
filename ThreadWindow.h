@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "ImageWindow.h"
 #import "View/PostView.h"
 #import "SubmitPostWindow.h"
+#import "PostListWindow.h"
 
-@interface ThreadWindow: NSWindow<PostViewDelegate, SubmitPostWindowDelegate>
+@interface ThreadWindow: PostListWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
 	NSScrollView *scrollView;
 	NSView *tableView;

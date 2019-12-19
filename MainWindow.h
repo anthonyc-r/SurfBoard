@@ -15,18 +15,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "Net/FrontPageNetworkSource.h"
-#import "GNUstepGUI/GSTable.h"
 #import "View/PostView.h"
 #import "ThreadWindow.h"
 #import "ImageWindow.h"
 #import "OpenBoardPanel.h"
 #import "PreferencesWindow.h"
 #import "SubmitPostWindow.h"
+#import "PostListWindow.h"
 
-@interface MainWindow : NSWindow<PostViewDelegate, SubmitPostWindowDelegate>
+@interface MainWindow : PostListWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
 	NSScrollView *scrollView;
-	GSTable *tableView;
+	NSView *tableView;
   	FrontPageNetworkSource *networkSource;
 	ThreadWindow *threadWindow;
 	ImageWindow *imageWindow;

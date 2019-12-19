@@ -23,11 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Text/NSString+Links.h"
 #import "SubmitPostWindow.h"
 
-static const CGFloat POST_MARGIN = 10;
-
 @interface ThreadWindow (private)
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber;
--(NSArray*)displayedPostViews;
 @end
 
 @implementation ThreadWindow
@@ -45,6 +42,18 @@ static const CGFloat POST_MARGIN = 10;
 	[scrollView setHasVerticalScroller: YES];
 	[self setContentView: scrollView];
 	selectedPostViews = [NSMutableArray new];
+}
+
+-(NSScrollView*)scrollView {
+	return scrollView;
+}
+
+-(NSView*)tableView {
+	return tableView;
+}
+
+-(void)setTableView: (NSView*)aTableView {
+	tableView = aTableView;
 }
 
 -(void)refreshForThread: (Thread*)thread {
@@ -179,55 +188,6 @@ static const CGFloat POST_MARGIN = 10;
 	}
 	
 	return NO;
-}
-
--(NSArray*)displayedPostViews {
-	NSMutableArray *postViews = [NSMutableArray array];
-	NSArray *subviews = [tableView subviews];
-	for (int i = 0; i < [subviews count]; i++) {
-		NSView *view = [[[subviews objectAtIndex: i] subviews]
-			objectAtIndex: 0];
-		if ([view isKindOfClass: [PostView class]]) {	
-			[postViews addObject: view];
-		}
-	}
-	return postViews;
-}
-
--(void)clearPosts {
-	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
-	CGFloat width = [scrollView frame].size.width - scrollWidth;
-	tableView = [[NSView alloc] initWithFrame: NSMakeRect(
-		0, 0,
-		width, 0
-	)];
-	[tableView autorelease];
-	[tableView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-	[scrollView setDocumentView: tableView];
-}
-
--(void)appendPosts: (NSArray*)posts {
-	CGFloat scrollWidth = [[scrollView verticalScroller] frame].size.width;
-	CGFloat width = [[self contentView] bounds].size.width - (2 * POST_MARGIN + scrollWidth);
-	NSRect currentFrame = [tableView frame];
-	CGFloat heightCursor = currentFrame.size.height + POST_MARGIN;
-	for (int i = 0; i < [posts count]; i++) {
-		Post *post = [posts objectAtIndex: i];
-		NSRect frame = NSMakeRect(
-			POST_MARGIN, heightCursor, width, 200
-		);
-		PostView *postView = [[PostView alloc] 
-			initWithFrame: frame];
-		[postView autorelease];
-		[postView configureForPost: post];
-		frame.size.height = [postView getRequestedHeight];
-		[postView setFrame: frame];
-		[postView setDelegate: self];
-		[tableView addSubview: postView];	
-		heightCursor += frame.size.height + POST_MARGIN;
-	}
-	currentFrame.size.height = heightCursor;
-	[tableView setFrame: currentFrame];
 }
 
 -(NSArray*)getNewPostsFromUpdatedPosts: (NSArray*)updatedPosts oldPosts: (NSArray*)oldPosts {
