@@ -187,14 +187,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // NOTE: - The SubmitPostWindow delegate methods return partially filled out
 // objects for Thread and Post, enough for ThreadWindow to refresh with them.
 
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didCreateNewThread: (Thread*)thread {
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didCreateNewThread: (Thread*)thread {
 	NSLog(@"Did create new thread: %@", thread);
+	[aSubmitPostWindow configureForReplyingToOP: [thread getOP]
+		quotingPostNumbers: [NSArray array]];
+	[aSubmitPostWindow setDelegate: threadWindow];
 	[threadWindow makeKeyAndOrderFront: self];
 	[threadWindow refreshForThread: thread];
 }
 
--(void)submitPostWindow: (SubmitPostWindow*)submitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
 	NSLog(@"Did reply with post: %@", post);
+	[aSubmitPostWindow setDelegate: threadWindow];
 	[threadWindow makeKeyAndOrderFront: self];
 	[threadWindow setFocusOnRefresh: post];
 	[threadWindow refreshForThread: thread];

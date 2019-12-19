@@ -159,6 +159,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[focusOnRefresh retain];
 }
 
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didCreateNewThread: (Thread*)thread {
+	// Shouldn't be called.
+}
+
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post {
+	NSLog(@"Did reply to thread.");
+}
+
 
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber {
 	// TODO: - Consider indexing the views by post number at refresh.

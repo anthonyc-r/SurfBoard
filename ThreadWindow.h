@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/PostView.h"
 #import "SubmitPostWindow.h"
 
-@interface ThreadWindow: NSWindow<PostViewDelegate>
+@interface ThreadWindow: NSWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
 	NSScrollView *scrollView;
 	GSTable *tableView;
@@ -40,4 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)refresh: (id)sender;
 -(void)postReply: (id)sender;
 -(void)setFocusOnRefresh: (Post*)post;
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didCreateNewThread: (Thread*)thread;
+-(void)submitPostWindow: (SubmitPostWindow*)aSubmitPostWindow didReplyToThread: (Thread*)thread withPost: (Post*)post;
 @end
