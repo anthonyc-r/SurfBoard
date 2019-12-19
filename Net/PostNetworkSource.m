@@ -155,9 +155,6 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 			NSASCIIStringEncoding]];
 	}
 	[request setHTTPBody: postBodyData];
-
-	NSLog(@"writing post body to file.");
-	[postBodyData writeToFile: @"/home/meguca/postBody" atomically: NO];
 	NSURLResponse *response = nil;
 	NSError *error = nil;
 	NSData *data = [NSURLConnection sendSynchronousRequest: request
