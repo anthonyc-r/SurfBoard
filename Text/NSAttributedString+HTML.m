@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)replaceHTMLVoidTag: (NSString*)tag withSymbol: (NSString*)symbol;
 -(void)replaceHTMLLinksWithText;
 -(void)replaceURLEncodingsOf: (NSString*)encoding withSymbol: (NSString*)symbol;
--(void)replaceHTMLSpanOfClass: (NSString*)class withAttributes: (NSDictionary*)attributes;
+-(void)replaceHTMLTag: (NSString*)tag ofClass: (NSString*)class withAttributes: (NSDictionary*)attributes;
+-(void)replaceHTMLTag: (NSString*)tag ofClass: (NSString*)class withAttributes: (NSDictionary*)attributes allowMultiline: (BOOL)allowMultiline;
 @end
 
 @implementation NSMutableAttributedString (HTML)
@@ -32,13 +33,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *closeTag = [NSString stringWithFormat: @"</%@>", tag];
 	NSMutableString *plainString = [self mutableString];
 	NSRange openTagRange = [plainString rangeOfString: openTag];
-	if (openTagRange.length == 0) {
+	if (openTagRange.location == NSNotFound) {
 		return;
 	}
 	[self deleteCharactersInRange: openTagRange];
 	
-	NSRange closeTagRange = [plainString rangeOfString: closeTag options: NSBackwardsSearch];
-	if (closeTagRange.length == 0) {
+	NSRange closeTagRange = [plainString rangeOfString: closeTag options:
+		NSBackwardsSearch];
+	if (closeTagRange.location == NSNotFound) {
 		return;
 	}
 	[self deleteCharactersInRange: closeTagRange];
@@ -104,12 +106,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 }
 
--(void)replaceHTMLSpanOfClass: (NSString*)class withAttributes: (NSDictionary*)attributes {
+
+-(void)replaceHTMLTag: (NSString*)tag ofClass: (NSString*)class withAttributes: (NSDictionary*)attributes {
+	[self replaceHTMLTag: tag ofClass: class withAttributes: attributes
+		allowMultiline: NO];
+}
+
+-(void)replaceHTMLTag: (NSString*)tag ofClass: (NSString*)class withAttributes: (NSDictionary*)attributes allowMultiline: (BOOL)allowMultiline {
 	NSError *error = [NSError alloc];
-	NSString *pattern = [NSString stringWithFormat: @"(<span class=\"%@\">).*(</span>)", class];
+	NSString *pattern = [NSString stringWithFormat: @"(<%@ class=\"%@\">).*?(</%@>)", tag, class, tag];
+	int options = allowMultiline ? 
+		NSRegularExpressionDotMatchesLineSeparators :
+		0;
 	NSRegularExpression *regexp = [[NSRegularExpression alloc] 
 		initWithPattern: pattern
-		options: 0
+		options: options
 		error: &error
 	];
 
@@ -152,7 +163,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[string replaceHTMLLinksWithText];
 	[string replaceHTMLTag: @"b" withAttributes: [NSAttributedString postBoldAttributes]];
 	[string replaceHTMLTag: @"u" withAttributes: [NSAttributedString postUnderlineAttributes]];
-	[string replaceHTMLSpanOfClass: @"quote" withAttributes: [NSAttributedString postQuoteAttributes]];
+	[string replaceHTMLTag: @"span" ofClass: @"quote" withAttributes: [NSAttributedString postQuoteAttributes]];
+	[string replaceHTMLTag: @"span" ofClass: @"deadlink" withAttributes: [NSAttributedString deadLinkAttributes]];
+	[string replaceHTMLTag: @"pre" ofClass: @"prettyprint" withAttributes: [NSAttributedString codeTagAttributes] allowMultiline: YES];
 	[string autorelease];
 	return string;
 }

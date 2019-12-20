@@ -72,4 +72,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	];
 }
 
++(NSDictionary*)deadLinkAttributes {
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:
+		[self linkAttributesForLink: @"deadlink"]];
+	// Strikethrough doesnt actually work for some reason oh well. Link is good enough.
+	[dict setObject: [NSNumber numberWithInteger: NSUnderlineStyleSingle]
+		forKey: NSStrikethroughStyleAttributeName];
+	return dict;
+}
+
++(NSDictionary*)codeTagAttributes {
+	return [NSDictionary dictionaryWithObjectsAndKeys: [NSColor whiteColor], NSBackgroundColorAttributeName, nil];
+}
+
 @end

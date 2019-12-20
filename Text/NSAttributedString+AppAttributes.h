@@ -27,5 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSDictionary*)postDateAttributes;
 +(NSDictionary*)postNumberAttributes;
 +(NSDictionary*)linkAttributesForLink: (NSString*)link;
++(NSDictionary*)deadLinkAttributes;
++(NSDictionary*)codeTagAttributes;
 
 @end
