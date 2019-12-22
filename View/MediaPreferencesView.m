@@ -15,14 +15,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "Data/Post.h"
-#import "View/ZoomingScrollView.h"
+#import "MediaPreferencesView.h"
 
-@interface ImageWindow: NSWindow {
-	ZoomingScrollView *scrollView;
-	NSImageView *imageView;
+@implementation MediaPreferencesView
+
+-(void)awakeFromNib {
+	[super awakeFromNib];
+	[internalViewerSwitch setTarget: self];
+	[internalViewerSwitch setAction: @selector(didTapEnableViewerButton:)];
 }
 
--(void)loadImage: (NSImage*)image;
+-(void)setInternalViewerSwitchOn: (BOOL)isOn {
+	if (isOn) {
+		[internalViewerSwitch setState: NSOnState];
+	} else {
+		[internalViewerSwitch setState: NSOffState];
+	}
+}
+
+-(void)setDelegate: (id<MediaPreferencesViewDelegate>)aDelegate {
+	delegate = aDelegate;
+}
+
+-(void)didTapEnableViewerButton: (NSButton*)button {
+	BOOL isEnabled = [button state] == NSOnState;
+	[delegate mediaPreferencesView: self didSetInternalViewerEnabled:
+		isEnabled];
+}
 
 @end

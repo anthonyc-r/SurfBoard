@@ -49,9 +49,18 @@
 	    imageWindow,
 	    openBoardPanel,
 	    preferencesWindow,
-	    submitPostWindow
+	    submitPostWindow,
+	    mediaManager
 	);
 	Super = NSWindow;
+    };
+    MediaManager = {
+	Actions = (
+	);
+	Outlets = (
+	    imageWindow
+	);
+	Super = NSObject;
     };
     OpenBoardPanel = {
 	Actions = (
@@ -96,7 +105,8 @@
 	);
 	Outlets = (
 	    imageWindow,
-	    submitPostWindow
+	    openBoardPanel,
+	    mediaManager
 	);
 	Super = NSWindow;
     };

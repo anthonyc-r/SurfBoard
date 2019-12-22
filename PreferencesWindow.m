@@ -24,13 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation PreferencesWindow
 
--(id)init {
-	if ((self = [super init])) {
-		preferences = [[NSMutableArray alloc] init];
-	}
-	return self;
-}
-
 -(void)dealloc {
 	[preferences release];
 	[networkSource release];
@@ -39,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 -(void)awakeFromNib {
 	[super awakeFromNib];
+	preferences = [[NSMutableArray alloc] init];
 	loginView = [PassLoginView loadFromNibNamed: @"PassLoginView"];
 	[loginView setDelegate: self];
 	if ([self isPassActivated]) {
@@ -46,10 +40,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	} else {
 		[loginView configureForNotActivated];
 	}
+	
+	mediaPreferencesView = [MediaPreferencesView loadFromNibNamed:
+		@"MediaPreferencesView"];
+	[mediaPreferencesView setDelegate: self];
+	[mediaPreferencesView setInternalViewerSwitchOn: [AppUserDefaults
+		isInternalViewerEnabled]];
+	
 	[preferenceButton removeAllItems];
 	[preferenceButton setTarget: self];
 	[preferenceButton setAction: @selector(didPickPreference)];
 	[self addPreferenceView: loginView withTitle: @"4Chan Pass"];
+	[self addPreferenceView: mediaPreferencesView withTitle: @"Media"];
 }
 
 -(void)didPickPreference {
@@ -64,12 +66,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		pref = nil;
 	}
 	if (pref != nil && [pref secondObject] != [containerView contentView]) {
+		NSLog(@"Setting container view content to %@", 
+			[pref secondObject]);
 		[containerView setContentView: [pref secondObject]];
+	} else {
+		NSLog(@"No pref view or already in container");
 	}
 }
 
 -(void)addPreferenceView: (NSView*)view withTitle: (NSString*)title {
-	Pair *pref = [[Pair alloc] initWithFirstObject: view secondObject: title];
+	Pair *pref = [[Pair alloc] initWithFirstObject: title secondObject: view];
 	[pref autorelease];
 	if ([preferences count] < 1) {
 		[containerView setContentView: view];
@@ -115,6 +121,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[networkSource release];
 	networkSource = nil;
 	NSLog(@"Failed to fetch pass with error %@", error);
+}
+
+-(void)mediaPreferencesView: (MediaPreferencesView*)mediaPreferencesView didSetInternalViewerEnabled: (BOOL)isEnabled {
+	[AppUserDefaults setInternalViewerEnabled: isEnabled];
 }
 
 @end

@@ -15,13 +15,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "NetworkSource.h"
 
-@interface ImageNetworkSource: NetworkSource {
-	NSURL *URL;
-	BOOL isCancelled;
+@class MediaPreferencesView;
+
+@protocol MediaPreferencesViewDelegate
+-(void)mediaPreferencesView: (MediaPreferencesView*)mediaPreferencesView didSetInternalViewerEnabled: (BOOL)isEnabled;
+@end
+
+@interface MediaPreferencesView: NSBox {
+	NSButton *internalViewerSwitch;
+	id<MediaPreferencesViewDelegate> delegate;
 }
 
--(id)initWithURL: (NSURL*)URL;
--(void)cancel;
+-(void)setDelegate: (id<MediaPreferencesViewDelegate>)aDelegate;
+-(void)setInternalViewerSwitchOn: (BOOL)isOn;
 @end

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static NSString *const PASS_ID_KEY = @"pass_id";
 static NSString *const USER_NAME_KEY = @"user_name";
+static NSString *const INTERNAL_VIEWER_ENABLED = @"internal_viewer_enabled";
 
 @implementation AppUserDefaults
 
@@ -37,6 +38,15 @@ static NSString *const USER_NAME_KEY = @"user_name";
 +(void)setUserName: (NSString*)userName {
 	[[NSUserDefaults standardUserDefaults] setObject: userName
 		forKey: USER_NAME_KEY];
+}
+
++(BOOL)isInternalViewerEnabled {
+	return [[NSUserDefaults standardUserDefaults]
+		boolForKey: INTERNAL_VIEWER_ENABLED];
+}
++(void)setInternalViewerEnabled: (BOOL)isInternalViewerEnabled  {
+	[[NSUserDefaults standardUserDefaults] setBool: isInternalViewerEnabled
+		forKey: INTERNAL_VIEWER_ENABLED];
 }
 
 @end

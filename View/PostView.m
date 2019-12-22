@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import "PostView.h"
-#import "Net/ImageNetworkSource.h"
+#import "Net/DataNetworkSource.h"
 #import "Net/NSURL+Utils.h"
 #import "GNUstepGUI/GSTable.h"
 #import "ClickableImageView.h"
@@ -114,13 +114,33 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	NSURL *imageUrl = [NSURL urlForThumbnail: post];
 	if ([post hasImage] && imageUrl) {
 		[imageView setHidden: NO];
-		activeImageSource = [[ImageNetworkSource alloc] initWithURL: imageUrl];
+		activeImageSource = [[DataNetworkSource alloc] initWithURL: imageUrl];
 		[activeImageSource performOnSuccess: @selector(onFetchedImage:) target: self];
 		[activeImageSource performOnFailure: @selector(onImageFail:) target: self];
 		[activeImageSource fetch];
 	} else {
 		[imageView setHidden: YES];
 	}	
+}
+
+-(void)mediaBeganLoading {
+	NSLog(@"Media began loading");
+	[imageView setAlphaValue: 0.5];
+	/*
+	NSRect frame = [imageView frame];
+	frame.size.height = 10;
+	frame.origin.y -= 10;
+	NSProgressIndicator *indicator = [[NSProgressIndicator alloc]
+		initWithFrame: frame];
+	[indicator setAlphaValue: 0.5];
+	[self addSubview: indicator];
+	[indicator startAnimation: self];
+	*/
+}
+
+-(void)mediaFinishedLoading {
+	NSLog(@"Media finished loading");
+	[imageView setAlphaValue: 1.0];
 }
 
 -(void)setPostBody: (NSString*)postBody {
@@ -204,7 +224,8 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 	)];
 }
 
--(void)onFetchedImage: (NSImage*)image {
+-(void)onFetchedImage: (NSData*)data {
+	NSImage *image = [[[NSImage alloc] initWithData: data] autorelease];
 	[activeImageSource release];
 	activeImageSource = nil;
 	[imageView setImage: image];

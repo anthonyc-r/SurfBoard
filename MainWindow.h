@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "PreferencesWindow.h"
 #import "SubmitPostWindow.h"
 #import "PostListWindow.h"
+#import "MediaManager.h"
 
 @interface MainWindow : PostListWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
@@ -36,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSArray *displayedThreads;
 	PostView *selectedOP;
 	SubmitPostWindow *submitPostWindow;
+	MediaManager *mediaManager;
 }
 -(void)refresh: (id)sender;
 -(void)open: (id)sender;

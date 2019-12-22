@@ -21,11 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation ImageWindow
 
--(void)dealloc {
-	[super dealloc];
-	[networkSource release];
-}
-
 -(void)awakeFromNib {
 	[super awakeFromNib];
 	NSRect bounds = [[self contentView] bounds];
@@ -37,28 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[scrollView setHasVerticalScroller: NO];
 }
 
--(void)loadImageForPost: (Post*)post {
-	networkSource = [[ImageNetworkSource alloc] initWithURL: 
-		[NSURL urlForFullPostImage: post]];
-	[networkSource performOnSuccess: @selector(onFetchImage:) target: self];
-	[networkSource performOnFailure: @selector(onFetchFail:) target: self];
-	[networkSource fetch];
-}
-
--(void)onFetchImage: (NSImage*)image {
+-(void)loadImage: (NSImage*)image {
 	NSLog(@"Image window fetched image, %@", image);
 	[imageView setImage: image];
 	NSRect bounds = [[self contentView] bounds];
-	[imageView setFrame: bounds];	
-	// TODO: - Fix crash on release...
-	//[networkSource release];
-	[self setNextResponder: nil];
-	[self becomeFirstResponder];
-}
-
--(void)onFetchFail: (NSError*)error {
-	NSLog(@"error loading image: %@", error);
-	//[networkSource release];
+	[imageView setFrame: bounds];
+	[self makeKeyAndOrderFront: self];
 }
 
 @end

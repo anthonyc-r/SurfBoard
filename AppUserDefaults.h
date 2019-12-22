@@ -24,4 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSString*)userName;
 +(void)setUserName: (NSString*)userName;
 
++(BOOL)isInternalViewerEnabled;
++(void)setInternalViewerEnabled: (BOOL)isInternalViewerEnabled;
+
 @end

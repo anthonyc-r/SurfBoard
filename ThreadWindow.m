@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/ClickableImageView.h"
 #import "Text/NSString+Links.h"
 #import "SubmitPostWindow.h"
+#import "MediaManager.h"
+#import "Net/NSURL+Utils.h"
+
 
 @interface ThreadWindow (private)
 -(BOOL)focusPostWithNumber: (NSNumber*)postNumber;
@@ -140,8 +143,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post {
 	NSLog(@"Did tap image on post %@", post);
-	[imageWindow makeKeyAndOrderFront: self];
-	[imageWindow loadImageForPost: post];
+	[mediaManager displayMediaAtURL: [NSURL urlForFullPostImage: post]
+		observer: postView];
 }
 
 -(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post {

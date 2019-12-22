@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "View/PostView.h"
 #import "SubmitPostWindow.h"
 #import "PostListWindow.h"
+#import "MediaManager.h"
 
 @interface ThreadWindow: PostListWindow<PostViewDelegate, SubmitPostWindowDelegate>
 {
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	SubmitPostWindow *submitPostWindow;
 	NSMutableArray *selectedPostViews;
 	Post *focusOnRefresh;
+	MediaManager *mediaManager;
 }
 
 -(void)refreshForThread: (Thread*)thread;

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Net/FrontPageNetworkSource.h"
 #import "Net/PassNetworkSource.h"
 #import "MenuItemTag.h"
+#import "Net/NSURL+Utils.h"
 
 
 @implementation MainWindow
@@ -160,8 +161,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)postView: (PostView*)postView didTapImageOnPost: (Post*)post {
 	NSLog(@"Did tap image on post %@", post);
-	[imageWindow makeKeyAndOrderFront: self];
-	[imageWindow loadImageForPost: post];
+	NSURL *imageURL = [NSURL urlForFullPostImage: post];
+	[mediaManager displayMediaAtURL: imageURL observer: postView];
 }
 
 -(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post {

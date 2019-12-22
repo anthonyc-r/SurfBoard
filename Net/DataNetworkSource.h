@@ -15,14 +15,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "Data/Post.h"
-#import "View/ZoomingScrollView.h"
+#import "NetworkSource.h"
 
-@interface ImageWindow: NSWindow {
-	ZoomingScrollView *scrollView;
-	NSImageView *imageView;
+@interface DataNetworkSource: NetworkSource {
+	NSURL *URL;
+	BOOL isCancelled;
 }
 
--(void)loadImage: (NSImage*)image;
-
+-(id)initWithURL: (NSURL*)URL;
+-(NSURL*)URL;
+-(void)cancel;
 @end

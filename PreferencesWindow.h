@@ -17,11 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "View/PassLoginView.h"
 #import "Net/PassNetworkSource.h"
+#import "View/MediaPreferencesView.h"
 
-@interface PreferencesWindow: NSWindow<PassLoginViewDelegate> {
+@interface PreferencesWindow: NSWindow<PassLoginViewDelegate, MediaPreferencesViewDelegate> {
 	NSBox *containerView;
 	NSPopUpButton *preferenceButton;
 	PassLoginView *loginView;
+	MediaPreferencesView *mediaPreferencesView;
 	NSMutableArray *preferences;
 	PassNetworkSource *networkSource;
 }

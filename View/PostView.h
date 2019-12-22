@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import "Data/Post.h"
 #import "Data/Thread.h"
-#import "Net/ImageNetworkSource.h"
+#import "Net/DataNetworkSource.h"
+#import "MediaManager.h"
 
 @class PostView;
 
@@ -26,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(void)postView: (PostView*)postView didSetSelected: (BOOL)isSelected forPost: (Post*)post;
 @end
 
-@interface PostView : NSView
+@interface PostView : NSView<MediaLoadingObserver>
 {
   NSImageView *imageView;
   NSTextView *upperTextView;
   CGFloat maximumPostHeight;
-  ImageNetworkSource *activeImageSource;
+  DataNetworkSource *activeImageSource;
   NSButton *viewButton;
   NSTextView *headlineLabel;
   Thread *displayedThread;

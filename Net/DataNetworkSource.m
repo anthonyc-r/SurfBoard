@@ -15,10 +15,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "ImageNetworkSource.h"
+#import "DataNetworkSource.h"
 #import "NSURL+Utils.h"
 
-@implementation ImageNetworkSource
+@implementation DataNetworkSource
 
 -(id)initWithURL: (NSURL*)aURL {
 	if ((self = [super init])) {
@@ -39,6 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	isCancelled = YES;
 }
 
+-(NSURL*)URL {
+	return URL;
+}
+
+
 -(void)makeSynchronousRequest {
 	[self retain];
 	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
@@ -57,11 +62,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		[self failure: error];
 		return;
 	}
-	NSImage *image = [[NSImage alloc] initWithData: data];
-	[self success: image];
-	[image release];
+	[self success: data];
 	[self release];
 }
-
 
 @end

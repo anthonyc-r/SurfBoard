@@ -15,14 +15,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import "Data/Post.h"
-#import "View/ZoomingScrollView.h"
+#import "ImageWindow.h"
+#import "Net/DataNetworkSource.h"
 
-@interface ImageWindow: NSWindow {
-	ZoomingScrollView *scrollView;
-	NSImageView *imageView;
+@protocol MediaLoadingObserver
+-(void)mediaBeganLoading;
+-(void)mediaFinishedLoading;
+@end
+
+@interface MediaManager: NSObject {
+	ImageWindow *imageWindow;
+	DataNetworkSource *networkSource;
+	NSObject<MediaLoadingObserver> *currentObserver;
 }
 
--(void)loadImage: (NSImage*)image;
-
+-(void)displayMediaAtURL: (NSURL*)aURL observer: (NSObject<MediaLoadingObserver>*)anObserver;
+-(void)displayMediaAtURL: (NSURL*)aURL;
+-(void)onFetchMedia: (NSData*)data;
+-(void)onFetchFail: (NSError*)error;
 @end
