@@ -73,7 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 	NSNumber *newThreadOP = [[detailedThread getOP] getNumber];
 	NSNumber *oldThreadOP = [[displayedThread getOP] getNumber];
-	BOOL didThreadChange = ![newThreadOP isEqualToNumber: oldThreadOP];
+	BOOL didThreadChange = ![oldThreadOP isEqualToNumber: newThreadOP];
 	
 	if (didThreadChange) {
 		[selectedPostViews removeAllObjects];
