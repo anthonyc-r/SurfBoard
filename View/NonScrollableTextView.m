@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation NonScrollableTextView 
 
 -(BOOL)acceptsFirstResponder {
-	return NO;
+	return YES;
 }
 
 -(void)mouseScroll: (NSEvent*)event {

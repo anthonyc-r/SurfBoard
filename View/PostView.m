@@ -67,6 +67,7 @@ static const CGFloat DEFAULT_MAXIMUM = 300.0;
 		[upperTextView setVerticallyResizable: NO];
 		[upperTextView setEditable: NO];
 		[upperTextView setRichText: YES];
+		[upperTextView setSelectable: YES];
 		[headlineLabel setDrawsBackground: NO];
 		[headlineLabel setEditable: NO];
 		[headlineLabel setRichText: YES];
