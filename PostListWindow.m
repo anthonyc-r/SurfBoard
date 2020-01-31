@@ -25,6 +25,14 @@ static const CGFloat POST_MARGIN_V = 20;
 
 @implementation PostListWindow
 
+-(id)init {
+	if ((self = [super init])) {
+		currentMode = ListDisplayModeNormal;
+		cursor = NSMakePoint(POST_MARGIN_H, POST_MARGIN_V);
+	}
+	return self;
+}
+
 -(NSArray*)displayedPostViews {
 	NSMutableArray *postViews = [NSMutableArray array];
 	NSArray *subviews = [[self tableView] subviews];
@@ -35,6 +43,11 @@ static const CGFloat POST_MARGIN_V = 20;
 		}
 	}
 	return postViews;
+}
+
+-(void)clearPostsAndSetMode: (ListDisplayMode)mode {
+	currentMode = mode;
+	[self clearPosts];
 }
 
 -(void)clearPosts {
@@ -52,14 +65,22 @@ static const CGFloat POST_MARGIN_V = 20;
 
 
 -(void)appendThreads: (NSArray*)threads {
-	[self appendPostsAndThreads: threads];
+	if (currentMode == ListDisplayModeNormal) {
+		[self appendPostsAndThreadsNormal: threads];
+	} else {
+		[self appendPostsAndThreadsGrid: threads];
+	}
 }
 
 -(void)appendPosts: (NSArray*)posts {
-	[self appendPostsAndThreads: posts];
+	if (currentMode == ListDisplayModeNormal) {
+		[self appendPostsAndThreadsNormal: posts];
+	} else {
+		[self appendPostsAndThreadsGrid: posts];
+	}
 }
 
--(void)appendPostsAndThreads: (NSArray*)postsAndThreads {
+-(void)appendPostsAndThreadsNormal: (NSArray*)postsAndThreads {
 	if ([postsAndThreads count] < 1) {
 		return;
 	}
@@ -94,6 +115,10 @@ static const CGFloat POST_MARGIN_V = 20;
 	}
 	currentFrame.size.height = heightCursor;
 	[[self tableView] setFrame: currentFrame];
+}
+
+-(void)appendPostsAndThreadsGrid: (NSArray*)postsAndThreads {
+	
 }
 
 -(NSScrollView*)scrollView {

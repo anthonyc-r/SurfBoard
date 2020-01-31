@@ -15,23 +15,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
+#import <Data/Thread.h>
 
-typedef NS_ENUM(NSUInteger, ListDisplayMode) {
-	ListDisplayModeNormal,
-	ListDisplayModeGrid
-};
-
-@interface PostListWindow: NSWindow<PostViewDelegate> {
-	ListDisplayMode currentMode;
-	NSPoint cursor;
+@interface GridThreadView: NSView {
+	NSImageView *imageView;
+	NSTextView *titleView;
 }
 
--(NSArray*)displayedPostViews;
--(void)clearPostsAndSetMode: (ListDisplayMode)mode;
--(void)clearPosts;
--(void)appendThreads: (NSArray*)threads;
--(void)appendPosts: (NSArray*)posts;
--(NSScrollView*)scrollView;
--(NSView*)tableView;
--(void)setTableView: (NSView*)aTableView;
+-(void)configureForThread: (Thread*)thread;
+
 @end
