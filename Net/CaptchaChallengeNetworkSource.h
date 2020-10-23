@@ -14,11 +14,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import "DraggableImageView.h"
+#include "NetworkSource.h"
 
-@implementation DraggableImageView
--(void)mouseDown: (NSEvent*)event {
-	// Prevent default implementation from stealing mouseDragged events.
+@interface CaptchaChallengeNetworkSource: NetworkSource {
+
 }
+
+
 @end

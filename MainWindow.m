@@ -70,6 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		NSLog(@"Refresh already in progress, ignoring");
 		return;
 	}
+	
 
 	NSLog(@"Main window refresh?");
 	NSString *code = [self getDisplayedBoard];

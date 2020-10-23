@@ -24,7 +24,8 @@ SurfBoard_OBJC_FILES = AppDelegate.m MainWindow.m View/PostView.m \
 	OpenBoardPanel.m NSError+AppErrors.m Text/DateFormatter.m Net/PassNetworkSource.m \
 	View/PassLoginView.m PreferencesWindow.m Data/Pair.m Net/PostNetworkSource.m \
 	SubmitPostWindow.m AppUserDefaults.m PostListWindow.m View/FlippedView.m \
-	MediaManager.m View/MediaPreferencesView.m
+	MediaManager.m View/MediaPreferencesView.m Net/CaptchaChallengeNetworkSource.m \
+	Data/CaptchaChallenge.m
 		
 SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	View/NSView+NibLoadable.h Theme.h Data/Post.h Net/NSURL+Utils.h Data/Thread.h \
@@ -36,7 +37,8 @@ SurfBoard_H_FILES = AppDelegate.h MainWindow.h View/PostView.h \
 	OpenBoardPanel.h NSError+AppErrors.h Text/DateFormatter.h Net/PassNetworkSurce.h \
 	View/PassLoginView.h PreferencesWindow.h Data/Pair.h Net/PostNetworkSource.h \
 	SubmitPostWindow.h AppUserDefaults.h PostListWindow.h View/FlippedView.h \
-	MediaManager.h View/MediaPreferencesView.h
+	MediaManager.h View/MediaPreferencesView.h Net/CaptchaChallengeNetworkSource.h \
+	Data/CaptchaChallenge.h
 
 SurfBoard_RESOURCE_FILES = Resources/MainWindow.gorm SurfBoardInfo.plist Resources/SurfBoard.tiff \
 	Resources/PassLoginView.gorm Resources/MediaPreferencesView.gorm

@@ -26,4 +26,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +(NSURL*)urlForFullPostImage: (Post*)post;
 +(NSURL*)urlForPassAuth;
 +(NSURL*)urlForPostingToBoard: (NSString*)board;
++(NSURL*)urlForCaptchaChallenge;
 @end

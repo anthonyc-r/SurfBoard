@@ -14,11 +14,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import "DraggableImageView.h"
 
-@implementation DraggableImageView
--(void)mouseDown: (NSEvent*)event {
-	// Prevent default implementation from stealing mouseDragged events.
+@interface CaptchaChallenge: NSObject {
+	NSString *key;
+	NSString *instructions;
+	NSURL *imageGridURL;
+	NSArray *selection;
 }
+
+-(id)initFromHTML: (NSString*)HTML;
+-(NSURL*)imageGridURL;
+-(NSString*)instructions;
+-(void)toggleItemAtIndex: (int)index;
+-(BOOL)isImageSelectedAtIndex: (int)index;
+
 @end
