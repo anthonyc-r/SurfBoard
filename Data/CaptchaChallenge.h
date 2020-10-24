@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(id)initFromHTML: (NSString*)HTML;
+-(BOOL)isValid;
 -(NSURL*)imageGridURL;
 -(NSString*)instructions;
 -(void)toggleItemAtIndex: (int)index;

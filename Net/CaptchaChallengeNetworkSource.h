@@ -14,7 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#include "NetworkSource.h"
+#import "NetworkSource.h"
 
 @interface CaptchaChallengeNetworkSource: NetworkSource {
 

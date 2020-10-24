@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/Post.h"
 #import "Net/FrontPageNetworkSource.h"
 #import "Net/PassNetworkSource.h"
+#import "Net/CaptchaChallengeNetworkSource.h"
 #import "MenuItemTag.h"
 #import "Net/NSURL+Utils.h"
 
@@ -66,6 +67,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)refresh: (id)sender {
+	//DEBUG
+	CaptchaChallengeNetworkSource *source = [[CaptchaChallengeNetworkSource alloc] init];
+	[source fetch];
+	return;
+	//ENDDEBUG
+
 	if (networkSource) {
 		NSLog(@"Refresh already in progress, ignoring");
 		return;

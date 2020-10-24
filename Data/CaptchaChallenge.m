@@ -16,13 +16,58 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <Foundation/Foundation.h>
 #import "CaptchaChallenge.h"
 
+static NSString *const HINT_REGEXP = @"<div class=\"rc-imageselect-desc-no-canonical\">(.*?)</div>";
+static NSString *const KEY_REGEXP = @".*<input.+name=\"c\".+value=\"([^\"]+)\"/><div class=\"fbc-payload-imageselect";
+static NSString *const IMG_REGEXP = @"<img.+class=\"fbc-imageselect-payload\".+src=\"([^\"]*)\"";
+
+static NSString *extractWithExp(NSString *src, NSString *const pattern) {
+	NSError *error = nil;
+	NSRegularExpression *exp = [[NSRegularExpression alloc]
+		initWithPattern: pattern
+		options: 0
+		error: &error
+	];
+	if (error != nil) {
+		NSLog(@"error creating key regexp: %@", error);
+		return nil;	
+	}
+	NSTextCheckingResult *result = [exp firstMatchInString: src options: 0 range:
+		NSMakeRange(0, [src length])];
+	NSRange range = [result rangeAtIndex: 1];
+	if (range.location == NSNotFound) {
+		NSLog(@"Couldnt find range of match");
+		return nil;
+	}
+	NSString *match = [src substringWithRange: range];
+	[exp release];
+	return match;
+}
+
 @implementation CaptchaChallenge
 
 -(id)initFromHTML: (NSString*)HTML {
 	if (self = [super init]) {
-	
+		key = extractWithExp(HTML, KEY_REGEXP);
+		[key retain];
+		NSString *urlString = extractWithExp(HTML, IMG_REGEXP);
+		imageGridURL = [NSURL URLWithString: urlString];
+		[imageGridURL retain];
+		instructions = extractWithExp(HTML, HINT_REGEXP);
+		[instructions retain];
+
+		NSLog(@"ins: %@", instructions);
 	}
 	return self;
+}
+
+- (void) dealloc {
+	[key release];
+	[imageGridURL release];
+	[super dealloc];
+}
+
+-(BOOL)isValid {
+	return key != nil && imageGridURL != nil && instructions != nil;
 }
 
 -(NSURL*)imageGridURL {

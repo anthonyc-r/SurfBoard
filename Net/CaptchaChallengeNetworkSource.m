@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "CaptchaChallengeNetworkSource.h"
 #import "NSError+AppErrors.h"
 #import "NSURL+Utils.h"
+#import "Data/CaptchaChallenge.h"
 
 static NSString *const USER_AGENT = @"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
 static NSString *const ACCEPT_ENCODE = @"Accept-Encoding: deflate, br";
@@ -61,7 +62,9 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 	NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
 	NSString *body = [[NSString alloc] initWithBytes: [data bytes]
 		length: [data length] encoding: NSUTF8StringEncoding];
-	NSLog(@"Body: %@", body); 
+	CaptchaChallenge *chal = [[CaptchaChallenge alloc] initFromHTML: body];
+	[body release];
+	NSLog(@"is challenge valid? %d", [chal isValid]);
 	
 }
 
