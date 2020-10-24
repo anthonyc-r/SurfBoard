@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import "CaptchaChallenge.h"
+#import "Net/NSURL+Utils.h"
 
 static NSString *const HINT_REGEXP = @"<div class=\"rc-imageselect-desc-no-canonical\">(.*?)</div>";
 static NSString *const KEY_REGEXP = @".*<input.+name=\"c\".+value=\"([^\"]+)\"/><div class=\"fbc-payload-imageselect";
@@ -49,13 +50,11 @@ static NSString *extractWithExp(NSString *src, NSString *const pattern) {
 	if (self = [super init]) {
 		key = extractWithExp(HTML, KEY_REGEXP);
 		[key retain];
-		NSString *urlString = extractWithExp(HTML, IMG_REGEXP);
-		imageGridURL = [NSURL URLWithString: urlString];
+		NSString *imagePath = extractWithExp(HTML, IMG_REGEXP);
+		imageGridURL = [NSURL urlForCaptchaImage: imagePath];
 		[imageGridURL retain];
 		instructions = extractWithExp(HTML, HINT_REGEXP);
 		[instructions retain];
-
-		NSLog(@"ins: %@", instructions);
 	}
 	return self;
 }

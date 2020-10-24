@@ -15,10 +15,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "Data/CaptchaChallenge.h"
+#import "Net/CaptchaChallengeNetworkSource.h"
+#import "Net/CaptchaImageNetworkSource.h"
 
 @interface CaptchaPanel: NSPanel {
 	id imageView;
 	id hintLabel;
+	CaptchaChallenge *captcha;
+	CaptchaChallengeNetworkSource *networkSource;
+	CaptchaImageNetworkSource *imageSource;
 }
 
 -(void)didTapSubmit: (id)sender;

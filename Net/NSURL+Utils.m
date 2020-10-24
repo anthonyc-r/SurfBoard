@@ -25,11 +25,16 @@ static NSString *const THREAD_DETAILS = @"https://a.4cdn.org/%@/thread/%@.json";
 static NSString *const PASS_AUTH = @"https://sys.4chan.org/auth";
 static NSString *const POST_URL = @"https://sys.4chan.org/%@/post";
 static NSString *const CAPTCHA_CHALLENGE = @"https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc";
-
+static NSString *const CAPTCHA_IMAGE = @"https://www.google.com%@&k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc";
 @implementation NSURL (Utils)
 
 +(NSURL*)urlForCaptchaChallenge {
 	return [NSURL URLWithString: CAPTCHA_CHALLENGE];
+}
+
++(NSURL*)urlForCaptchaImage: (NSString*)path {
+	NSString *urlString = [NSString stringWithFormat: CAPTCHA_IMAGE, path];
+	return [NSURL URLWithString: urlString];
 }
 
 +(NSURL*)urlForPostImage: (Post*)post {

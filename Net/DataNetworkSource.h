@@ -20,9 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @interface DataNetworkSource: NetworkSource {
 	NSURL *URL;
 	BOOL isCancelled;
+	NSDictionary *additionalHeaders;
 }
 
 -(id)initWithURL: (NSURL*)URL;
+-(NSDictionary*)additionalHeaders;
 -(NSURL*)URL;
 -(void)cancel;
 @end

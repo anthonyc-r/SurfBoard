@@ -67,7 +67,7 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 	if ([chal isValid]) {
 		[self success: chal];
 	} else {
-		[self failure: [NSError unexpectedResponseError];
+		[self failure: [NSError unexpectedResponseError]];
 	}
 }
 

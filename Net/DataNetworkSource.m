@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import <AppKit/AppKit.h>
 #import "DataNetworkSource.h"
 #import "NSURL+Utils.h"
+#import "NSError+AppErrors.h"
 
 @implementation DataNetworkSource
 
@@ -44,9 +45,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 
+-(NSDictionary*)additionalHeaders  {
+	return nil;
+}
+
 -(void)makeSynchronousRequest {
 	[self retain];
-	NSURLRequest *request = [NSURLRequest requestWithURL: URL];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: URL];
+	NSArray *headerKeys = [[self additionalHeaders] allKeys];
+	NSString *key, *value;
+	if (headerKeys != nil) {
+		for (int i = 0; i < [headerKeys count]; i++) {
+			key = [headerKeys objectAtIndex: i];
+			value = [[self additionalHeaders] objectForKey: key];
+			NSLog(@"setting header : %@: %@", key, value);
+			[request setValue: value forHTTPHeaderField: key];
+		}
+	}
 	// TODO: - Handle errors
 	NSURLResponse *response;
 	NSError *error;
@@ -60,6 +75,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (error != nil) {
 		NSLog(@"Error fetching image! %@", error);
 		[self failure: error];
+		return;
+	}
+	if (![response isKindOfClass: [NSHTTPURLResponse class]]) {
+		NSLog(@"Not httpurlres");
+		[self failure: [NSError unexpectedResponseError]];
+		return;
+	}
+	NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+	NSLog(@"status code is %ld", [httpResponse statusCode]);
+	if ([httpResponse statusCode] != 200) {
+		NSLog(@"status code is error");
+		[self failure: [NSError unexpectedResponseError]];
 		return;
 	}
 	[self success: data];

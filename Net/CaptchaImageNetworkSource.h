@@ -14,19 +14,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
-#import "Data/Post.h"
-#import "Data/Thread.h"
+#import "DataNetworkSource.h"
 
-@interface NSURL (Utils)
+@interface CaptchaImageNetworkSource: DataNetworkSource {
 
-+(NSURL*)urlForPostImage: (Post*)post;
-+(NSURL*)urlForThumbnail: (Post*)post;
-+(NSURL*)urlForIndex: (NSNumber*)index ofBoard: (NSString*)board;
-+(NSURL*)urlForThreadDetails: (Thread*)thread;
-+(NSURL*)urlForFullPostImage: (Post*)post;
-+(NSURL*)urlForPassAuth;
-+(NSURL*)urlForPostingToBoard: (NSString*)board;
-+(NSURL*)urlForCaptchaChallenge;
-+(NSURL*)urlForCaptchaImage: (NSString*)path;
+}
+
 
 @end
