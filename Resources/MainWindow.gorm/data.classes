@@ -16,15 +16,28 @@
 	);
 	Super = NSView;
     };
+    CaptchaPanel = {
+	Actions = (
+	    "didTapSubmit:",
+	    "didTapCheckbox:"
+	);
+	Outlets = (
+	    imageView,
+	    hintLabel
+	);
+	Super = NSPanel;
+    };
     FirstResponder = {
 	Actions = (
 	    "didTap4ChanPass:",
 	    "didTapCancel:",
 	    "didTapOK:",
+	    "didTapPickImage:",
 	    "didTapPost:",
 	    "didTapPreferences:",
+	    "didTapSubmit:",
 	    "didTapTheme:",
-	    "didTapPickImage:",
+	    "didTapCheckbox:",
 	    "postReply:",
 	    "postThread:",
 	    "refresh:"
@@ -50,7 +63,8 @@
 	    openBoardPanel,
 	    preferencesWindow,
 	    submitPostWindow,
-	    mediaManager
+	    mediaManager,
+	    captchaPanel
 	);
 	Super = NSWindow;
     };

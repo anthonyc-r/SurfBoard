@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "ImageWindow.h"
 #import "OpenBoardPanel.h"
 #import "PreferencesWindow.h"
+#import "CaptchaPanel.h"
 #import "SubmitPostWindow.h"
 #import "PostListWindow.h"
 #import "MediaManager.h"
@@ -38,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	PostView *selectedOP;
 	SubmitPostWindow *submitPostWindow;
 	MediaManager *mediaManager;
+	CaptchaPanel *captchaPanel;
 }
 -(void)refresh: (id)sender;
 -(void)open: (id)sender;

@@ -64,8 +64,11 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 		length: [data length] encoding: NSUTF8StringEncoding];
 	CaptchaChallenge *chal = [[CaptchaChallenge alloc] initFromHTML: body];
 	[body release];
-	NSLog(@"is challenge valid? %d", [chal isValid]);
-	
+	if ([chal isValid]) {
+		[self success: chal];
+	} else {
+		[self failure: [NSError unexpectedResponseError];
+	}
 }
 
 @end

@@ -67,12 +67,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)refresh: (id)sender {
-	//DEBUG
-	CaptchaChallengeNetworkSource *source = [[CaptchaChallengeNetworkSource alloc] init];
-	[source fetch];
-	return;
-	//ENDDEBUG
-
 	if (networkSource) {
 		NSLog(@"Refresh already in progress, ignoring");
 		return;
@@ -88,6 +82,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)open: (id)sender {
+	// DEBUG
+	[NSApp runModalForWindow: captchaPanel];
+	return;
+	// ENDDEBUG
 	NSLog(@"Open...");
 	[NSApp runModalForWindow: openBoardPanel];
 	NSString *board = [openBoardPanel pickedValue];
