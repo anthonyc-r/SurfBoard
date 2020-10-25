@@ -83,9 +83,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		return;
 	}
 	NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
-	NSLog(@"status code is %ld", [httpResponse statusCode]);
 	if ([httpResponse statusCode] != 200) {
-		NSLog(@"status code is error");
 		[self failure: [NSError unexpectedResponseError]];
 		return;
 	}

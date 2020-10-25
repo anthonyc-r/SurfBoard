@@ -18,17 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "Data/CaptchaChallenge.h"
 #import "Net/CaptchaChallengeNetworkSource.h"
 #import "Net/CaptchaImageNetworkSource.h"
+#import "Net/CaptchaCompletedNetworkSource.h"
 
 @interface CaptchaPanel: NSPanel {
-	BOOL selection[9];
 	id imageView;
 	id hintLabel;
 	CaptchaChallenge *captcha;
 	CaptchaChallengeNetworkSource *networkSource;
 	CaptchaImageNetworkSource *imageSource;
+	CaptchaCompletedNetworkSource *completedSource;
+	NSString *result;
 }
 
 -(void)didTapSubmit: (id)sender;
 -(void)didTapCheckbox: (id)sender;
+-(NSString*)result;
+-(NSString*)challenge;
 
 @end

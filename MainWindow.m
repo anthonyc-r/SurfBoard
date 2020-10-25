@@ -82,10 +82,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 -(void)open: (id)sender {
-	// DEBUG
-	[NSApp runModalForWindow: captchaPanel];
-	return;
-	// ENDDEBUG
 	NSLog(@"Open...");
 	[NSApp runModalForWindow: openBoardPanel];
 	NSString *board = [openBoardPanel pickedValue];

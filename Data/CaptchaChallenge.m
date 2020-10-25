@@ -85,12 +85,13 @@ static NSString *extractWithExp(NSString *src, NSString *const pattern) {
 	return 9;
 }
 
--(void)toggleItemAtIndex: (int)index {
-
+-(void)setImageSelected: (BOOL)selected atIndex: (int)index {
+	selection[index] = selected;
 }
 
+
 -(BOOL)isImageSelectedAtIndex: (int)index {
-	return NO;
+	return selection[index];
 }
 
 @end

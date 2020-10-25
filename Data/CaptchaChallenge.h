@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *key;
 	NSString *instructions;
 	NSURL *imageGridURL;
-	NSArray *selection;
+	BOOL selection[9];
 }
 
 -(id)initFromHTML: (NSString*)HTML;
@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(NSString*)instructions;
 -(NSString*)key;
 -(int)imageCount;
--(void)toggleItemAtIndex: (int)index;
+-(void)setImageSelected: (BOOL)selected atIndex: (int)index;
 -(BOOL)isImageSelectedAtIndex: (int)index;
 
 @end

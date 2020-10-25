@@ -25,6 +25,7 @@ static NSString *const ACCEPT_ENCODE = @"Accept-Encoding: deflate, br";
 static NSString *const ACCEPT_LANG = @"Accept-Language: en-US";
 static NSString *const COOKIE = @"NID=87=gkOAkg09AKnvJosKq82kgnDnHj8Om2pLskKhdna02msog8HkdHDlasDf";
 static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3";
+static NSString *const RES_PATTERN = @"<textarea.+>(.+)</textarea>";
 
 @implementation CaptchaCompletedNetworkSource 
 
@@ -43,6 +44,29 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 
 -(NSString*)bodyContentForTextField: (NSString*)field withValue: (NSString*)value {
 	return [NSString stringWithFormat: @"--%@\nContent-Disposition: form-data; name=\"%@\"\n\n%@\n", FORM_DELIM, field, value];
+}
+
+-(NSString*)captchaCodeFromResponseHTML: (NSString*)HTML {
+	NSError *error = nil;
+	NSRegularExpression *exp = [[NSRegularExpression alloc]
+		initWithPattern: RES_PATTERN
+		options: 0
+		error: &error
+	];
+	if (error != nil) {
+		NSLog(@"error creating regexp: %@", error);
+		return nil;	
+	}
+	NSTextCheckingResult *result = [exp firstMatchInString: HTML options: 0 range:
+		NSMakeRange(0, [HTML length])];
+	NSRange range = [result rangeAtIndex: 1];
+	if (range.location == NSNotFound) {
+		NSLog(@"Couldnt find range of match");
+		return nil;
+	}
+	NSString *match = [HTML substringWithRange: range];
+	[exp release];
+	return match;
 }
 
 // TODO: - Consider creating a more general 'multipart form-data' network source.
@@ -92,9 +116,14 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 		[self failure: [NSError unexpectedResponseError]];
 		return;
 	}
-	NSString *responseString = [[NSString alloc] initWithData: data
+	NSString *responseHTML = [[NSString alloc] initWithData: data
 		encoding: NSUTF8StringEncoding];
-	NSLog(@"response: %@", responseString);
+	NSString *code = [self captchaCodeFromResponseHTML: responseHTML];
+	if (code == nil) {
+		[self failure: [NSError unexpectedResponseError]];
+	} else {
+		[self success: code];
+	}
 }
 
 @end

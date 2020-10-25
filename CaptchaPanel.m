@@ -22,17 +22,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @implementation CaptchaPanel
 
+-(void)dealloc {
+	[result release];
+	[super dealloc];
+}
+
+-(void)onCaptchaCompleted: (NSString*)aResult {
+	NSLog(@"Captcha completed with result: %@", aResult);
+	[result release];
+	result = aResult;
+	[result retain];
+	[self close];
+}
+
+-(void)onCaptchaFailed: (NSError*)error {
+	NSLog(@"Captcha failed: %@", error);
+	[self close];
+}
+
 -(void)onImageFetched: (NSData*)data {
 	NSLog(@"Fetched image");
 	NSImage *image = [[[NSImage alloc] initWithData: data] autorelease];
 	[imageView setImage: image];
+	[imageSource release];
+	imageSource = nil;
 }
 
 -(void)onImageFailed: (NSError*)error {
 	NSLog(@"Failed to fetch image: %@", error);
+	[imageSource release];
+	imageSource = nil;
 }
 
--(void)onCaptchaFetched: (CaptchaChallenge*)aCaptcha { 
+-(void)onFetchedCaptcha: (CaptchaChallenge*)aCaptcha { 
 	NSLog(@"Fetched captcha");
 	[captcha release];
 	captcha = aCaptcha;
@@ -48,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 }
 
--(void)onCaptchaFailed: (NSError*)error {
+-(void)onFetchChallengeFailed: (NSError*)error {
 	NSLog(@"Failed to get captcha");
 	[networkSource release];
 	networkSource = nil;
@@ -56,8 +78,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)fetchChallenge {
 	networkSource = [[CaptchaChallengeNetworkSource alloc] init];
-	[networkSource performOnSuccess: @selector(onCaptchaFetched:) target: self];
-	[networkSource performOnFailure: @selector(onCaptchaFailed:) target: self];
+	[networkSource performOnSuccess: @selector(onFetchedCaptcha:) target: self];
+	[networkSource performOnFailure: @selector(onFetchChallengeFailed:) target: self];
 	[networkSource makeSynchronousRequest];
 }
 
@@ -69,14 +91,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 }
 
+-(void)close {
+	[super close];
+	[imageView setImage: nil];
+	[hintLabel setStringValue: @"Loading..."];
+	[captcha release];
+	captcha = nil;
+	[networkSource release];
+	networkSource = nil;
+}
+
 -(void)didTapSubmit: (id)sender {
 	NSLog(@"did tap submit");
+	if (![captcha isValid]) {
+		NSLog(@"No valid captcha to submit");
+		return;
+	}
+	NSLog(@"will make req,...");
+	completedSource = [[CaptchaCompletedNetworkSource alloc] initWithChallenge: captcha];
+	[completedSource performOnSuccess: @selector(onCaptchaCompleted:) target: self];
+	[completedSource performOnFailure: @selector(onCaptchaFailed:) target: self];
+	[completedSource makeSynchronousRequest];
 }
 
 -(void)didTapCheckbox: (id)sender {
 	NSLog(@"did tap checkbox: %ld", [sender tag]);
-	selection[[sender tag]] = [sender isEnabled];
+	BOOL isSelected = [sender state] == NSOnState;
+	[captcha setImageSelected: isSelected atIndex: [sender tag]];
 
+}
+
+-(NSString*)result {
+	return result;
+}	
+
+-(NSString*)challenge {
+	return [captcha key];
 }
 
 @end

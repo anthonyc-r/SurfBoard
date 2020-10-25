@@ -81,12 +81,24 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	[super dealloc];
 }
 
+-(void)setPassId: (NSString*)aPassId {
+	[passId release];
+	passId = aPassId;
+	[passId retain];
+}
+
+-(void)setCaptchaId: (NSString*)aCaptchaId forChallenge: (NSString*)aCaptchaChallenge {
+	[captchaId release];
+	captchaId = aCaptchaId;
+	[captchaId retain];
+	[captchaChallenge release];
+	captchaChallenge = aCaptchaChallenge;
+	[captchaChallenge retain];
+}
 
 
 -(void)makeSynchronousRequest {
-	NSString *passId = [[NSUserDefaults standardUserDefaults]
-		objectForKey: @"pass_id"];
-	if (passId == nil) {
+	if (passId == nil && captchaId == nil) {
 		[self failure: [NSError noPassError]];
 		return;
 	}
@@ -97,8 +109,10 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		
 	[request setHTTPMethod: @"POST"];
 	[request setValue: USER_AGENT forHTTPHeaderField: @"User-Agent"];
-	NSString *cookie = [NSString stringWithFormat: COOKIE, passId];
-	[request setValue: cookie forHTTPHeaderField: @"Cookie"];
+	if (passId != nil) {
+		NSString *cookie = [NSString stringWithFormat: COOKIE, passId];
+		[request setValue: cookie forHTTPHeaderField: @"Cookie"];
+	}
 	// TODO: - consider abstracting this http multipart form construction
 	// TODO: - random, long, boundary.;
 	NSString *contentType = [NSString stringWithFormat: 
@@ -136,6 +150,15 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		withValue: options]];
 	[postBody appendString: [self bodyContentForTextField: @"com"
 		withValue: comment]];
+	if (captchaId != nil) {
+		NSLog(@"captcha set, id is: %@", captchaId);
+		[postBody appendString: [self bodyContentForTextField: 
+			@"g-recaptcha-response" withValue: captchaId]];
+		//[postBody appendString: [self bodyContentForTextField:
+		//	@"recaptcha_response_field" withValue: captchaId]];
+	}
+	
+
 	[postBody appendFormat: @"--%@\n", FORM_DELIM];
 	[postBody appendFormat: @"Content-Disposition: form-data; name=\"upfile\"; filename=\"%@\"\n", [self filename]];
 	[postBody appendFormat: @"Content-Type: %@\n\n", 
@@ -169,7 +192,7 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 		encoding: NSUTF8StringEncoding];
 	[responseString autorelease];
 	NSRange range = [responseString rangeOfString: SUCCESS_TOKEN];
-	NSLog(@"Response data: %@", responseString);
+	//NSLog(@"Response data: %@", responseString);
 	if (range.location != NSNotFound) {
 		NSNumber *newPostNumber = [self newPostNumberFromResponse: 
 			responseString];

@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
+#import "CaptchaPanel.h"
 #import "Net/PostNetworkSource.h"
 #import "Data/Thread.h"
 #import "Data/Post.h"
@@ -37,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	Post *targetOP;
 	NSString *targetBoard;
 	id<SubmitPostWindowDelegate> delegate;
+	CaptchaPanel *captchaPanel;
 }
 
 -(void)didTapPost: (id)sender;

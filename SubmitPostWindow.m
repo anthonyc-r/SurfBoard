@@ -43,6 +43,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (networkSource != nil) {
 		NSLog(@"Post already in progress, ignoring.");
 	}
+	NSString *passId = [[NSUserDefaults standardUserDefaults] objectForKey: @"pass_id"];
+	NSString *captchaId = nil;
+	NSString *captchaChallenge = nil;
+	if (passId == nil) {
+		[NSApp runModalForWindow: captchaPanel];
+		captchaId = [captchaPanel result];
+		captchaChallenge = [captchaPanel challenge];
+		if (captchaId == nil) {
+			[self setTitle: @"Captcha Error..."];
+			[self scheduleTitleConfigAfterDelay];
+			return;
+		}
+	}
+
 	[self setTitle: @"Posting..."];
 	NSString *name = [nameTextField stringValue];
 	// Persist name upon posting...
@@ -64,6 +78,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			withName: name password: password subject: subject 
 			comment: content options: options imageURL: [self
 			selectedImageURL]];
+	}
+	if (passId != nil) {
+		[networkSource setPassId: passId];
+	} else {
+		[networkSource setCaptchaId: captchaId forChallenge: captchaChallenge];
 	}
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
 	[networkSource performOnFailure: @selector(postFailure:) target: self];

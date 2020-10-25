@@ -110,7 +110,8 @@
 	    contentTextView,
 	    postButton,
 	    imageTextField,
-	    pickImageButton
+	    pickImageButton,
+	    captchaPanel
 	);
 	Super = NSWindow;
     };
