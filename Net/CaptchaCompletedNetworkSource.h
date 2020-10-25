@@ -14,21 +14,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #import <Foundation/Foundation.h>
+#import "NetworkSource.h"
+#import "Data/CaptchaChallenge.h"
 
-@interface CaptchaChallenge: NSObject {
-	NSString *key;
-	NSString *instructions;
-	NSURL *imageGridURL;
-	NSArray *selection;
+@interface CaptchaCompletedNetworkSource: NetworkSource {
+	CaptchaChallenge *challenge;
 }
 
--(id)initFromHTML: (NSString*)HTML;
--(BOOL)isValid;
--(NSURL*)imageGridURL;
--(NSString*)instructions;
--(NSString*)key;
--(int)imageCount;
--(void)toggleItemAtIndex: (int)index;
--(BOOL)isImageSelectedAtIndex: (int)index;
+-(id)initWithChallenge: (CaptchaChallenge*)aCompletedChallenge;
 
 @end

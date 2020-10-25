@@ -65,6 +65,10 @@ static NSString *extractWithExp(NSString *src, NSString *const pattern) {
 	[super dealloc];
 }
 
+-(NSString*)key {
+	return key;
+}
+
 -(BOOL)isValid {
 	return key != nil && imageGridURL != nil && instructions != nil;
 }
@@ -75,6 +79,10 @@ static NSString *extractWithExp(NSString *src, NSString *const pattern) {
 
 -(NSString*)instructions {
 	return instructions;
+}
+
+-(int)imageCount {
+	return 9;
 }
 
 -(void)toggleItemAtIndex: (int)index {

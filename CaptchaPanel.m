@@ -75,6 +75,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -(void)didTapCheckbox: (id)sender {
 	NSLog(@"did tap checkbox: %ld", [sender tag]);
+	selection[[sender tag]] = [sender isEnabled];
+
 }
 
 @end
