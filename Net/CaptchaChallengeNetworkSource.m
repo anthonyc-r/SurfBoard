@@ -24,6 +24,9 @@ static NSString *const ACCEPT_ENCODE = @"Accept-Encoding: deflate, br";
 static NSString *const ACCEPT_LANG = @"Accept-Language: en-US";
 static NSString *const COOKIE = @"NID=87=gkOAkg09AKnvJosKq82kgnDnHj8Om2pLskKhdna02msog8HkdHDlasDf";
 static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3";
+// Fails in a tricky way if this isn't set right...
+static NSString *const REFERER = @"https://boards.4chan.org/";
+
 
 
 @implementation CaptchaChallengeNetworkSource
@@ -34,15 +37,18 @@ static NSString *const ACCEPT = @"text/html,application/xhtml+xml,application/xm
 	NSMutableURLRequest *request = [NSMutableURLRequest 
 		requestWithURL: url];
 	[request setHTTPMethod: @"GET"];
-	[request setValue: [url absoluteString] forHTTPHeaderField:
-		@"Referer"];
-	[request setValue: USER_AGENT forHTTPHeaderField: @"User-Agent"];
-	[request setValue: ACCEPT forHTTPHeaderField: @"Accept"];
+	[request setValue: USER_AGENT forHTTPHeaderField: 
+		@"User-Agent"];
+	[request setValue: ACCEPT forHTTPHeaderField:
+ 		@"Accept"];
 	[request setValue: ACCEPT_ENCODE forHTTPHeaderField: 
 		@"Accept-Encoding"];
 	[request setValue: ACCEPT_LANG forHTTPHeaderField:
 		@"Accept-Language"];
-	[request setValue: COOKIE forHTTPHeaderField: @"Cookie"];
+	[request setValue: COOKIE forHTTPHeaderField: 
+		@"Cookie"];
+	[request setValue: REFERER forHTTPHeaderField:
+		@"Referer"];
 	
 	NSURLResponse *response = nil;
 	NSError *error = nil;
