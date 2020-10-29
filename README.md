@@ -1,7 +1,7 @@
 # SurfBoard
 A desktop image board app.
 
-Current state - Basic browsing and replying via 4chan pass working. (gcaptcha not supported).
+Current state - Basic browsing and replying implemented. Noscript captcha and 4chan passes are supported!
 
 
 ## Media (e.g. webms)
