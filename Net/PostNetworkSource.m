@@ -87,13 +87,10 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	[passId retain];
 }
 
--(void)setCaptchaId: (NSString*)aCaptchaId forChallenge: (NSString*)aCaptchaChallenge {
+-(void)setCaptchaId: (NSString*)aCaptchaId {
 	[captchaId release];
 	captchaId = aCaptchaId;
 	[captchaId retain];
-	[captchaChallenge release];
-	captchaChallenge = aCaptchaChallenge;
-	[captchaChallenge retain];
 }
 
 
@@ -151,11 +148,8 @@ static NSString *const SUCCESS_TOKEN = @"<title>Post successful!</title>";
 	[postBody appendString: [self bodyContentForTextField: @"com"
 		withValue: comment]];
 	if (captchaId != nil) {
-		NSLog(@"captcha set, id is: %@", captchaId);
 		[postBody appendString: [self bodyContentForTextField: 
 			@"g-recaptcha-response" withValue: captchaId]];
-		//[postBody appendString: [self bodyContentForTextField:
-		//	@"recaptcha_response_field" withValue: captchaId]];
 	}
 	
 

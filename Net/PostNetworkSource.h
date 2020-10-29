@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	NSString *board;
 	NSString *options;
 	NSString *captchaId;
-	NSString *captchaChallenge;
 	NSString *passId;
 	NSURL *imageURL;
 	Post *op;
@@ -36,5 +35,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -(id)initForBoard: (NSString*)aBoard withName: (NSString*)aName password: (NSString*)aPassword subject: (NSString*)aSubject comment: (NSString*)aComment options: (NSString*)someOptions imageURL: (NSURL*)anImageURL;
 -(NSString*)boardCode;
 -(void)setPassId: (NSString*)aPassId;
--(void)setCaptchaId: (NSString*)aCaptchaId forChallenge: (NSString*)aCaptchaChallenge;
+-(void)setCaptchaId: (NSString*)aCaptchaId;
 @end

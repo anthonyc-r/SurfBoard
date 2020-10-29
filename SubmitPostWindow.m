@@ -45,11 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	NSString *passId = [[NSUserDefaults standardUserDefaults] objectForKey: @"pass_id"];
 	NSString *captchaId = nil;
-	NSString *captchaChallenge = nil;
 	if (passId == nil) {
 		[NSApp runModalForWindow: captchaPanel];
 		captchaId = [captchaPanel result];
-		captchaChallenge = [captchaPanel challenge];
 		if (captchaId == nil) {
 			[self setTitle: @"Captcha Error..."];
 			[self scheduleTitleConfigAfterDelay];
@@ -82,7 +80,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	if (passId != nil) {
 		[networkSource setPassId: passId];
 	} else {
-		[networkSource setCaptchaId: captchaId forChallenge: captchaChallenge];
+		[networkSource setCaptchaId: captchaId];
 	}
 	[networkSource performOnSuccess: @selector(postSuccess:) target: self];
 	[networkSource performOnFailure: @selector(postFailure:) target: self];
