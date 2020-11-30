@@ -83,10 +83,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	[networkSource makeSynchronousRequest];
 }
 
+-(void)clearCheckboxes {
+	id view;
+	NSArray *subviews = [[self contentView] subviews];
+	for (int i = 0; i < [subviews count]; i++) {
+		view = [subviews objectAtIndex: i];
+		if ([view isKindOfClass: [NSButton class]]) {
+			[view setState: NSOffState];
+		}
+	}
+}
+
 -(void)makeKeyWindow {
 	[super makeKeyWindow];
 	NSLog(@"became key");
 	if (captcha == nil && networkSource == nil) {
+		[self clearCheckboxes];
 		[self fetchChallenge];
 	}
 }
