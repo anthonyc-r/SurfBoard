@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation MainWindow
 
 -(void)awakeFromNib {
-	[super awakeFromNib];
 	NSLog(@"MainWindow loaded. wtf");
 	NSView *contentView = [self contentView];
 	NSRect frame = [contentView bounds];

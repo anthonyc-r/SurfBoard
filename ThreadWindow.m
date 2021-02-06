@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation ThreadWindow
 
 -(void)awakeFromNib {
-	[super awakeFromNib];
 	NSLog(@"ThreadWindow init.");
 	NSView *contentView = [self contentView];
 	NSRect frame = [contentView bounds];

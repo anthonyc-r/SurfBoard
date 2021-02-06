@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation ImageWindow
 
 -(void)awakeFromNib {
-	[super awakeFromNib];
 	NSRect bounds = [[self contentView] bounds];
 	imageView = [[DraggableImageView alloc] initWithFrame: bounds];
 	[imageView setAnimates: YES];

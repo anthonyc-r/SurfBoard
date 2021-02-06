@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @implementation OpenBoardPanel
 
 -(void)awakeFromNib {
-	[super awakeFromNib];
 	[textField setDelegate: self];
 	[okButton setKeyEquivalent: @"\r"];
 }
